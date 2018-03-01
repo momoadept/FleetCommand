@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetCommand", "FleetCommand.csproj", "{C146224D-7B33-46DD-A829-DDDF09D25E33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C146224D-7B33-46DD-A829-DDDF09D25E33}.Debug|x64.ActiveCfg = Debug|x64
+		{C146224D-7B33-46DD-A829-DDDF09D25E33}.Debug|x64.Build.0 = Debug|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FFA0B745-A08C-4E56-B3AA-7F2B7DAE9E01}
+	EndGlobalSection
+EndGlobal
