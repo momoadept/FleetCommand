@@ -5,12 +5,12 @@ namespace IngameScript
 {
     internal class Program : MyGridProgram
     {
+        public App MyApp { get; set; }
+
         public Program()
         {
             MyApp = new App("TestShip", this);
         }
-
-        public App MyApp { get; set; }
 
         public void Save()
         {
@@ -18,6 +18,7 @@ namespace IngameScript
 
         public void Main(string argument, UpdateType updateSource)
         {
+            MyApp.Tick();
         }
     }
 }

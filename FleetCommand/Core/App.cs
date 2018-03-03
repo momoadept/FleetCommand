@@ -4,12 +4,16 @@ using IngameScript.Core.ComponentModel;
 using IngameScript.Core.Interfaces;
 using IngameScript.Core.Logging;
 using IngameScript.Core.ServiceProvider;
+using IngameScript.Core.StatusReporting;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core
 {
     public class App : IWorker, ILogProvider
     {
+        public const string ScriptTag = "MFC";
+        public static string BlockTag(string value) => $"[{ScriptTag} {value}]";
+
         public App(string id, MyGridProgram context)
         {
             Id = id;
@@ -81,6 +85,7 @@ namespace IngameScript.Core
 
             Async = BootstrapComponent(new Async.Async());
             Blocks = BootstrapComponent(new LazyBlockLoader());
+            BootstrapComponent(new LCDStatusChecker(StatusReporters));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace IngameScript.Core.BlockLoader
     {
         private MyGridProgram context;
 
-        public int RefreshPeriod { get; set; } = 100;
+        public int RefreshPeriod { get; set; } = 1000;
 
         public List<IMyTerminalBlock> Blocks { get; } = new List<IMyTerminalBlock>();
         public List<IMyBlockGroup> Groups { get; } = new List<IMyBlockGroup>();
