@@ -10,8 +10,16 @@ namespace IngameScript.Core
 {
     public class App : IWorker, ILogProvider
     {
+        public App(string id, MyGridProgram context)
+        {
+            Id = id;
+            Context = context;
+            Log = new LcdLog(ServiceProvider, this);
+
+            BootstrapCommonServices();
+        }
+
         public string Id { get; }
-        public string LogEntityId { get; } = "APP";
 
         // Common singleton services
 
@@ -26,27 +34,22 @@ namespace IngameScript.Core
         protected List<IStatusReporter> StatusReporters { get; } = new List<IStatusReporter>();
 
         protected ILog Log { get; set; }
+        public string LogEntityId { get; } = "APP";
 
-        public App(string id, MyGridProgram context)
+        public void Tick()
         {
-            Id = id;
-            Context = context;
-            Log = new LcdLog(ServiceProvider, this);
-
-            BootstrapCommonServices();
+            Time.Now++;
+            Workers.ForEach(w => w.Tick());
         }
 
         public App BootstrapComponents(params IComponent[] components)
         {
-            foreach (var component in components)
-            {
-                BootstrapComponent(component);
-            }
+            foreach (var component in components) BootstrapComponent(component);
 
             return this;
         }
 
-        public T BootstrapComponent<T>(T component) where T: class, IComponent
+        public T BootstrapComponent<T>(T component) where T : class, IComponent
         {
             if (component is IWorker)
             {
@@ -61,21 +64,14 @@ namespace IngameScript.Core
             }
 
             if (component is IService)
-            {
                 foreach (var service in (component as IService).Provides)
                 {
                     ServiceProvider.Use(component, service);
                     Log.Log($"{component.ComponentId} attached as provider for ${service}");
                 }
-            }
 
+            component.OnAttached(this);
             return component;
-        }
-
-        public void Tick()
-        {
-            Time.Time.Now++;
-            Workers.ForEach(w => w.Tick());
         }
 
         protected void BootstrapCommonServices()
@@ -83,8 +79,8 @@ namespace IngameScript.Core
             ServiceProvider.Use(this);
             ServiceProvider.Use(Context);
 
-            Async = BootstrapComponent(new Async.Async(ServiceProvider));
-            Blocks = BootstrapComponent(new LazyBlockLoader(ServiceProvider));
+            Async = BootstrapComponent(new Async.Async());
+            Blocks = BootstrapComponent(new LazyBlockLoader());
         }
     }
 }

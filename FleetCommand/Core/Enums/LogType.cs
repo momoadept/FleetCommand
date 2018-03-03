@@ -1,10 +1,10 @@
 ﻿namespace IngameScript.Core.Enums
 {
-        public enum LogType
-        {
-            Debug,
-            Info,
-            Warning,
-            Error
-        }
+    public enum LogType
+    {
+        Debug,
+        Info,
+        Warning,
+        Error
+    }
 }

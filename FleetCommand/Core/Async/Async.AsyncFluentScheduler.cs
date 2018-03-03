@@ -4,8 +4,8 @@
     {
         public class AsyncFluentScheduler
         {
-            private readonly IAsyncTask task;
             private readonly Async async;
+            private readonly IAsyncTask task;
 
             public AsyncFluentScheduler(IAsyncTask task, Async async)
             {

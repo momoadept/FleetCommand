@@ -1,7 +1,7 @@
-﻿namespace IngameScript.Core.Time
+﻿namespace IngameScript.Core
 {
-        static class Time
-        {
-            public static int Now { get; set; } = 0;
-        }
+    internal static class Time
+    {
+        public static int Now { get; set; } = 0;
+    }
 }

@@ -4,9 +4,9 @@ using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.BlockLoader
 {
-        public interface IBlockLoader: IWorker
-        {
-            List<IMyTerminalBlock> Blocks { get; }
-            List<IMyBlockGroup> Groups { get; }
-        }
+    public interface IBlockLoader
+    {
+        List<IMyTerminalBlock> Blocks { get; }
+        List<IMyBlockGroup> Groups { get; }
+    }
 }

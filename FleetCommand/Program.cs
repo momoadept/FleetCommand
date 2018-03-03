@@ -1,39 +1,23 @@
-﻿using Sandbox.Game.EntityComponents;
+﻿using IngameScript.Core;
 using Sandbox.ModAPI.Ingame;
-using Sandbox.ModAPI.Interfaces;
-using SpaceEngineers.Game.ModAPI.Ingame;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System;
-using IngameScript.Core;
-using VRage.Collections;
-using VRage.Game.Components;
-using VRage.Game.ModAPI.Ingame;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Game;
-using VRageMath;
 
 namespace IngameScript
 {
-    partial class Program : MyGridProgram
+    internal class Program : MyGridProgram
     {
-        public App MyApp { get; set; }
-
         public Program()
         {
             MyApp = new App("TestShip", this);
         }
 
+        public App MyApp { get; set; }
+
         public void Save()
         {
-
         }
 
         public void Main(string argument, UpdateType updateSource)
         {
-
         }
     }
 }
