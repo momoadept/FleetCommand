@@ -1,23 +1,10 @@
-﻿using Sandbox.Game.EntityComponents;
-using Sandbox.ModAPI.Ingame;
-using Sandbox.ModAPI.Interfaces;
-using SpaceEngineers.Game.ModAPI.Ingame;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System;
-using VRage.Collections;
-using VRage.Game.Components;
-using VRage.Game.ModAPI.Ingame;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Game;
-using VRageMath;
+﻿using IngameScript.Core.BlockLoader;
+using IngameScript.Core.Enums;
+using IngameScript.Core.Interfaces;
+using IngameScript.Core.ServiceProvider;
 
-namespace IngameScript
+namespace IngameScript.Core.Logging
 {
-    partial class Program
-    {
         public class LcdLog: ILog
         {
             private readonly IBlockLoader blocks;
@@ -35,5 +22,4 @@ namespace IngameScript
             {
             }
         }
-    }
 }

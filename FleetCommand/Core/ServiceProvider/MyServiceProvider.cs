@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using IngameScript.Core.Interfaces;
+using IngameScript.Core.Logging;
 
-namespace IngameScript
+namespace IngameScript.Core.ServiceProvider
 {
-    partial class Program
-    {
         public class MyServiceProvider : IMyServiceProvider
         {
             protected Dictionary<Type, object> Config { get; } = new Dictionary<Type, object>();
@@ -48,5 +48,4 @@ namespace IngameScript
                 Use<ILog>(log);
             }
         }
-    }
 }

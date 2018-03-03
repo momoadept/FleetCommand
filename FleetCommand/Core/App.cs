@@ -1,24 +1,12 @@
-﻿using Sandbox.Game.EntityComponents;
+﻿using System.Collections.Generic;
+using IngameScript.Core.BlockLoader;
+using IngameScript.Core.Interfaces;
+using IngameScript.Core.ServiceProvider;
 using Sandbox.ModAPI.Ingame;
-using Sandbox.ModAPI.Interfaces;
-using SpaceEngineers.Game.ModAPI.Ingame;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System;
-using VRage.Collections;
-using VRage.Game.Components;
-using VRage.Game.ModAPI.Ingame;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Game;
-using VRageMath;
 
-namespace IngameScript
+namespace IngameScript.Core
 {
-    partial class Program
-    {
-        public App MyApp { get; set; }
+        
         public class App : IWorker
         {
 
@@ -26,7 +14,7 @@ namespace IngameScript
 
             public IMyServiceProvider ServiceProvider { get; } = new MyServiceProvider();
 
-            public Async Async { get; }
+            public Async.Async Async { get; }
 
             public IBlockLoader Blocks { get; }
 
@@ -41,16 +29,14 @@ namespace IngameScript
                 ServiceProvider.Use<IBlockLoader>(Blocks);
                 ServiceProvider.Use(Async);
 
-                Async = new Async(ServiceProvider);
+                Async = new Async.Async(ServiceProvider);
                 Blocks = new LazyBlockLoader(ServiceProvider);
             }
 
             public void Tick()
             {
-                Time.Now++;
+                Time.Time.Now++;
                 Workers.ForEach(w => w.Tick());
             }
         }
-    }
-
 }

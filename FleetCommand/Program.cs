@@ -7,6 +7,7 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System;
+using IngameScript.Core;
 using VRage.Collections;
 using VRage.Game.Components;
 using VRage.Game.ModAPI.Ingame;
@@ -18,6 +19,8 @@ namespace IngameScript
 {
     partial class Program : MyGridProgram
     {
+        public App MyApp { get; set; }
+
         public Program()
         {
             MyApp = new App("TestShip", this);

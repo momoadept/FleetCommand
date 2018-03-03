@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IngameScript.Core.Enums;
+using IngameScript.Core.Interfaces;
 
-namespace IngameScript
+namespace IngameScript.Core.Logging
 {
-    partial class Program
-    {
         public class EmptyLog : ILog
         {
             public void Log(string entry, LogType logType = LogType.Info)
@@ -18,5 +13,4 @@ namespace IngameScript
             {
             }
         }
-    }
 }

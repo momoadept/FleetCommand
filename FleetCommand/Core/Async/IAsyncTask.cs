@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IngameScript.Core.Interfaces;
 
-namespace IngameScript
+namespace IngameScript.Core.Async
 {
-    partial class Program
-    {
         public interface IAsyncTask : IWorker
         {
             int Created { get; }
@@ -37,10 +32,9 @@ namespace IngameScript
                 Completed?.Invoke(this);
             }
 
-            public int Created { get; } = Time.Now;
+            public int Created { get; } = Time.Time.Now;
             public int Delay { get; }
             public bool IsCompleted { get; private set; } = false;
             public event Async.AsyncTaskCompleteHandler Completed;
         }
-    }
 }
