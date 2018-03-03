@@ -1,9 +1,7 @@
 ﻿namespace IngameScript.Core.Interfaces
 {
-        interface ILogProvider
+        public interface ILogProvider
         {
             string LogEntityId { get; }
-
-            ILog Log { get; }
         }
 }

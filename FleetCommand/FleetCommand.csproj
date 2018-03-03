@@ -97,19 +97,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\App.cs" />
+    <Compile Include="Core\Async\Async.AsyncFluentScheduler.cs" />
     <Compile Include="Core\Async\Async.cs" />
     <Compile Include="Core\Async\IAsyncJob.cs" />
     <Compile Include="Core\Async\IAsyncTask.cs" />
     <Compile Include="Core\BlockLoader\IBlockLoader.cs" />
     <Compile Include="Core\BlockLoader\LazyBlockLoader.cs" />
+    <Compile Include="Core\ComponentModel\IComponent.cs" />
     <Compile Include="Core\Enums\LogType.cs" />
     <Compile Include="Core\Interfaces\ILog.cs" />
     <Compile Include="Core\Interfaces\ILogProvider.cs" />
-    <Compile Include="Core\Interfaces\IStatusProvider.cs" />
+    <Compile Include="Core\Interfaces\IStatusReporter.cs" />
     <Compile Include="Core\Interfaces\IWorker.cs" />
     <Compile Include="Core\Logging\EmptyLog.cs" />
     <Compile Include="Core\Logging\LcdLog.cs" />
     <Compile Include="Core\ServiceProvider\IMyServiceProvider.cs" />
+    <Compile Include="Core\ServiceProvider\IService.cs" />
     <Compile Include="Core\ServiceProvider\MyServiceProvider.cs" />
     <Compile Include="Core\Time\Time.cs" />
     <Compile Include="MDK\Bootstrapper.cs" />
@@ -121,6 +124,7 @@
     <AdditionalFiles Include="thumb.png" />
     <AdditionalFiles Include="MDK\whitelist.cache" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Copy SourceFiles="mdk\mdk.options" DestinationFolder="$(TargetDir)\mdk" />

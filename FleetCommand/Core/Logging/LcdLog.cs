@@ -5,21 +5,23 @@ using IngameScript.Core.ServiceProvider;
 
 namespace IngameScript.Core.Logging
 {
-        public class LcdLog: ILog
+    public class LcdLog : ILog
+    {
+        private readonly IBlockLoader blocks;
+        private readonly ILogProvider owner;
+
+        public LcdLog(IMyServiceProvider services, ILogProvider owner)
         {
-            private readonly IBlockLoader blocks;
-
-            public LcdLog(IMyServiceProvider services)
-            {
-                blocks = services.Get<IBlockLoader>();
-            }
-
-            public void Log(string entry, LogType logType = LogType.Info)
-            {
-            }
-
-            public void Clear()
-            {
-            }
+            this.owner = owner;
+            blocks = services.Get<IBlockLoader>();
         }
+
+        public void Log(string entry, LogType logType = LogType.Info)
+        {
+        }
+
+        public void Clear()
+        {
+        }
+    }
 }

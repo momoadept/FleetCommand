@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IngameScript.Core.ComponentModel;
 using IngameScript.Core.Interfaces;
 using IngameScript.Core.ServiceProvider;
 
 namespace IngameScript.Core.Async
 {
-    public class Async : IStatusProvider, ILogProvider, IWorker
+    public partial class Async : IStatusReporter, ILogProvider, IWorker, IComponent, IService
     {
         public delegate void AsyncTaskCompleteHandler(IAsyncTask task);
 
+        public string ComponentId { get; } = "Async";
         public string StatusEntityId { get; } = "Async";
+        public int RefreshStatusDelay { get; } = 100;
         public string LogEntityId { get; } = "Async";
+        public Type[] Provides { get; } = {typeof(Async)};
         public ILog Log { get; }
 
         protected List<IAsyncTask> Defered { get; } = new List<IAsyncTask>();
 
+        protected int CompletedTasksCount = 0;
+
         public Async(IMyServiceProvider services)
         {
             Log = services.Get<ILog>();
-
-            services.Get<App>().Workers.Add(this);
         }
 
         public void Tick()
@@ -40,8 +44,14 @@ namespace IngameScript.Core.Async
 
         public string GetStatus()
         {
-            return "OK";
+            var status = $@"
+Async tasks completed last {RefreshStatusDelay} ticks: {CompletedTasksCount}
+
+";
+            CompletedTasksCount = 0;
+            return status;
         }
+
 
         public AsyncFluentScheduler Do(Action task)
         {
@@ -65,32 +75,7 @@ namespace IngameScript.Core.Async
             if (task.IsCompleted)
             {
                 Defered.Remove(task);
-            }
-        }
-
-        public class AsyncFluentScheduler
-        {
-            private readonly IAsyncTask task;
-            private readonly Async async;
-
-            public AsyncFluentScheduler(IAsyncTask task, Async async)
-            {
-                this.task = task;
-                this.async = async;
-            }
-
-            public AsyncFluentScheduler Then(AsyncTaskCompleteHandler callback)
-            {
-                task.Completed += callback;
-
-                return this;
-            }
-
-            public AsyncFluentScheduler Then(IAsyncTask nextTask)
-            {
-                task.Completed += t => { async.Do(nextTask); };
-
-                return new AsyncFluentScheduler(nextTask, async);
+                CompletedTasksCount++;
             }
         }
     }
