@@ -38,8 +38,10 @@ namespace IngameScript.Core.FakeAsync
         {
             var status = $@"
 Async tasks completed last {RefreshStatusDelay} ticks: {CompletedTasksCount}
-Active jobs: 
+
+Active Jobs: 
 {GetJobsReport(true)}
+
 Inactive Jobs:
 {GetJobsReport(false)}
 ";
@@ -120,7 +122,7 @@ Inactive Jobs:
 
         protected string GetJobsReport(bool active)
         {
-            return string.Join("\n", Jobs.Where(j => j.IsRunning == active).Select(j => $"{j.AsyncJobId} every {j.DelayBetweenRuns} ticks"));
+            return string.Join("\n", Jobs.Where(j => j.IsRunning == active).Select(j => $"{j.AsyncJobId}: every {j.DelayBetweenRuns} ticks"));
         }
     }
 }
