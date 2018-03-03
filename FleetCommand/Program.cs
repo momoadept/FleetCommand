@@ -18,7 +18,7 @@ namespace IngameScript
 
         public void Main(string argument, UpdateType updateSource)
         {
-            MyApp.Tick();
+            MyApp?.Tick();
         }
     }
 }

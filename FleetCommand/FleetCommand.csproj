@@ -97,14 +97,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\App.cs" />
-    <Compile Include="Core\Async\Async.AsyncFluentScheduler.cs" />
-    <Compile Include="Core\Async\Async.cs" />
-    <Compile Include="Core\Async\IAsyncJob.cs" />
-    <Compile Include="Core\Async\IAsyncTask.cs" />
-    <Compile Include="Core\Async\SimpleAsyncTask.cs" />
-    <Compile Include="Core\Async\SimpleAsyncWorker.cs" />
+    <Compile Include="Core\FakeAsync\Async.AsyncFluentScheduler.cs" />
+    <Compile Include="Core\FakeAsync\Async.cs" />
+    <Compile Include="Core\FakeAsync\IAsyncJob.cs" />
+    <Compile Include="Core\FakeAsync\IAsyncTask.cs" />
+    <Compile Include="Core\FakeAsync\SimpleAsyncTask.cs" />
+    <Compile Include="Core\FakeAsync\SimpleAsyncWorker.cs" />
     <Compile Include="Core\BlockLoader\IBlockLoader.cs" />
     <Compile Include="Core\BlockLoader\LazyBlockLoader.cs" />
+    <Compile Include="Core\BlockReferences\TagBlockReference.cs" />
+    <Compile Include="Core\BlockReferences\LCD\LcdReference.cs" />
     <Compile Include="Core\ComponentModel\IComponent.cs" />
     <Compile Include="Core\Enums\LogType.cs" />
     <Compile Include="Core\Interfaces\ILog.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="Core\ServiceProvider\IMyServiceProvider.cs" />
     <Compile Include="Core\ServiceProvider\IService.cs" />
     <Compile Include="Core\ServiceProvider\MyServiceProvider.cs" />
+    <Compile Include="Core\StatusReporting\LCDStatusChecker.cs" />
     <Compile Include="Core\Time\Time.cs" />
     <Compile Include="MDK\Bootstrapper.cs" />
     <AdditionalFiles Include="MDK\MDK.options">

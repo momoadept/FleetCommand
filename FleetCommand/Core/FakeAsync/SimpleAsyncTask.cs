@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IngameScript.Core.Async
+namespace IngameScript.Core.FakeAsync
 {
     internal class SimpleAsyncTask : IAsyncTask
     {
@@ -10,6 +10,7 @@ namespace IngameScript.Core.Async
         {
             this.action = action;
             Delay = delay;
+            Created = App.Time.Now;
         }
 
         public void Tick()
@@ -20,7 +21,7 @@ namespace IngameScript.Core.Async
             Completed?.Invoke(this);
         }
 
-        public int Created { get; } = Time.Now;
+        public int Created { get; }
         public int Delay { get; }
         public bool IsCompleted { get; private set; }
         public event Async.AsyncTaskCompleteHandler Completed;

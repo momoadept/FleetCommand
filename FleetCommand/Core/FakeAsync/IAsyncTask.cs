@@ -1,6 +1,6 @@
 ﻿using IngameScript.Core.Interfaces;
 
-namespace IngameScript.Core.Async
+namespace IngameScript.Core.FakeAsync
 {
     public interface IAsyncTask : IWorker
     {

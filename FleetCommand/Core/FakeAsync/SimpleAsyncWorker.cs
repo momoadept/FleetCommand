@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IngameScript.Core.Async
+namespace IngameScript.Core.FakeAsync
 {
     public class SimpleAsyncWorker : IAsyncJob
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using IngameScript.Core.Async;
 using IngameScript.Core.ComponentModel;
+using IngameScript.Core.FakeAsync;
 using IngameScript.Core.ServiceProvider;
 using Sandbox.ModAPI.Ingame;
 

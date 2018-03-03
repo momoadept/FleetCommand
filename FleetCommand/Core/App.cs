@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using IngameScript.Core.BlockLoader;
 using IngameScript.Core.ComponentModel;
+using IngameScript.Core.FakeAsync;
 using IngameScript.Core.Interfaces;
 using IngameScript.Core.Logging;
 using IngameScript.Core.ServiceProvider;
@@ -18,7 +20,8 @@ namespace IngameScript.Core
         {
             Id = id;
             Context = context;
-            Log = new LcdLog(ServiceProvider, this);
+
+            context.Runtime.UpdateFrequency = UpdateFrequency.Update1;
 
             BootstrapCommonServices();
         }
@@ -29,8 +32,9 @@ namespace IngameScript.Core
 
         public MyGridProgram Context { get; }
         public IMyServiceProvider ServiceProvider { get; } = new MyServiceProvider();
-        public Async.Async Async { get; private set; }
+        public Async Async { get; private set; }
         public IBlockLoader Blocks { get; private set; }
+        public static Time Time = new Time();
 
         // Bootstrapped component types
 
@@ -42,8 +46,16 @@ namespace IngameScript.Core
 
         public void Tick()
         {
-            Time.Now++;
-            Workers.ForEach(w => w.Tick());
+            try
+            {
+                Time.Now++;
+                Workers.ForEach(w => w.Tick());
+            }
+            catch (Exception e)
+            {
+                Context.Echo(e.Message + e.StackTrace);
+            }
+            
         }
 
         public App BootstrapComponents(params IComponent[] components)
@@ -80,10 +92,12 @@ namespace IngameScript.Core
 
         protected void BootstrapCommonServices()
         {
+            Log = new EmptyLog();
+
             ServiceProvider.Use(this);
             ServiceProvider.Use(Context);
 
-            Async = BootstrapComponent(new Async.Async());
+            Async = BootstrapComponent(new Async());
             Blocks = BootstrapComponent(new LazyBlockLoader());
             BootstrapComponent(new LCDStatusChecker(StatusReporters));
         }

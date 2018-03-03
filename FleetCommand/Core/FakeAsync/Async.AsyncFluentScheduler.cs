@@ -1,4 +1,4 @@
-﻿namespace IngameScript.Core.Async
+﻿namespace IngameScript.Core.FakeAsync
 {
     public partial class Async
     {

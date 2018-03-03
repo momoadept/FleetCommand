@@ -5,7 +5,7 @@ using IngameScript.Core.ComponentModel;
 using IngameScript.Core.Interfaces;
 using IngameScript.Core.ServiceProvider;
 
-namespace IngameScript.Core.Async
+namespace IngameScript.Core.FakeAsync
 {
     public partial class Async : IStatusReporter, ILogProvider, IWorker, IComponent, IService
     {
@@ -80,7 +80,7 @@ Inactive Jobs:
                 if (RunJobNow(job))
                 {
                     job.Tick();
-                    job.LastRan = Time.Now;
+                    job.LastRan = App.Time.Now;
                 }
             }
         }
@@ -99,12 +99,12 @@ Inactive Jobs:
 
         protected List<IAsyncTask> GetTasksToDoNow()
         {
-            return Defered.Where(d => Time.Now - d.Created >= d.Delay).ToList();
+            return Defered.Where(d => App.Time.Now - d.Created >= d.Delay).ToList();
         }
 
         protected bool RunJobNow(IAsyncJob job)
         {
-            return job.IsRunning && (job.LastRan == 0 || Time.Now - job.LastRan >= job.DelayBetweenRuns);
+            return job.IsRunning && (job.LastRan == 0 || App.Time.Now - job.LastRan >= job.DelayBetweenRuns);
         }
 
         protected void RunTask(IAsyncTask task)

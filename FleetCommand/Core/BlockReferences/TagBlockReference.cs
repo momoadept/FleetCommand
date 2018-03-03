@@ -13,16 +13,18 @@ namespace IngameScript.Core.BlockReferences
         protected IBlockLoader Blocks;
         protected string Tag;
 
+        public string FullTag => App.BlockTag(Tag);
+
         public TagBlockReference(IBlockLoader blocks, string tag)
         {
             Blocks = blocks;
             Tag = tag;
         }
 
-        protected List<T> GetMyBlocks()
+        public List<T> GetMyBlocks()
         {
             var blocks = Blocks.Blocks
-                .Where(b => b is T && b.Name.Contains(App.BlockTag(Tag)))
+                .Where(b => b is T && b.CustomName != null && b.CustomName.Contains(FullTag))
                 .Cast<T>();
 
             return blocks.ToList();
