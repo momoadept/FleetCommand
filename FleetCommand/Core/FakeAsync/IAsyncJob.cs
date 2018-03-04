@@ -1,4 +1,4 @@
-﻿using IngameScript.Core.Interfaces;
+﻿using IngameScript.Core.ComponentModel;
 
 namespace IngameScript.Core.FakeAsync
 {

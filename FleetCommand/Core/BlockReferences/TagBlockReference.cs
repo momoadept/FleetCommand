@@ -15,9 +15,9 @@ namespace IngameScript.Core.BlockReferences
 
         public string FullTag => App.BlockTag(Tag);
 
-        public TagBlockReference(IBlockLoader blocks, string tag)
+        public TagBlockReference(string tag)
         {
-            Blocks = blocks;
+            Blocks = App.ServiceProvider.Get<IBlockLoader>();
             Tag = tag;
         }
 

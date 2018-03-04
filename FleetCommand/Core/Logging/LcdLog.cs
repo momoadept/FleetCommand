@@ -1,27 +1,58 @@
-﻿using IngameScript.Core.BlockLoader;
+﻿using System.Collections.Generic;
+using System.Linq;
+using IngameScript.Core.BlockReferences.LCD;
+using IngameScript.Core.Delegates;
 using IngameScript.Core.Enums;
-using IngameScript.Core.Interfaces;
-using IngameScript.Core.ServiceProvider;
 
 namespace IngameScript.Core.Logging
 {
     public class LcdLog : ILog
     {
-        private readonly IBlockLoader blocks;
-        private readonly ILogProvider owner;
+        public List<LogEntry> LogEntries { get; } = new List<LogEntry>();
+        public List<LogType> DisplayedLogTypes { get; set; } = App.GlobalConfiguration.CommonLogTypes;
+        public int DisplayedEntriesCount { get; set; } = 10;
 
-        public LcdLog(IMyServiceProvider services, ILogProvider owner)
+        public event Event.Handler<LogEntry> EntryAdded;
+
+        protected string Entity { get; }
+        protected LcdReference LcdReference { get; }
+
+        public LcdLog(string entity)
         {
-            this.owner = owner;
-            blocks = services.Get<IBlockLoader>();
+            App.ServiceProvider.Get<ILoggingHub>().RegisterLog(this);
+            Entity = entity;
+            LcdReference = new LcdReference(App.BlockTag($"Log {Entity}"));
         }
 
-        public void Log(string entry, LogType logType = LogType.Info)
+        public void Log(string text, LogType logType = LogType.Info)
         {
+            var entry = new LogEntry(logType, text, Entity);
+            LogEntries.Add(entry);
+            EntryAdded?.Invoke(entry);
+
+            if (DisplayedLogTypes.Contains(entry.Type))
+            {
+                UpdateLcd();
+            }
         }
 
-        public void Clear()
+        protected void UpdateLcd()
         {
+            // TODO: Optimize this method
+            var format =
+                Entity + "\n"
+                       + string.Join(
+                           "\n",
+                           LogEntries
+                               .Where(entry => DisplayedLogTypes.Contains(entry.Type))
+                               .OrderByDescending(entry => entry.Time)
+                               .Take(DisplayedEntriesCount)
+                               .OrderBy(entry => entry.Time)
+                               .Select(entry =>
+                                   $"{entry.Time} [{entry.Type}]: {entry.Text}"));
+            
+            LcdReference.SetText(format);
         }
+        
     }
 }

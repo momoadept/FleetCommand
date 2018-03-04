@@ -2,22 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using IngameScript.Core.ComponentModel;
-using IngameScript.Core.Interfaces;
 using IngameScript.Core.ServiceProvider;
 
 namespace IngameScript.Core.FakeAsync
 {
-    public partial class Async : IStatusReporter, ILogProvider, IWorker, IComponent, IService
+    public partial class Async : IStatusReporter, IWorker, IComponent, IService
     {
-        public delegate void AsyncTaskCompleteHandler(IAsyncTask task);
-
         protected int CompletedTasksCount;
 
         public Async()
         {
         }
-
-        protected ILog Log { get; private set; }
 
         protected List<IAsyncTask> Defered { get; } = new List<IAsyncTask>();
         protected List<IAsyncJob> Jobs { get; } = new List<IAsyncJob>();
@@ -25,7 +20,7 @@ namespace IngameScript.Core.FakeAsync
         public string ComponentId { get; } = "Async";
         public void OnAttached(App app)
         {
-            Log = app.ServiceProvider.Get<ILog>();
+            
         }
 
         public string LogEntityId { get; } = "Async";

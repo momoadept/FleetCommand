@@ -31,7 +31,7 @@ namespace IngameScript.Core.BlockReferences.LCD
             Clear();
         }
 
-        public LcdReference(IBlockLoader blocks, string tag) : base(blocks, tag)
+        public LcdReference(string tag) : base(tag)
         {
             Init();
         }

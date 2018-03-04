@@ -1,4 +1,6 @@
-﻿namespace IngameScript.Core.FakeAsync
+﻿using IngameScript.Core.Delegates;
+
+namespace IngameScript.Core.FakeAsync
 {
     public partial class Async
     {
@@ -13,7 +15,7 @@
                 this.async = async;
             }
 
-            public AsyncFluentScheduler Then(AsyncTaskCompleteHandler callback)
+            public AsyncFluentScheduler Then(Event.Handler<IAsyncTask> callback)
             {
                 task.Completed += callback;
 

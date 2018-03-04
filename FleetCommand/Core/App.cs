@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using IngameScript.Core.BlockLoader;
 using IngameScript.Core.ComponentModel;
 using IngameScript.Core.FakeAsync;
-using IngameScript.Core.Interfaces;
 using IngameScript.Core.Logging;
 using IngameScript.Core.ServiceProvider;
 using IngameScript.Core.StatusReporting;
@@ -11,8 +10,10 @@ using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core
 {
-    public class App : IWorker, ILogProvider
+    public class App : IWorker
     {
+        public static AppConfig GlobalConfiguration { get; set; }
+
         public const string ScriptTag = "MFC";
         public static string BlockTag(string value) => $"[{ScriptTag} {value}]";
 
@@ -31,10 +32,10 @@ namespace IngameScript.Core
         // Common singleton services
 
         public MyGridProgram Context { get; }
-        public IMyServiceProvider ServiceProvider { get; } = new MyServiceProvider();
+        public static IMyServiceProvider ServiceProvider { get; } = new MyServiceProvider();
         public Async Async { get; private set; }
         public IBlockLoader Blocks { get; private set; }
-        public static Time Time = new Time();
+        public static Time Time { get; } = new Time();
 
         // Bootstrapped component types
 
@@ -70,20 +71,20 @@ namespace IngameScript.Core
             if (component is IWorker)
             {
                 Workers.Add(component as IWorker);
-                Log.Log($"{component.ComponentId} attached as Worker");
+                Log?.Log($"{component.ComponentId} attached as Worker");
             }
 
             if (component is IStatusReporter)
             {
                 StatusReporters.Add(component as IStatusReporter);
-                Log.Log($"{component.ComponentId} attached as Status Reporter");
+                Log?.Log($"{component.ComponentId} attached as Status Reporter");
             }
 
             if (component is IService)
                 foreach (var service in (component as IService).Provides)
                 {
                     ServiceProvider.Use(component, service);
-                    Log.Log($"{component.ComponentId} attached as provider for ${service}");
+                    Log?.Log($"{component.ComponentId} attached as provider for ${service}");
                 }
 
             component.OnAttached(this);
@@ -92,10 +93,11 @@ namespace IngameScript.Core
 
         protected void BootstrapCommonServices()
         {
-            Log = new EmptyLog();
-
             ServiceProvider.Use(this);
             ServiceProvider.Use(Context);
+
+            BootstrapComponent(new LcdLoggingHub());
+            Log = new LcdLog("App");
 
             Async = BootstrapComponent(new Async());
             Blocks = BootstrapComponent(new LazyBlockLoader());

@@ -1,4 +1,4 @@
-﻿namespace IngameScript.Core.Interfaces
+﻿namespace IngameScript.Core.ComponentModel
 {
     public interface IStatusReporter
     {

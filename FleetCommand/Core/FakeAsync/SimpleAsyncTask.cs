@@ -1,4 +1,5 @@
 ﻿using System;
+using IngameScript.Core.Delegates;
 
 namespace IngameScript.Core.FakeAsync
 {
@@ -24,6 +25,6 @@ namespace IngameScript.Core.FakeAsync
         public int Created { get; }
         public int Delay { get; }
         public bool IsCompleted { get; private set; }
-        public event Async.AsyncTaskCompleteHandler Completed;
+        public event Event.Handler<IAsyncTask> Completed;
     }
 }

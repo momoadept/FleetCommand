@@ -22,7 +22,7 @@ namespace IngameScript.Core.BlockLoader
 
         public void OnAttached(App app)
         {
-            context = app.ServiceProvider.Get<MyGridProgram>();
+            context = App.ServiceProvider.Get<MyGridProgram>();
 
             blockPollingWorker = new SimpleAsyncWorker("BlockPollingWorker", RefreshBlocks, RefreshPeriod);
             app.Async.AddJob(blockPollingWorker);

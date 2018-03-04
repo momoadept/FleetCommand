@@ -7,7 +7,6 @@ using IngameScript.Core.BlockLoader;
 using IngameScript.Core.BlockReferences.LCD;
 using IngameScript.Core.ComponentModel;
 using IngameScript.Core.FakeAsync;
-using IngameScript.Core.Interfaces;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.StatusReporting
@@ -20,7 +19,6 @@ namespace IngameScript.Core.StatusReporting
         protected List<IStatusReporter> StatusReporters;
         protected Dictionary<IStatusReporter, StatusReportingStatus> StatusReportingData = new Dictionary<IStatusReporter, StatusReportingStatus>();
         protected SimpleAsyncWorker UpdateStatusesWorker;
-        protected IBlockLoader BlockLoader;
         protected MyGridProgram Context;
 
         public LCDStatusChecker(List<IStatusReporter> statusReporters)
@@ -30,7 +28,6 @@ namespace IngameScript.Core.StatusReporting
 
         public void OnAttached(App app)
         {
-            BlockLoader = app.ServiceProvider.Get<IBlockLoader>();
             Context = app.Context;
 
             UpdateStatusesWorker = new SimpleAsyncWorker("UpdateLcdStatusWorker", CheckStatuses);
@@ -73,7 +70,7 @@ namespace IngameScript.Core.StatusReporting
 
         protected StatusReportingStatus CreateStatusReportingStatus(IStatusReporter reporter)
         {
-            return new StatusReportingStatus(new LcdReference(BlockLoader, $"S {reporter.StatusEntityId}"));
+            return new StatusReportingStatus(new LcdReference($"S {reporter.StatusEntityId}"));
         }
 
         protected class StatusReportingStatus

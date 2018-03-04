@@ -9,6 +9,11 @@ namespace IngameScript
 
         public Program()
         {
+            App.GlobalConfiguration = new AppConfig()
+            {
+                EnableMasterLog = true
+            };
+
             MyApp = new App("TestShip", this);
         }
 

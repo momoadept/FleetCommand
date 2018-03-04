@@ -1,4 +1,5 @@
-﻿using IngameScript.Core.Interfaces;
+﻿using IngameScript.Core.ComponentModel;
+using IngameScript.Core.Delegates;
 
 namespace IngameScript.Core.FakeAsync
 {
@@ -10,6 +11,6 @@ namespace IngameScript.Core.FakeAsync
 
         bool IsCompleted { get; }
 
-        event Async.AsyncTaskCompleteHandler Completed;
+        event Event.Handler<IAsyncTask> Completed;
     }
 }
