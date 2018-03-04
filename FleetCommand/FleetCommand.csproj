@@ -118,6 +118,7 @@
     <Compile Include="Core\ComponentModel\IWorker.cs" />
     <Compile Include="Core\Logging\EmptyLog.cs" />
     <Compile Include="Core\Logging\LcdLog.cs" />
+    <Compile Include="Core\Logging\LcdLoggingHub.cs" />
     <Compile Include="Core\Logging\LogEntry.cs" />
     <Compile Include="Core\ServiceProvider\IMyServiceProvider.cs" />
     <Compile Include="Core\ServiceProvider\IService.cs" />
