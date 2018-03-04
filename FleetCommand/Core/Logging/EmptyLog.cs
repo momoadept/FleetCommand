@@ -10,6 +10,26 @@ namespace IngameScript.Core.Logging
         {
         }
 
+        public void Debug(string text)
+        {
+        }
+
+        public void Info(string text)
+        {
+        }
+
+        public void Warning(string text)
+        {
+        }
+
+        public void Error(string text)
+        {
+        }
+
+        public void Priority(string text)
+        {
+        }
+
         public List<LogType> DisplayedLogTypes { get; set; }
         public List<LogEntry> LogEntries { get; } = new List<LogEntry>();
         public event Event.Handler<LogEntry> EntryAdded;

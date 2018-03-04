@@ -9,6 +9,11 @@ namespace IngameScript.Core.Logging
     public interface ILog
     {
         void Log(string text, LogType logType = LogType.Info);
+        void Debug(string text);
+        void Info(string text);
+        void Warning(string text);
+        void Error(string text);
+        void Priority(string text);
         List<LogType> DisplayedLogTypes { get; set; }
         List<LogEntry> LogEntries { get; }
         event Event.Handler<LogEntry> EntryAdded;

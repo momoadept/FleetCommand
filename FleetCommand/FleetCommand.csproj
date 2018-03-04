@@ -98,6 +98,7 @@
   <ItemGroup>
     <Compile Include="Core\App.cs" />
     <Compile Include="Core\AppConfig.cs" />
+    <Compile Include="Core\ComponentModel\BaseComponent.cs" />
     <Compile Include="Core\Delegates\EventHandlers.cs" />
     <Compile Include="Core\FakeAsync\Async.AsyncFluentScheduler.cs" />
     <Compile Include="Core\FakeAsync\Async.cs" />

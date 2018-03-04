@@ -6,22 +6,17 @@ using IngameScript.Core.ServiceProvider;
 
 namespace IngameScript.Core.FakeAsync
 {
-    public partial class Async : IStatusReporter, IWorker, IComponent, IService
+    public partial class Async : BaseComponent, IStatusReporter, IWorker, IService
     {
         protected int CompletedTasksCount;
 
         public Async()
+            :base("Async")
         {
         }
 
         protected List<IAsyncTask> Defered { get; } = new List<IAsyncTask>();
         protected List<IAsyncJob> Jobs { get; } = new List<IAsyncJob>();
-
-        public string ComponentId { get; } = "Async";
-        public void OnAttached(App app)
-        {
-            
-        }
 
         public string LogEntityId { get; } = "Async";
         public Type[] Provides { get; } = {typeof(Async)};
@@ -53,6 +48,7 @@ Inactive Jobs:
         public void AddJob(IAsyncJob job)
         {
             Jobs.Add(job);
+            Log.Info($"Async job added: {job.AsyncJobId} each {job.DelayBetweenRuns} ticks");
         }
 
         public void RemoveJob(IAsyncJob job)
@@ -67,6 +63,8 @@ Inactive Jobs:
 
         public AsyncFluentScheduler Do(IAsyncTask task)
         {
+            Defered.Add(task);
+            Log.Debug($"Scheduled async task after {task.Delay} ticks");
             return new AsyncFluentScheduler(task, this);
         }
 

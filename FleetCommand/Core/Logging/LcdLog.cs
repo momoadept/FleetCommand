@@ -9,6 +9,7 @@ namespace IngameScript.Core.Logging
     public class LcdLog : ILog
     {
         public List<LogEntry> LogEntries { get; } = new List<LogEntry>();
+
         public List<LogType> DisplayedLogTypes { get; set; } = App.GlobalConfiguration.CommonLogTypes;
         public int DisplayedEntriesCount { get; set; } = 10;
 
@@ -35,6 +36,15 @@ namespace IngameScript.Core.Logging
                 UpdateLcd();
             }
         }
+
+        public void Debug(string text) => Log(text, LogType.Debug);
+
+        public void Info(string text) => Log(text, LogType.Info);
+
+        public void Warning(string text) => Log(text, LogType.Warning);
+
+        public void Error(string text) => Log(text, LogType.Error);
+        public void Priority(string text) => Log(text, LogType.Priority);
 
         protected void UpdateLcd()
         {

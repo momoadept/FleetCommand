@@ -7,20 +7,23 @@ using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.BlockLoader
 {
-    public class LazyBlockLoader : IBlockLoader, IComponent, IService
+    public class LazyBlockLoader : BaseComponent, IBlockLoader, IService
     {
-        private MyGridProgram context;
-
         public int RefreshPeriod { get; set; } = 1000;
-
+        public Type[] Provides { get; } = { typeof(IBlockLoader) };
         public List<IMyTerminalBlock> Blocks { get; } = new List<IMyTerminalBlock>();
         public List<IMyBlockGroup> Groups { get; } = new List<IMyBlockGroup>();
 
-        public string ComponentId { get; } = "DefaultBlockLoader";
-
         private SimpleAsyncWorker blockPollingWorker;
+        private MyGridProgram context;
 
-        public void OnAttached(App app)
+        public LazyBlockLoader()
+            :base("DefaultBlockLoader")
+        {
+            
+        }
+
+        public override void OnAttached(App app)
         {
             context = App.ServiceProvider.Get<MyGridProgram>();
 
@@ -29,12 +32,13 @@ namespace IngameScript.Core.BlockLoader
             blockPollingWorker.Start();
         }
 
-        public Type[] Provides { get; } = {typeof(IBlockLoader)};
+        
 
         private void RefreshBlocks()
         {
             context.GridTerminalSystem.GetBlocks(Blocks);
             context.GridTerminalSystem.GetBlockGroups(Groups);
+            Log.Debug($"{Blocks.Count} blocks and {Groups.Count} groups detected");
         }
     }
 }
