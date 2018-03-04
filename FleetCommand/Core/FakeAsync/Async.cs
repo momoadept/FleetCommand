@@ -83,6 +83,7 @@ Inactive Jobs:
                 {
                     job.Tick();
                     job.LastRan = App.Time.Now;
+                    CompletedTasksCount++;
                 }
             }
         }
