@@ -49,6 +49,7 @@ namespace IngameScript.Core.StatusReporting
 [{statusReporter.StatusEntityId}]
 {status}";
                     statusReportingStatus.TargetLcd.SetText(text);
+                    statusReportingStatus.LastReported = App.Time.Now;
                 }
             }
         }
@@ -65,7 +66,7 @@ namespace IngameScript.Core.StatusReporting
 
         protected bool UpdateStatusNow(IStatusReporter reporter, StatusReportingStatus statusReportingStatus)
         {
-            return App.Time.Now - statusReportingStatus.LastReported <= reporter.RefreshStatusDelay;
+            return App.Time.Now - statusReportingStatus.LastReported >= reporter.RefreshStatusDelay;
         }
 
         protected StatusReportingStatus CreateStatusReportingStatus(IStatusReporter reporter)

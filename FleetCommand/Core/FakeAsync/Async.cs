@@ -74,6 +74,7 @@ Inactive Jobs:
             {
                 if (RunJobNow(job))
                 {
+                    // Log.Debug($"executing job {job.AsyncJobId}");
                     job.Tick();
                     job.LastRan = App.Time.Now;
                     CompletedTasksCount++;

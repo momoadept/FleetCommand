@@ -51,6 +51,7 @@ namespace IngameScript.Core
             {
                 Time.Now++;
                 Workers.ForEach(w => w.Tick());
+                Context.Echo($"Time: {Time.Now}\n {Context.Runtime.LastRunTimeMs} ms");
             }
             catch (Exception e)
             {

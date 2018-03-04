@@ -124,6 +124,7 @@
     <Compile Include="Core\ServiceProvider\IService.cs" />
     <Compile Include="Core\ServiceProvider\MyServiceProvider.cs" />
     <Compile Include="Core\StatusReporting\LCDStatusChecker.cs" />
+    <Compile Include="Core\Testing\Ticker.cs" />
     <Compile Include="Core\Time\Time.cs" />
     <Compile Include="MDK\Bootstrapper.cs" />
     <AdditionalFiles Include="MDK\MDK.options">

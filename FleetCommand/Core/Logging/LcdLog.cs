@@ -22,7 +22,7 @@ namespace IngameScript.Core.Logging
         {
             App.ServiceProvider.Get<ILoggingHub>().RegisterLog(this);
             Entity = entity;
-            LcdReference = new LcdReference(App.BlockTag($"Log {Entity}"));
+            LcdReference = new LcdReference($"Log {Entity}");
         }
 
         public void Log(string text, LogType logType = LogType.Info)

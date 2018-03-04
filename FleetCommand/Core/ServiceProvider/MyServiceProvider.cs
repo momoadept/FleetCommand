@@ -8,8 +8,7 @@ namespace IngameScript.Core.ServiceProvider
     {
         public MyServiceProvider()
         {
-            var log = new EmptyLog();
-            Use<ILog>(log);
+
         }
 
         protected Dictionary<Type, Func<object>> Config { get; } = new Dictionary<Type, Func<object>>();
@@ -27,7 +26,7 @@ namespace IngameScript.Core.ServiceProvider
                 throw new Exception($"Wrong service configured for {type.FullName}");
             }
 
-            throw new Exception($"No service configured for {type.FullName}");
+            return null;
         }
 
         public void Use<T>(T service) where T : class

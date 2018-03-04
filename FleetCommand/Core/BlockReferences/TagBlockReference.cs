@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IngameScript.Core.BlockLoader;
+using IngameScript.Core.Logging;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.BlockReferences
@@ -12,6 +13,7 @@ namespace IngameScript.Core.BlockReferences
     {
         protected IBlockLoader Blocks;
         protected string Tag;
+        protected ILog Log;
 
         public string FullTag => App.BlockTag(Tag);
 
@@ -23,6 +25,12 @@ namespace IngameScript.Core.BlockReferences
 
         public List<T> GetMyBlocks()
         {
+            if (Blocks == null)
+            {
+                Blocks = App.ServiceProvider.Get<IBlockLoader>();
+                return new List<T>();
+            }
+
             var blocks = Blocks.Blocks
                 .Where(b => b is T && b.CustomName != null && b.CustomName.Contains(FullTag))
                 .Cast<T>();
