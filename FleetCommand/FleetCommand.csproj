@@ -112,6 +112,7 @@
     <Compile Include="Core\BlockReferences\LCD\LcdReference.cs" />
     <Compile Include="Core\ComponentModel\IComponent.cs" />
     <Compile Include="Core\Enums\LogType.cs" />
+    <Compile Include="Core\FakeAsync\Waiter.cs" />
     <Compile Include="Core\Logging\ILog.cs" />
     <Compile Include="Core\Logging\ILoggingHub.cs" />
     <Compile Include="Core\ComponentModel\IStatusReporter.cs" />

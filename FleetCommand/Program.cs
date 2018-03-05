@@ -1,4 +1,6 @@
-﻿using IngameScript.Core;
+﻿using System;
+using System.Runtime.Remoting.Contexts;
+using IngameScript.Core;
 using IngameScript.Core.Testing;
 using Sandbox.ModAPI.Ingame;
 
@@ -10,12 +12,19 @@ namespace IngameScript
 
         public Program()
         {
-            App.GlobalConfiguration = new AppConfig()
+            try
             {
-                EnableMasterLog = true
-            };
+                App.GlobalConfiguration = new AppConfig()
+                {
+                    EnableMasterLog = true
+                };
 
-            MyApp = new App("TestShip", this);
+                MyApp = new App("TestShip", this);
+            }
+            catch (Exception e)
+            {
+                Echo(e.Message + e.StackTrace);
+            }
         }
 
         public void Save()

@@ -51,7 +51,6 @@ namespace IngameScript.Core
             {
                 Time.Now++;
                 Workers.ForEach(w => w.Tick());
-                Context.Echo($"Time: {Time.Now}\n {Context.Runtime.LastRunTimeMs} ms");
             }
             catch (Exception e)
             {
@@ -97,10 +96,11 @@ namespace IngameScript.Core
             ServiceProvider.Use(this);
             ServiceProvider.Use(Context);
 
+            Async = BootstrapComponent(new Async());
+
             BootstrapComponent(new LcdLoggingHub());
             Log = new LcdLog("App");
-
-            Async = BootstrapComponent(new Async());
+            
             Blocks = BootstrapComponent(new LazyBlockLoader());
             BootstrapComponent(new LCDStatusChecker(StatusReporters));
         }

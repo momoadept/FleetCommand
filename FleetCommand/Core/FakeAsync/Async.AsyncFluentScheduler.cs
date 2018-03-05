@@ -28,6 +28,8 @@ namespace IngameScript.Core.FakeAsync
 
                 return new AsyncFluentScheduler(nextTask, async);
             }
+
+            public IAsyncTask Pick() => task;
         }
     }
 }

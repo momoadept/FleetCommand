@@ -3,6 +3,8 @@ using System.Linq;
 using IngameScript.Core.BlockReferences.LCD;
 using IngameScript.Core.Delegates;
 using IngameScript.Core.Enums;
+using IngameScript.Core.FakeAsync;
+using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.Logging
 {
@@ -33,6 +35,14 @@ namespace IngameScript.Core.Logging
 
             if (DisplayedLogTypes.Contains(entry.Type))
             {
+                if (!LcdReference.Ready)
+                {
+                    App.ServiceProvider.Get<Async>()
+                        .When(() => LcdReference.Ready)
+                        .Then(e => UpdateLcd());
+                    return;
+                }
+                
                 UpdateLcd();
             }
         }
@@ -60,7 +70,7 @@ namespace IngameScript.Core.Logging
                                .OrderBy(entry => entry.Time)
                                .Select(entry =>
                                    $"{entry.Time} [{entry.Type}]: {entry.Text}"));
-            
+
             LcdReference.SetText(format);
         }
         

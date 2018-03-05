@@ -12,28 +12,30 @@ namespace IngameScript.Core.BlockReferences.LCD
     {
         public void SetText(string value)
         {
+            Prepare();
             GetMyBlocks().ForEach(screen => { screen.WritePublicText(value); });
         }
 
         public void Append(string value)
         {
+            Prepare();
             GetMyBlocks().ForEach(screen => { screen.WritePublicText(value, true); });
         }
 
         public void Clear()
         {
+            Prepare();
             GetMyBlocks().ForEach(screen => { screen.WritePublicText(""); });
         }
 
-        public void Init()
+        public void Prepare()
         {
             GetMyBlocks().ForEach(screen => { screen.ShowPublicTextOnScreen(); });
-            Clear();
         }
 
         public LcdReference(string tag) : base(tag)
         {
-            Init();
+            Prepare();
         }
     }
 }

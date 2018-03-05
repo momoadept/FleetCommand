@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IngameScript.Core.BlockLoader;
 using IngameScript.Core.ComponentModel;
+using IngameScript.Core.Logging;
 using IngameScript.Core.ServiceProvider;
+using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.FakeAsync
 {
-    public partial class Async : BaseComponent, IStatusReporter, IWorker, IService
+    public partial class Async : IComponent, IStatusReporter, IWorker, IService
     {
         protected int CompletedTasksCount;
 
         public Async()
-            :base("Async")
         {
         }
 
         protected List<IAsyncTask> Defered { get; } = new List<IAsyncTask>();
         protected List<IAsyncJob> Jobs { get; } = new List<IAsyncJob>();
+        public ILog Log { get; private set; }
 
         public string LogEntityId { get; } = "Async";
         public Type[] Provides { get; } = {typeof(Async)};
@@ -34,6 +37,9 @@ Active Jobs:
 
 Inactive Jobs:
 {GetJobsReport(false)}
+
+Active waiters:
+{Defered.Count(t => t is Waiter)}
 ";
             CompletedTasksCount = 0;
             return status;
@@ -48,7 +54,7 @@ Inactive Jobs:
         public void AddJob(IAsyncJob job)
         {
             Jobs.Add(job);
-            Log.Info($"Async job added: {job.AsyncJobId} each {job.DelayBetweenRuns} ticks");
+            Log?.Info($"Async job added: {job.AsyncJobId} each {job.DelayBetweenRuns} ticks");
         }
 
         public void RemoveJob(IAsyncJob job)
@@ -64,8 +70,21 @@ Inactive Jobs:
         public AsyncFluentScheduler Do(IAsyncTask task)
         {
             Defered.Add(task);
-            Log.Debug($"Scheduled async task after {task.Delay} ticks");
+            Log?.Debug($"Scheduled async task after {task.Delay} ticks");
             return new AsyncFluentScheduler(task, this);
+        }
+
+        public AsyncFluentScheduler When(Func<bool> condition)
+        {
+            var task = new Waiter(condition);
+            Defered.Add(task);
+            Log?.Debug($"Started waiter");
+            return new AsyncFluentScheduler(task, this);
+        }
+
+        public AsyncFluentScheduler WhenReady<TService>() where TService : class
+        {
+            return When(() => App.ServiceProvider.Get<TService>() != null);
         }
 
         protected void RunJobs()
@@ -74,7 +93,6 @@ Inactive Jobs:
             {
                 if (RunJobNow(job))
                 {
-                    // Log.Debug($"executing job {job.AsyncJobId}");
                     job.Tick();
                     job.LastRan = App.Time.Now;
                     CompletedTasksCount++;
@@ -112,12 +130,24 @@ Inactive Jobs:
             {
                 Defered.Remove(task);
                 CompletedTasksCount++;
+                if (task is Waiter)
+                {
+                    Log?.Debug("Finished waiter");
+                }
             }
         }
 
         protected string GetJobsReport(bool active)
         {
             return string.Join("\n", Jobs.Where(j => j.IsRunning == active).Select(j => $"{j.AsyncJobId}: every {j.DelayBetweenRuns} ticks"));
+        }
+
+        public string ComponentId { get; } = "Async";
+        public void OnAttached(App app)
+        {
+            When(() => App.ServiceProvider.Get<ILoggingHub>() != null &&
+                       App.ServiceProvider.Get<IBlockLoader>() != null)
+                .Then(e => Log = new LcdLog(ComponentId));
         }
     }
 }
