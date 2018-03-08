@@ -13,15 +13,12 @@ namespace IngameScript.Core.FakeAsync
     {
         protected int CompletedTasksCount;
 
-        public Async()
-        {
-        }
-
         protected List<IAsyncTask> Defered { get; } = new List<IAsyncTask>();
         protected List<IAsyncJob> Jobs { get; } = new List<IAsyncJob>();
+        protected Time Time;
+        protected App App;
         public ILog Log { get; private set; }
 
-        public string LogEntityId { get; } = "Async";
         public Type[] Provides { get; } = {typeof(Async)};
         public string StatusEntityId { get; } = "Async";
         public int RefreshStatusDelay { get; } = 100;
@@ -64,7 +61,7 @@ Active waiters:
 
         public AsyncFluentScheduler Do(Action task)
         {
-            return Do(new SimpleAsyncTask(task));
+            return Do(new SimpleAsyncTask(task, Time.Now));
         }
 
         public AsyncFluentScheduler Do(IAsyncTask task)
@@ -74,9 +71,9 @@ Active waiters:
             return new AsyncFluentScheduler(task, this);
         }
 
-        public AsyncFluentScheduler When(Func<bool> condition)
+        public AsyncFluentScheduler When(Func<bool> condition, int waitingCheckDelay = 1)
         {
-            var task = new Waiter(condition);
+            var task = new Waiter(condition, Time, waitingCheckDelay);
             Defered.Add(task);
             Log?.Debug($"Started waiter");
             return new AsyncFluentScheduler(task, this);
@@ -124,7 +121,7 @@ Active waiters:
 
         protected void RunTask(IAsyncTask task)
         {
-            task.Tick();
+            task.Tick(this);
 
             if (task.IsCompleted)
             {
@@ -145,9 +142,13 @@ Active waiters:
         public string ComponentId { get; } = "Async";
         public void OnAttached(App app)
         {
-            When(() => App.ServiceProvider.Get<ILoggingHub>() != null &&
-                       App.ServiceProvider.Get<IBlockLoader>() != null)
-                .Then(e => Log = new LcdLog(ComponentId));
+            app.Bootstrapped += OnAppBootstrapped;
+        }
+
+        private void OnAppBootstrapped(App app)
+        {
+            App = app;
+            Time = app.Time;
         }
     }
 }

@@ -11,22 +11,7 @@ namespace IngameScript.Core
     {
         // Logging
         public bool EnableMasterLog { get; set; } = false;
-        public List<LogType> MasterLogTypes { get; set; } = new List<LogType>()
-        {
-            LogType.Debug,
-            LogType.Error,
-            LogType.Info,
-            LogType.Warning,
-            LogType.Priority
-        };
-        public string MasterLogTag { get; set; } = App.BlockTag("MasterLog");
-        public List<LogType> CommonLogTypes { get; set; } = new List<LogType>()
-        {
-            LogType.Debug,
-            LogType.Error,
-            LogType.Info,
-            LogType.Warning,
-            LogType.Priority
-        };
+        public LogType MasterLogTypes { get; set; } = LogType.All;
+        public LogType CommonLogTypes { get; set; } = LogType.All;
     }
 }

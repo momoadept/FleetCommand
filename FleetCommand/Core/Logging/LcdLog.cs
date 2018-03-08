@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using IngameScript.Core.BlockReferences.LCD;
+using IngameScript.Core.BlockReferences;
 using IngameScript.Core.Delegates;
 using IngameScript.Core.Enums;
 using IngameScript.Core.FakeAsync;
@@ -12,38 +13,31 @@ namespace IngameScript.Core.Logging
     {
         public List<LogEntry> LogEntries { get; } = new List<LogEntry>();
 
-        public List<LogType> DisplayedLogTypes { get; set; } = App.GlobalConfiguration.CommonLogTypes;
         public int DisplayedEntriesCount { get; set; } = 10;
 
         public event Event.Handler<LogEntry> EntryAdded;
 
         protected string Entity { get; }
-        protected LcdReference LcdReference { get; }
+        protected TagBlockReference<IMyTextPanel> LcdReference { get; }
+        protected Time Time;
 
-        public LcdLog(string entity)
+        public LcdLog(string entity, ILoggingHub hub, IBlockReferenceFactory references, Time time)
         {
-            App.ServiceProvider.Get<ILoggingHub>().RegisterLog(this);
+            hub.RegisterLog(this);
             Entity = entity;
-            LcdReference = new LcdReference($"Log {Entity}");
+            Time = time;
+            LcdReference = references.GetReference<IMyTextPanel>($"Log {Entity}");
         }
 
         public void Log(string text, LogType logType = LogType.Info)
         {
-            var entry = new LogEntry(logType, text, Entity);
+            var entry = new LogEntry(logType, text, Entity, Time.Now);
             LogEntries.Add(entry);
             EntryAdded?.Invoke(entry);
 
-            if (DisplayedLogTypes.Contains(entry.Type))
+            foreach (var lcdReferenceAccessor in LcdReference.Accessors)
             {
-                if (!LcdReference.Ready)
-                {
-                    App.ServiceProvider.Get<Async>()
-                        .When(() => LcdReference.Ready)
-                        .Then(e => UpdateLcd());
-                    return;
-                }
-                
-                UpdateLcd();
+                WriteToLcd(lcdReferenceAccessor);
             }
         }
 
@@ -56,23 +50,58 @@ namespace IngameScript.Core.Logging
         public void Error(string text) => Log(text, LogType.Error);
         public void Priority(string text) => Log(text, LogType.Priority);
 
-        protected void UpdateLcd()
+        protected void WriteToLcd(BlockAccessor<IMyTextPanel> lcd)
         {
-            // TODO: Optimize this method
+            lcd.Block.ShowPublicTextOnScreen();
+            var entries = FilterByLogTypes(lcd.Arguments);
+
             var format =
                 Entity + "\n"
                        + string.Join(
                            "\n",
-                           LogEntries
-                               .Where(entry => DisplayedLogTypes.Contains(entry.Type))
+                           entries
                                .OrderByDescending(entry => entry.Time)
                                .Take(DisplayedEntriesCount)
                                .OrderBy(entry => entry.Time)
                                .Select(entry =>
                                    $"{entry.Time} [{entry.Type}]: {entry.Text}"));
 
-            LcdReference.SetText(format);
+            lcd.Block.WritePublicText(format);
         }
-        
+
+        protected List<LogEntry> FilterByLogTypes(List<string> logTypes)
+        {
+            var acceptedTypes = LogType.All;
+
+            if (logTypes.Count > 0)
+            {
+                acceptedTypes = LogType.None;
+                foreach (var logType in logTypes)
+                {
+                    acceptedTypes |= ParseLogType(logType);
+                }
+            }
+
+            return LogEntries.Where(entry => (entry.Type & acceptedTypes) != 0).ToList();
+        }
+
+        protected LogType ParseLogType(string str)
+        {
+            switch (str.Trim())
+            {
+                case "Info":
+                    return LogType.Info;
+                case "Debug":
+                    return LogType.Debug;
+                case "Warning":
+                    return LogType.Warning;
+                case "Error":
+                    return LogType.Error;
+                case "Priority":
+                    return LogType.Priority;
+            }
+
+            throw new Exception($"Unknown log type: {str}");
+        }
     }
 }

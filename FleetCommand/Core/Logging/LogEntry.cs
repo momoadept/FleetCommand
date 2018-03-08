@@ -15,12 +15,12 @@ namespace IngameScript.Core.Logging
         public LogType Type { get; }
         public string Entity { get; }
 
-        public LogEntry(LogType type, string text, string entity)
+        public LogEntry(LogType type, string text, string entity, int time)
         {
             Type = type;
             Text = text;
             Entity = entity;
-            Time = App.Time.Now;
+            Time = time;
             RealTime = DateTime.Now;
         }
     }

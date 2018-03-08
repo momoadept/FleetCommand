@@ -3,7 +3,7 @@ using IngameScript.Core.Delegates;
 
 namespace IngameScript.Core.FakeAsync
 {
-    public interface IAsyncTask : IWorker
+    public interface IAsyncTask
     {
         int Created { get; }
 
@@ -12,5 +12,7 @@ namespace IngameScript.Core.FakeAsync
         bool IsCompleted { get; }
 
         event Event.Handler<IAsyncTask> Completed;
+
+        void Tick(Async async);
     }
 }

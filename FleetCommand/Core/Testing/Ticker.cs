@@ -16,13 +16,6 @@ namespace IngameScript.Core.Testing
 
         public override void OnAttached(App app)
         {
-            var ticker = new SimpleAsyncWorker("Ticker", () =>
-            {
-                Log.Info("tick");
-            });
-
-            app.Async.AddJob(ticker);
-            ticker.Start();
         }
     }
 }

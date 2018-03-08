@@ -5,18 +5,18 @@ namespace IngameScript.Core.FakeAsync
 {
     internal class SimpleAsyncTask : IAsyncTask
     {
-        private readonly Action action;
+        protected Action Action;
 
-        public SimpleAsyncTask(Action action, int delay = 0)
+        public SimpleAsyncTask(Action action, int created, int delay = 0)
         {
-            this.action = action;
+            Action = action;
             Delay = delay;
-            Created = App.Time.Now;
+            Created = created;
         }
 
-        public void Tick()
+        public void Tick(Async async)
         {
-            action();
+            Action();
 
             IsCompleted = true;
             Completed?.Invoke(this);

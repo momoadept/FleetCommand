@@ -14,7 +14,6 @@ namespace IngameScript.Core.Logging
         void Warning(string text);
         void Error(string text);
         void Priority(string text);
-        List<LogType> DisplayedLogTypes { get; set; }
         List<LogEntry> LogEntries { get; }
         event Event.Handler<LogEntry> EntryAdded;
     }

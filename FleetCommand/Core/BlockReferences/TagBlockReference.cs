@@ -12,56 +12,64 @@ namespace IngameScript.Core.BlockReferences
 {
     public class TagBlockReference<T> where T: IMyTerminalBlock
     {
-        protected IBlockLoader Blocks;
-        protected string Tag;
-        protected ILog Log;
-        protected IAsyncTask ReadyWaiter;
-        public bool Ready { get; private set; } = false;
+        protected IBlockLoader BlockLoader { get; }
+        protected ILog Log { get; }
+        protected string Tag { get; }
+        protected string AppTag { get; }
+        public List<BlockAccessor<T>> Accessors { get; } = new List<BlockAccessor<T>>();
 
-        public string FullTag => App.BlockTag(Tag);
-
-        public TagBlockReference(string tag)
+        public TagBlockReference(IBlockLoader blockLoader, ILog log, string tag, string appTag)
         {
-            Blocks = App.ServiceProvider.Get<IBlockLoader>();
+            BlockLoader = blockLoader;
+            Log = log;
             Tag = tag;
+            AppTag = appTag;
+            BlockLoader.Updated += loader => RefreshAccessors();
+            RefreshAccessors();
         }
 
-        public List<T> GetMyBlocks()
+        public void RefreshAccessors()
         {
-            if (WaitingIfNotReady())
-            {
-                return new List<T>();
-            }
+            var searchString = $"[{AppTag} {Tag}";
 
-            Ready = true;
-
-            var blocks = Blocks.Blocks
-                .Where(b => b is T && b.CustomName != null && b.CustomName.Contains(FullTag))
-                .Cast<T>();
-
-            return blocks.ToList();
+            Accessors.Clear();
+            Accessors.AddRange(BlockLoader.Blocks
+                .Where(block => block.CustomName.StartsWith(searchString) && block is T)
+                .Cast<T>()
+                .Select(block => new BlockAccessor<T>(block, GetArguments(block.CustomName))));
         }
 
-        private bool WaitingIfNotReady()
+        public int ForEach(Action<T> action, Func<BlockAccessor<T>, bool> filter = null)
         {
-            if (ReadyWaiter != null && !ReadyWaiter.IsCompleted)
+            filter = filter ?? (x => true);
+            var filtered = Accessors.Where(filter);
+            foreach (var blockAccessor in Accessors.Where(filter))
             {
-                return true;
-            }
-            if (Blocks == null)
-            {
-                ReadyWaiter = App.ServiceProvider.Get<Async>()
-                    .When(() => App.ServiceProvider.Get<IBlockLoader>() != null && App.ServiceProvider.Get<IBlockLoader>().Blocks.Any())
-                    .Then(e =>
-                    {
-                        Blocks = App.ServiceProvider.Get<IBlockLoader>();
-                        Ready = true;
-                    })
-                    .Pick();
-                return true;
+                action(blockAccessor.Block);
             }
 
-            return false;
+            return filtered.Count();
+        }
+
+        protected List<string> GetArguments(string name)
+        {
+            try
+            {
+                var start = name.IndexOf("[");
+                var end = name.IndexOf("]");
+
+                return name
+                    .Substring(start + 1, end - start - 1)
+                    .Replace(AppTag, "")
+                    .Replace(Tag, "")
+                    .Split(' ')
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Cannot parse the block name: {name}");
+                throw;
+            }
         }
     }
 }

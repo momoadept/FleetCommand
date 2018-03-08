@@ -10,21 +10,25 @@ namespace IngameScript.Core.FakeAsync
 {
     public class Waiter: IAsyncTask
     {
-        public int Created { get; }
-        public int Delay { get; private set; }
+        public int Created { get; private set; }
+        public int Delay { get; private set; } = 0;
         public bool IsCompleted { get; private set; }
 
         public event Event.Handler<IAsyncTask> Completed;
 
         protected Func<bool> Condition { get; }
-        public Waiter(Func<bool> condition, int delay = 0)
+        protected int WaitingCheckDelay { get; }
+        protected Time Time { get; }
+
+        public Waiter(Func<bool> condition, Time time, int waitingCheckDelay = 1)
         {
-            Delay = delay;
-            Created = App.Time.Now;
+            WaitingCheckDelay = waitingCheckDelay;
+            Created = time.Now;
+            Time = time;
             Condition = condition;
         }
 
-        public void Tick()
+        public void Tick(Async async)
         {
             if (Condition())
             {
@@ -33,7 +37,8 @@ namespace IngameScript.Core.FakeAsync
             }
             else
             {
-                Delay++;
+                Delay = WaitingCheckDelay;
+                Created = Time.Now;
             }
         }
 

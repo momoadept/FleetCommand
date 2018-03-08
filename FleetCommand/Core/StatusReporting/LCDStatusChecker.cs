@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IngameScript.Core.BlockLoader;
-using IngameScript.Core.BlockReferences.LCD;
+using IngameScript.Core.BlockReferences;
 using IngameScript.Core.ComponentModel;
 using IngameScript.Core.FakeAsync;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.StatusReporting
 {
-    // ReSharper disable once InconsistentNaming
-    public class LCDStatusChecker: IComponent
+    public class LcdStatusChecker: IComponent
     {
         public string ComponentId { get; } = "StatusReporter";
 
@@ -20,18 +19,29 @@ namespace IngameScript.Core.StatusReporting
         protected Dictionary<IStatusReporter, StatusReportingStatus> StatusReportingData = new Dictionary<IStatusReporter, StatusReportingStatus>();
         protected SimpleAsyncWorker UpdateStatusesWorker;
         protected MyGridProgram Context;
+        protected Async Async;
+        protected Time Time;
+        protected IBlockReferenceFactory BlockReferenceFactory;
 
-        public LCDStatusChecker(List<IStatusReporter> statusReporters)
+        public LcdStatusChecker(List<IStatusReporter> statusReporters)
         {
             StatusReporters = statusReporters;
         }
 
         public void OnAttached(App app)
         {
-            Context = app.Context;
+            app.Bootstrapped += OnAppBootstrapped;
+        }
+
+        protected void OnAppBootstrapped(App app)
+        {
+            Context = app.ServiceProvider.Get<MyGridProgram>();
+            Async = app.ServiceProvider.Get<Async>();
+            BlockReferenceFactory = app.ServiceProvider.Get<IBlockReferenceFactory>();
+            Time = app.Time;
 
             UpdateStatusesWorker = new SimpleAsyncWorker("UpdateLcdStatusWorker", CheckStatuses);
-            app.Async.AddJob(UpdateStatusesWorker);
+            Async.AddJob(UpdateStatusesWorker);
             UpdateStatusesWorker.Start();
         }
 
@@ -48,8 +58,12 @@ namespace IngameScript.Core.StatusReporting
                     var text = $@"
 [{statusReporter.StatusEntityId}]
 {status}";
-                    statusReportingStatus.TargetLcd.SetText(text);
-                    statusReportingStatus.LastReported = App.Time.Now;
+                    statusReportingStatus.TargetLcd.ForEach(panel =>
+                    {
+                        panel.ShowPublicTextOnScreen();
+                        panel.WritePublicText(text);
+                    });
+                    statusReportingStatus.LastReported = Time.Now;
                 }
             }
         }
@@ -66,19 +80,19 @@ namespace IngameScript.Core.StatusReporting
 
         protected bool UpdateStatusNow(IStatusReporter reporter, StatusReportingStatus statusReportingStatus)
         {
-            return App.Time.Now - statusReportingStatus.LastReported >= reporter.RefreshStatusDelay;
+            return Time.Now - statusReportingStatus.LastReported >= reporter.RefreshStatusDelay;
         }
 
         protected StatusReportingStatus CreateStatusReportingStatus(IStatusReporter reporter)
         {
-            return new StatusReportingStatus(new LcdReference($"S {reporter.StatusEntityId}"));
+            return new StatusReportingStatus(BlockReferenceFactory.GetReference<IMyTextPanel>($"S {reporter.StatusEntityId}"));
         }
 
         protected class StatusReportingStatus
         {
             public int LastReported { get; set; } = 0;
-            public LcdReference TargetLcd { get; set; }
-            public StatusReportingStatus(LcdReference targetLcd)
+            public TagBlockReference<IMyTextPanel> TargetLcd { get; set; }
+            public StatusReportingStatus(TagBlockReference<IMyTextPanel> targetLcd)
             {
                 TargetLcd = targetLcd;
             }
