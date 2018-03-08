@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IngameScript.Core.BlockReferences;
 using IngameScript.Core.ComponentModel;
 using IngameScript.Core.ServiceProvider;
+using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.Logging
 {
@@ -15,16 +17,27 @@ namespace IngameScript.Core.Logging
         public int DisplayedEntriesCount { get; set; } = 20;
 
         protected List<ILog> Logs { get; } = new List<ILog>();
+        protected TagBlockReference<IMyTerminalBlock> FlightRecorder;
 
         public void RegisterLog(ILog log)
         {
             Logs.Add(log);
+            log.EntryAdded += PushToFlightRecorder;
         }
 
-        
+        private void PushToFlightRecorder(LogEntry entry)
+        {
+            FlightRecorder.ForEach(block => block.CustomData += FormatEntry(entry) + "\n");
+        }
+
+
         public void OnAttached(App app)
         {
-            
+            app.Bootstrapped += a =>
+            {
+                FlightRecorder = a.ServiceProvider.Get<IBlockReferenceFactory>()
+                    .GetReference<IMyTerminalBlock>("FlightRec");
+            };
         }
 
         
@@ -39,9 +52,12 @@ namespace IngameScript.Core.Logging
 
             return string.Join(
                 "\n",
-                combinedLog.Select(
-                    entry =>
-                        $"({entry.Entity}) {entry.RealTime.ToShortTimeString()} [{entry.Type}]: {entry.Text}"));
+                combinedLog.Select(FormatEntry));
+        }
+
+        private string FormatEntry(LogEntry entry)
+        {
+            return $"{entry.Entity} {entry.RealTime.ToShortTimeString()} [{entry.Type}]: {entry.Text}";
         }
 
         private List<LogEntry> CreateCombinedLog()

@@ -15,6 +15,9 @@ namespace IngameScript.Core
     public class App: IComponent
     {
         public static AppConfig GlobalConfiguration { get; set; }
+        public static void Echo(string text) => DebugContext.Echo(text);
+
+        protected static MyGridProgram DebugContext;
 
         public const string ScriptTag = "MFC";
 
@@ -47,7 +50,7 @@ namespace IngameScript.Core
         public App(string id, MyGridProgram context)
         {
             ComponentId = id;
-            Context = context;
+            DebugContext = Context = context;
 
             context.Runtime.UpdateFrequency = UpdateFrequency.Update1;
 
@@ -57,6 +60,9 @@ namespace IngameScript.Core
         public void Start()
         {
             Bootstrapped?.Invoke(this);
+
+            Log = ServiceProvider.Get<ILogFactory>().GetLog(this);
+            FlushSafeLog();
         }
 
         public void Tick(string argument, UpdateType updateSource)
@@ -153,17 +159,14 @@ namespace IngameScript.Core
             ServiceProvider.Use(this);
             ServiceProvider.Use(Context);
 
+            BootstrapComponent(new BlockReferenceFactory());
+            BootstrapComponent(new LcdLogFactory());
+
             Async = BootstrapComponent(new Async());
             Blocks = BootstrapComponent(new CacheBlockLoader());
 
-            BootstrapComponent(new BlockReferenceFactory());
-
             BootstrapComponent(new LcdStatusChecker(StatusReporters));
             BootstrapComponent(new LcdLoggingHub());
-
-            var logFactory = BootstrapComponent(new LcdLogFactory());
-            Log = logFactory.GetLog(this);
-            FlushSafeLog();
         }
 
         protected void SafeLog(string text)

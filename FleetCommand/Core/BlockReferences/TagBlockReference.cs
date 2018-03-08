@@ -13,15 +13,13 @@ namespace IngameScript.Core.BlockReferences
     public class TagBlockReference<T> where T: IMyTerminalBlock
     {
         protected IBlockLoader BlockLoader { get; }
-        protected ILog Log { get; }
         protected string Tag { get; }
         protected string AppTag { get; }
         public List<BlockAccessor<T>> Accessors { get; } = new List<BlockAccessor<T>>();
 
-        public TagBlockReference(IBlockLoader blockLoader, ILog log, string tag, string appTag)
+        public TagBlockReference(IBlockLoader blockLoader, string tag, string appTag)
         {
             BlockLoader = blockLoader;
-            Log = log;
             Tag = tag;
             AppTag = appTag;
             BlockLoader.Updated += loader => RefreshAccessors();
@@ -37,6 +35,8 @@ namespace IngameScript.Core.BlockReferences
                 .Where(block => block.CustomName.StartsWith(searchString) && block is T)
                 .Cast<T>()
                 .Select(block => new BlockAccessor<T>(block, GetArguments(block.CustomName))));
+
+            App.Echo($"{searchString}: {Accessors.Count}");
         }
 
         public int ForEach(Action<T> action, Func<BlockAccessor<T>, bool> filter = null)
@@ -67,8 +67,7 @@ namespace IngameScript.Core.BlockReferences
             }
             catch (Exception e)
             {
-                Log.Error($"Cannot parse the block name: {name}");
-                throw;
+                throw new Exception($"Cannot parse the block name: {name}");
             }
         }
     }

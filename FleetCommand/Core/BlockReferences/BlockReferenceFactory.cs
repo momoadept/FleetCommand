@@ -6,7 +6,7 @@ using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.BlockReferences
 {
-    public class BlockReferenceFactory : BaseComponent, IBlockReferenceFactory, IService
+    public class BlockReferenceFactory : IComponent, IBlockReferenceFactory, IService
     {
         protected IBlockLoader Loader { get; private set; }
         protected string AppTag { get; private set; }
@@ -20,23 +20,23 @@ namespace IngameScript.Core.BlockReferences
                 throw new Exception("Trying to get block reference before app is ready");
             }
 
-            return new TagBlockReference<T>(Loader, Log, tag, AppTag);
+            return new TagBlockReference<T>(Loader, tag, AppTag);
         }
 
         public Type[] Provides { get; } = {typeof(IBlockReferenceFactory)};
 
-        public BlockReferenceFactory() : base("BlockReferences")
+        protected void OnAppBootstrapped(App app)
         {
-        }
-
-        protected override void OnAppBootstrapped(App app)
-        {
-            base.OnAppBootstrapped(app);
-
             Loader = app.ServiceProvider.Get<IBlockLoader>();
             AppTag = app.ComponentId;
 
             IsReady = true;
+        }
+
+        public string ComponentId { get; } = "BlockReferences";
+        public void OnAttached(App app)
+        {
+            app.Bootstrapped += OnAppBootstrapped;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace IngameScript.Core.ServiceProvider
                 throw new Exception($"Wrong service configured for {type.FullName}");
             }
 
-            return null;
+            throw new Exception($"No service configured for {type.FullName}");
         }
 
         public void Use<T>(T service) where T : class
