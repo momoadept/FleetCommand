@@ -43,6 +43,7 @@ namespace IngameScript.Core
 
         protected List<IWorker> Workers { get; } = new List<IWorker>();
         protected List<IStatusReporter> StatusReporters { get; } = new List<IStatusReporter>();
+        protected List<IMessageProcessor> MessageProcessors { get; } = new List<IMessageProcessor>();
 
         protected ILog Log { get; set; }
         protected List<string> InitLogEntries { get; } = new List<string>();
@@ -94,6 +95,18 @@ namespace IngameScript.Core
 
         protected void HandleExternalMessage(string argument, UpdateType updateSource)
         {
+            var message = new ComponentMessage()
+            {
+                Text = argument
+            };
+            foreach (var messageProcessor in MessageProcessors)
+            {
+                messageProcessor.ProcessMessage(message);
+                if (message.StopProcessing)
+                {
+                    break;
+                }
+            }
         }
 
         protected void AdvanceTime()
@@ -139,6 +152,12 @@ namespace IngameScript.Core
             {
                 StatusReporters.Add(component as IStatusReporter);
                 SafeLog($"{component.ComponentId} attached as Status Reporter");
+            }
+
+            if (component is IMessageProcessor)
+            {
+                MessageProcessors.Add(component as IMessageProcessor);
+                SafeLog($"{component.ComponentId} attached as Message Processor");
             }
 
             if (component is IService)
