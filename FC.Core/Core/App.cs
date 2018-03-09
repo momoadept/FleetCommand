@@ -187,6 +187,8 @@ namespace FC.Core.Core
 
             BootstrapComponent(new LcdStatusChecker(StatusReporters));
             BootstrapComponent(new LcdLoggingHub());
+
+            BootstrapComponent(new MessageHub());
         }
 
         protected void SafeLog(string text)

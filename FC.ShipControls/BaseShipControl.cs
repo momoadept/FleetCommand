@@ -5,6 +5,7 @@ using FC.Core.Core.BlockReferences;
 using FC.Core.Core.ComponentModel;
 using FC.Core.Core.FakeAsync.Promises;
 using FC.Core.Core.Interfaces;
+using FC.Core.Core.Messaging;
 using FC.Core.Core.ServiceProvider;
 using Sandbox.ModAPI.Ingame;
 using VRageMath;
@@ -86,6 +87,8 @@ namespace FC.ShipControls
 
             BlockReferenceFactory = app.ServiceProvider.Get<IBlockReferenceFactory>();
             Autopilots = BlockReferenceFactory.GetReference<IMyRemoteControl>(ComponentId);
+
+            app.ServiceProvider.Get<IMessageHub>()?.SubscribeToActionInvokations(this);
         }
 
         protected void ResetAutopilot()
@@ -103,6 +106,11 @@ namespace FC.ShipControls
         public Promise<string> Invoke(string action, string[] args)
         {
             return Actions.Invoke(action, args);
+        }
+
+        public bool CanInvoke(string action)
+        {
+            return Actions.CanInvoke(action);
         }
 
         public string ActionProviderId => ComponentId;

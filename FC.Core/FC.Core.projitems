@@ -45,7 +45,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Logging\LcdLoggingHub.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Logging\LogEntry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Messaging\ComponentMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Messaging\IMessageHub.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Messaging\IMessageProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Messaging\MessageHub.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Messaging\PlayerMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ServiceProvider\IMyServiceProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ServiceProvider\IService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ServiceProvider\MyServiceProvider.cs" />

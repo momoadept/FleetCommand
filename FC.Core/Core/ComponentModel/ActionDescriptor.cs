@@ -42,5 +42,10 @@ namespace FC.Core.Core.ComponentModel
 
             return result;
         }
+
+        public bool CanInvoke(string action)
+        {
+            return Actions.ContainsKey(action) || Queries.ContainsKey(action);
+        }
     }
 }
