@@ -1,4 +1,7 @@
-﻿using FC.Core.Core.FakeAsync.Promises;
+﻿using FC.Core.Core;
+using FC.Core.Core.FakeAsync.Promises;
+using FC.Core.Core.Logging;
+using Sandbox.ModAPI.Ingame;
 using VRageMath;
 
 namespace FC.ShipControls
@@ -16,18 +19,22 @@ namespace FC.ShipControls
             public void ActivateState(ShipControlState previous, ShipControlState next)
             {
                 Base.Autopilot.SetAutoPilotEnabled(true);
+                Base.Log.Info("Autopilot enabled");
             }
 
             public void DeactivateState(ShipControlState previous, ShipControlState next)
             {
-                Base.ResetAutopilot();
+                Base.Autopilot.SetAutoPilotEnabled(false);
+                Base.Log.Info("Autopilot disabled");
             }
 
             public Promise MoveTo(Vector3D coords)
             {
                 Base.Autopilot.ClearWaypoints();
                 Base.Autopilot.AddWaypoint(coords, "Autopilot");
-                return Base.Async.When(() =>  coords.Equals(Base.Autopilot.Position, 1), 100);
+                Base.LastWaypointCoords = coords;
+                return Base.Async.When(() =>  coords.Equals(Base.Autopilot.GetPosition(), 20), 100)
+                    .Then(t => Base.State = ShipControlState.Standby);
             }
         }
     }

@@ -33,6 +33,7 @@ namespace FC.ShipControls
             HasState(ShipControlState.Standby, new StandbyShipControl(this));
             HasState(ShipControlState.Moving, new MovingShipControl(this));
             HasState(ShipControlState.ManualOverride, new ManualOverrideShipControl(this));
+            DefaultState(ShipControlState.Standby);
         }
 
         public Type[] Provides { get; } = {typeof(IShipControl)};
@@ -67,7 +68,7 @@ namespace FC.ShipControls
             switch (State)
             {
                 case ShipControlState.Moving:
-                    return $"Moving to {Autopilot.CurrentWaypoint.Coords}";
+                    return $"Moving to {LastWaypointCoords}\nCuurent position: {Autopilot.GetPosition()}";
                 case ShipControlState.Standby:
                     return "On standby";
                 case ShipControlState.ManualOverride:
@@ -79,8 +80,9 @@ namespace FC.ShipControls
 
         protected IBlockReferenceFactory BlockReferenceFactory;
         protected TagBlockReference<IMyRemoteControl> Autopilots;
-        protected IMyRemoteControl Autopilot => Autopilots.Accessors.First().Block;
+        protected IMyRemoteControl Autopilot => Autopilots.Accessors.FirstOrDefault()?.Block;
         protected ActionDescriptor Actions = new ActionDescriptor();
+        protected Vector3D? LastWaypointCoords = null;
         protected override void OnAppBootstrapped(App app)
         {
             base.OnAppBootstrapped(app);
@@ -93,12 +95,17 @@ namespace FC.ShipControls
 
         protected void ResetAutopilot()
         {
+            if (Autopilot == null)
+            {
+                var message = $"No autopilot found. Serach tag: [moduleId {ComponentId}]";
+                Log.Error(message);
+                throw new Exception(message);
+            }
             Autopilot.Direction = Base6Directions.Direction.Forward;
             Autopilot.FlightMode = FlightMode.OneWay;
             Autopilot.ControlThrusters = true;
             Autopilot.ControlWheels = false;
             Autopilot.ClearWaypoints();
-            Autopilot.SetAutoPilotEnabled(false);
             Autopilot.SetDockingMode(false);
             Autopilot.SetCollisionAvoidance(true);
         }

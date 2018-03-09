@@ -20,6 +20,7 @@ namespace FC.ShipControls
 
             public void DeactivateState(ShipControlState previous, ShipControlState next)
             {
+                Base.ResetAutopilot();
             }
 
             public Promise MoveTo(Vector3D coords)

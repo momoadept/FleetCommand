@@ -83,8 +83,6 @@ namespace FC.Core.Core
             }
             catch (Exception e)
             {
-                SafeLog(e.Message);
-                SafeLog(e.StackTrace);
                 Context.Echo(e.Message + e.StackTrace);
             }
         }

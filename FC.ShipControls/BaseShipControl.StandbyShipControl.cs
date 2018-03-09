@@ -15,12 +15,11 @@ namespace FC.ShipControls
 
             public void ActivateState(ShipControlState previous, ShipControlState next)
             {
-                Base.Autopilot.SetAutoPilotEnabled(true);
+                Base.Autopilot.ClearWaypoints();
             }
 
             public void DeactivateState(ShipControlState previous, ShipControlState next)
             {
-                Base.ResetAutopilot();
             }
 
             public Promise MoveTo(Vector3D coords)

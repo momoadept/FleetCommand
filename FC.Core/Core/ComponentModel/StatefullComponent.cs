@@ -7,7 +7,7 @@ namespace FC.Core.Core.ComponentModel
     public class StatefullComponent<TState, TStrategy>: BaseComponent, IStatefull<TState>
         where TStrategy : IStateStrategy<TState>
     {
-        protected Dictionary<TState, TStrategy> Strategies;
+        protected Dictionary<TState, TStrategy> Strategies = new Dictionary<TState, TStrategy>();
         private TState _state;
 
         protected TState State
