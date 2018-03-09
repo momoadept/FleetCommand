@@ -1,13 +1,13 @@
 ﻿using FC.Core.Core.FakeAsync.Promises;
 using VRageMath;
 
-namespace IngameScript.ShipControls
+namespace FC.ShipControls
 {
     public partial class BaseShipControl
     {
-        protected class StandbyShipControl : IShipControlStrategy
+        protected class ManualOverrideShipControl : IShipControlStrategy
         {
-            public StandbyShipControl(BaseShipControl @base)
+            public ManualOverrideShipControl(BaseShipControl @base)
             {
                 Base = @base;
             }
@@ -15,18 +15,17 @@ namespace IngameScript.ShipControls
 
             public void ActivateState(ShipControlState previous, ShipControlState next)
             {
-                Base.Autopilot.SetAutoPilotEnabled(true);
+                Base.ResetAutopilot();
             }
 
             public void DeactivateState(ShipControlState previous, ShipControlState next)
             {
-                Base.ResetAutopilot();
             }
 
             public Promise MoveTo(Vector3D coords)
             {
-                Base.State = ShipControlState.Moving;
-                return Base.MoveTo(coords);
+                Base.Log.Warning("MoveTo execution ignored: ship on manual override");
+                return Promise.Resolve(() => {});
             }
         }
     }

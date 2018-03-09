@@ -1,14 +1,13 @@
-﻿using System;
-using FC.Core.Core.FakeAsync.Promises;
+﻿using FC.Core.Core.FakeAsync.Promises;
 using VRageMath;
 
-namespace IngameScript.ShipControls
+namespace FC.ShipControls
 {
     public partial class BaseShipControl
     {
-        protected class MovingShipControl : IShipControlStrategy
+        protected class StandbyShipControl : IShipControlStrategy
         {
-            public MovingShipControl(BaseShipControl @base)
+            public StandbyShipControl(BaseShipControl @base)
             {
                 Base = @base;
             }
@@ -26,9 +25,8 @@ namespace IngameScript.ShipControls
 
             public Promise MoveTo(Vector3D coords)
             {
-                Base.Autopilot.ClearWaypoints();
-                Base.Autopilot.AddWaypoint(coords, "Autopilot");
-                return Base.Async.When(() =>  coords.Equals(Base.Autopilot.Position, 1), 100);
+                Base.State = ShipControlState.Moving;
+                return Base.MoveTo(coords);
             }
         }
     }

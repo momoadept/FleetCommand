@@ -9,11 +9,11 @@ using FC.Core.Core.ServiceProvider;
 using Sandbox.ModAPI.Ingame;
 using VRageMath;
 
-namespace IngameScript.ShipControls
+namespace FC.ShipControls
 {
     public partial class BaseShipControl : StatefullComponent<ShipControlState, IShipControlStrategy>, IService, IShipControl, IStatusReporter, IActionProvider
     {
-        public BaseShipControl() : base("ShipControl")
+        public BaseShipControl() : base((string) "ShipControl")
         {
             Actions.HasAction("MoveTo", args =>
                 MoveTo(new Vector3D(

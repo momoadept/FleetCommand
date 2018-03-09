@@ -9,5 +9,11 @@
     <Import_RootNamespace>FC.ShipControls</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BaseShipControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BaseShipControl.ManualOverrideShipControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BaseShipControl.MovingShipControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BaseShipControl.StandbyShipControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IShipControlStrategy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ShipControlState.cs" />
   </ItemGroup>
 </Project>

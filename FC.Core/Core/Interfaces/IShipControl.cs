@@ -1,6 +1,6 @@
 ﻿using FC.Core.Core.ComponentModel;
 using FC.Core.Core.FakeAsync.Promises;
-using IngameScript.ShipControls;
+using FC.ShipControls;
 using VRageMath;
 
 namespace FC.Core.Core.Interfaces

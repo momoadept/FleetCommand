@@ -104,14 +104,10 @@
     <Compile Include="Readme.cs" />
     <AdditionalFiles Include="thumb.png" />
     <AdditionalFiles Include="MDK\whitelist.cache" />
-    <Compile Include="ShipControls\BaseShipControl.cs" />
-    <Compile Include="ShipControls\BaseShipControl.ManualOverrideShipControl.cs" />
-    <Compile Include="ShipControls\BaseShipControl.MovingShipControl.cs" />
-    <Compile Include="ShipControls\BaseShipControl.StandbyShipControl.cs" />
-    <Compile Include="ShipControls\IShipControlStrategy.cs" />
-    <Compile Include="ShipControls\ShipControlState.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ShipControls\" />
+  </ItemGroup>
   <Import Project="..\FC.Core\FC.Core.projitems" Label="Shared" />
   <Import Project="..\FC.ShipControls\FC.ShipControls.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

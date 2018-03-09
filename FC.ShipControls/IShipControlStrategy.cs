@@ -2,7 +2,7 @@
 using FC.Core.Core.FakeAsync.Promises;
 using VRageMath;
 
-namespace IngameScript.ShipControls
+namespace FC.ShipControls
 {
     public interface IShipControlStrategy : IStateStrategy<ShipControlState>
     {
