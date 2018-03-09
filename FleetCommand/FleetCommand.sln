@@ -7,10 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetCommand", "FleetComman
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FC.Core", "..\FC.Core\FC.Core.shproj", "{6FEC9101-6097-4B8E-9A61-D4D6C4B32C41}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FC.ShipControls", "..\FC.ShipControls\FC.ShipControls.shproj", "{D550B91C-9845-48F0-AC5E-A5E24ABC0715}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\FC.Core\FC.Core.projitems*{6fec9101-6097-4b8e-9a61-d4d6c4b32c41}*SharedItemsImports = 13
 		..\FC.Core\FC.Core.projitems*{c146224d-7b33-46dd-a829-dddf09d25e33}*SharedItemsImports = 4
+		..\FC.ShipControls\FC.ShipControls.projitems*{c146224d-7b33-46dd-a829-dddf09d25e33}*SharedItemsImports = 4
+		..\FC.ShipControls\FC.ShipControls.projitems*{d550b91c-9845-48f0-ac5e-a5e24abc0715}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

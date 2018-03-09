@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\BlockReferences\BlockReferenceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\BlockReferences\IBlockReferenceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\BlockReferences\TagBlockReference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\ComponentModel\ActionDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ComponentModel\BaseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ComponentModel\IActionProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ComponentModel\IComponent.cs" />

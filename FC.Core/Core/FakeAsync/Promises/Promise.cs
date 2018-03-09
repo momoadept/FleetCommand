@@ -78,6 +78,16 @@ namespace FC.Core.Core.FakeAsync.Promises
             var promise = new Promise<T>(p => p.Resolve(value));
             return promise;
         }
+
+        public static Promise<string> AsStringResult<T>(Promise<T> promise)
+        {
+            return new Promise<string>(p =>
+            {
+                promise
+                    .Then(res => p.Resolve(res.ToString()))
+                    .Error(p.Reject);
+            });
+        }
     }
 
     public class Promise<T>

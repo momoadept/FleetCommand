@@ -11,10 +11,24 @@ using VRageMath;
 
 namespace IngameScript.ShipControls
 {
-    public partial class BaseShipControl : StatefullComponent<ShipControlState, IShipControlStrategy>, IService, IShipControl, IStatusReporter
+    public partial class BaseShipControl : StatefullComponent<ShipControlState, IShipControlStrategy>, IService, IShipControl, IStatusReporter, IActionProvider
     {
         public BaseShipControl() : base("ShipControl")
         {
+            Actions.HasAction("MoveTo", args =>
+                MoveTo(new Vector3D(
+                    Double.Parse(args[0]),
+                    Double.Parse(args[1]),
+                    Double.Parse(args[2]))
+                )
+            );
+
+            Actions.HasAction("Stop", args => Stop());
+            Actions.HasAction("SetManualOverride", args => SetManualOverride());
+            Actions.HasAction("RemoveManualOverride", args => RemoveManualOverride());
+
+            Actions.HasQuery("GetCurrentWaypoint", args => Promise.AsStringResult(GetCurrentWaypoint()));
+
             HasState(ShipControlState.Standby, new StandbyShipControl(this));
             HasState(ShipControlState.Moving, new MovingShipControl(this));
             HasState(ShipControlState.ManualOverride, new ManualOverrideShipControl(this));
@@ -65,6 +79,7 @@ namespace IngameScript.ShipControls
         protected IBlockReferenceFactory BlockReferenceFactory;
         protected TagBlockReference<IMyRemoteControl> Autopilots;
         protected IMyRemoteControl Autopilot => Autopilots.Accessors.First().Block;
+        protected ActionDescriptor Actions = new ActionDescriptor();
         protected override void OnAppBootstrapped(App app)
         {
             base.OnAppBootstrapped(app);
@@ -84,5 +99,12 @@ namespace IngameScript.ShipControls
             Autopilot.SetDockingMode(false);
             Autopilot.SetCollisionAvoidance(true);
         }
+
+        public Promise<string> Invoke(string action, string[] args)
+        {
+            return Actions.Invoke(action, args);
+        }
+
+        public string ActionProviderId => ComponentId;
     }
 }
