@@ -102,11 +102,13 @@
     <Compile Include="Core\BlockReferences\BlockReferenceFactory.cs" />
     <Compile Include="Core\BlockReferences\IBlockReferenceFactory.cs" />
     <Compile Include="Core\ComponentModel\BaseComponent.cs" />
+    <Compile Include="Core\ComponentModel\ComponentMessage.cs" />
+    <Compile Include="Core\ComponentModel\IMessageProcessor.cs" />
     <Compile Include="Core\Delegates\EventHandlers.cs" />
-    <Compile Include="Core\FakeAsync\Async.AsyncFluentScheduler.cs" />
     <Compile Include="Core\FakeAsync\Async.cs" />
     <Compile Include="Core\FakeAsync\IAsyncJob.cs" />
     <Compile Include="Core\FakeAsync\IAsyncTask.cs" />
+    <Compile Include="Core\FakeAsync\Promise\Promise.cs" />
     <Compile Include="Core\FakeAsync\SimpleAsyncTask.cs" />
     <Compile Include="Core\FakeAsync\SimpleAsyncWorker.cs" />
     <Compile Include="Core\BlockLoader\IBlockLoader.cs" />

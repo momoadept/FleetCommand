@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using IngameScript.Core.BlockLoader;
 using IngameScript.Core.ComponentModel;
+using IngameScript.Core.FakeAsync.Promises;
 using IngameScript.Core.Logging;
 using IngameScript.Core.ServiceProvider;
 using Sandbox.ModAPI.Ingame;
@@ -59,27 +60,27 @@ Active waiters:
             Jobs.Remove(job);
         }
 
-        public AsyncFluentScheduler Do(Action task)
+        public Promise Do(Action task)
         {
             return Do(new SimpleAsyncTask(task, Time.Now));
         }
 
-        public AsyncFluentScheduler Do(IAsyncTask task)
+        public Promise Do(IAsyncTask task)
         {
             Defered.Add(task);
             Log?.Debug($"Scheduled async task after {task.Delay} ticks");
-            return new AsyncFluentScheduler(task, this);
+            return new Promise(task, this);
         }
 
-        public AsyncFluentScheduler When(Func<bool> condition, int waitingCheckDelay = 1)
+        public Promise When(Func<bool> condition, int waitingCheckDelay = 1)
         {
             var task = new Waiter(condition, Time, waitingCheckDelay);
             Defered.Add(task);
             Log?.Debug($"Started waiter");
-            return new AsyncFluentScheduler(task, this);
+            return new Promise(task, this);
         }
 
-        public AsyncFluentScheduler WhenReady<TService>() where TService : class
+        public Promise WhenReady<TService>() where TService : class
         {
             return When(() => App.ServiceProvider.Get<TService>() != null);
         }
