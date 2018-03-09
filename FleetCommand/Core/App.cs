@@ -6,6 +6,7 @@ using IngameScript.Core.ComponentModel;
 using IngameScript.Core.Delegates;
 using IngameScript.Core.FakeAsync;
 using IngameScript.Core.Logging;
+using IngameScript.Core.Messaging;
 using IngameScript.Core.ServiceProvider;
 using IngameScript.Core.StatusReporting;
 using Sandbox.ModAPI.Ingame;
@@ -31,7 +32,7 @@ namespace IngameScript.Core
         // Common singleton services
 
         public IMyServiceProvider ServiceProvider { get; } = new MyServiceProvider();
-        public Time Time { get; } = new Time();
+        public Time.Time Time { get; } = new Time.Time();
 
         // Common component instances
 

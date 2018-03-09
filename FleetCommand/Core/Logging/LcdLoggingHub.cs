@@ -64,11 +64,9 @@ namespace IngameScript.Core.Logging
         {
             var allEntries = Logs.SelectMany(log => log.LogEntries);
 
-            return allEntries
-                .OrderByDescending(entry => entry.Time)
-                .Take(DisplayedEntriesCount)
-                .OrderBy(entry => entry.Time)
-                .ToList();
+            return Enumerable.ToList<LogEntry>(Enumerable.Take<LogEntry>(allEntries
+                        .OrderByDescending(entry => entry.Time), DisplayedEntriesCount)
+                    .OrderBy(entry => entry.Time));
         }
     }
 }

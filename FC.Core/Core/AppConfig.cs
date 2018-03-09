@@ -1,6 +1,4 @@
-﻿using IngameScript.Core.Enums;
-
-namespace IngameScript.Core
+﻿namespace IngameScript.Core
 {
     public class AppConfig
     {

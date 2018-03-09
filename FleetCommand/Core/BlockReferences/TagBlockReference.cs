@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using IngameScript.Core.BlockLoader;
-using IngameScript.Core.FakeAsync;
-using IngameScript.Core.Logging;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.BlockReferences
@@ -31,9 +27,8 @@ namespace IngameScript.Core.BlockReferences
             var searchString = $"[{AppTag} {Tag}";
 
             Accessors.Clear();
-            Accessors.AddRange(BlockLoader.Blocks
-                .Where(block => block.CustomName.StartsWith(searchString) && block is T)
-                .Cast<T>()
+            Accessors.AddRange(Enumerable.Cast<T>(BlockLoader.Blocks
+                    .Where(block => block.CustomName.StartsWith(searchString) && block is T))
                 .Select(block => new BlockAccessor<T>(block, GetArguments(block.CustomName))));
 
             App.Echo($"{searchString}: {Accessors.Count}");
@@ -48,7 +43,7 @@ namespace IngameScript.Core.BlockReferences
                 action(blockAccessor.Block);
             }
 
-            return filtered.Count();
+            return Enumerable.Count<BlockAccessor<T>>(filtered);
         }
 
         protected List<string> GetArguments(string name)

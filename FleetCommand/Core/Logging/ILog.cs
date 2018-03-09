@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using IngameScript.Core.BlockLoader;
+﻿using System.Collections.Generic;
 using IngameScript.Core.Delegates;
 using IngameScript.Core.Enums;
 

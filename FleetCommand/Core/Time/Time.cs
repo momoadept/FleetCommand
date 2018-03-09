@@ -1,4 +1,4 @@
-﻿namespace IngameScript.Core
+﻿namespace IngameScript.Core.Time
 {
     public class Time
     {

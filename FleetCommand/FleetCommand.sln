@@ -5,7 +5,12 @@ VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetCommand", "FleetCommand.csproj", "{C146224D-7B33-46DD-A829-DDDF09D25E33}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FC.Core", "..\FC.Core\FC.Core.shproj", "{6FEC9101-6097-4B8E-9A61-D4D6C4B32C41}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\FC.Core\FC.Core.projitems*{6fec9101-6097-4b8e-9a61-d4d6c4b32c41}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 	EndGlobalSection

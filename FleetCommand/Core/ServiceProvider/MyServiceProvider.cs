@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using IngameScript.Core.Logging;
 
 namespace IngameScript.Core.ServiceProvider
 {

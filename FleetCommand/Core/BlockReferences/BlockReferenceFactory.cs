@@ -23,6 +23,7 @@ namespace IngameScript.Core.BlockReferences
             return new TagBlockReference<T>(Loader, tag, AppTag);
         }
 
+
         public Type[] Provides { get; } = {typeof(IBlockReferenceFactory)};
 
         protected void OnAppBootstrapped(App app)

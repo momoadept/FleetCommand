@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IngameScript.Core.BlockLoader;
 using IngameScript.Core.ComponentModel;
 using IngameScript.Core.FakeAsync.Promises;
 using IngameScript.Core.Logging;
 using IngameScript.Core.ServiceProvider;
-using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.FakeAsync
 {
@@ -16,7 +14,7 @@ namespace IngameScript.Core.FakeAsync
 
         protected List<IAsyncTask> Defered { get; } = new List<IAsyncTask>();
         protected List<IAsyncJob> Jobs { get; } = new List<IAsyncJob>();
-        protected Time Time;
+        protected Time.Time Time;
         protected App App;
         public ILog Log { get; private set; }
 
@@ -37,7 +35,7 @@ Inactive Jobs:
 {GetJobsReport(false)}
 
 Active waiters:
-{Defered.Count(t => t is Waiter)}
+{Enumerable.Count<IAsyncTask>(Defered, t => t is Waiter)}
 ";
             CompletedTasksCount = 0;
             return status;
@@ -60,24 +58,25 @@ Active waiters:
             Jobs.Remove(job);
         }
 
-        public Promise Do(Action task)
+        public Promise Defer(IAsyncTask task)
         {
-            return Do(new SimpleAsyncTask(task, Time.Now));
-        }
-
-        public Promise Do(IAsyncTask task)
-        {
-            Defered.Add(task);
-            Log?.Debug($"Scheduled async task after {task.Delay} ticks");
-            return new Promise(task, this);
+            return new Promise(promise =>
+            {
+                task.Completed += t => promise.Resolve();
+                Defered.Add(task);
+                Log?.Debug($"Scheduled async task after {task.Delay} ticks");
+            });
         }
 
         public Promise When(Func<bool> condition, int waitingCheckDelay = 1)
         {
             var task = new Waiter(condition, Time, waitingCheckDelay);
-            Defered.Add(task);
-            Log?.Debug($"Started waiter");
-            return new Promise(task, this);
+            return new Promise(promise =>
+            {
+                task.Completed += t => promise.Resolve();
+                Defered.Add(task);
+                Log?.Debug($"Started waiter with {waitingCheckDelay} delay");
+            });
         }
 
         public Promise WhenReady<TService>() where TService : class
@@ -100,19 +99,19 @@ Active waiters:
 
         protected void RunTasks()
         {
-            if (!Defered.Any()) return;
+            if (!Enumerable.Any<IAsyncTask>(Defered)) return;
 
             List<IAsyncTask> doing;
             do
             {
                 doing = GetTasksToDoNow();
                 doing.ForEach(RunTask);
-            } while (doing.Any());
+            } while (Enumerable.Any<IAsyncTask>(doing));
         }
 
         protected List<IAsyncTask> GetTasksToDoNow()
         {
-            return Defered.Where(d => App.Time.Now - d.Created >= d.Delay).ToList();
+            return Enumerable.ToList<IAsyncTask>(Defered.Where(d => App.Time.Now - d.Created >= d.Delay));
         }
 
         protected bool RunJobNow(IAsyncJob job)

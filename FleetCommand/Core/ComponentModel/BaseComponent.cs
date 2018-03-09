@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IngameScript.Core.FakeAsync;
+﻿using IngameScript.Core.FakeAsync;
 using IngameScript.Core.Logging;
 using Sandbox.ModAPI.Ingame;
 
@@ -15,7 +10,7 @@ namespace IngameScript.Core.ComponentModel
         protected ILog Log { get; private set; }
         protected MyGridProgram Context { get; private set; }
         protected Async Async { get; private set; }
-        protected Time Time { get; private set; }
+        protected Time.Time Time { get; private set; }
 
         public BaseComponent(string componentId)
         {

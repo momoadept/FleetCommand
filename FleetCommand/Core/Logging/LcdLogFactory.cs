@@ -9,7 +9,7 @@ namespace IngameScript.Core.Logging
     {
         protected ILoggingHub Hub;
         protected IBlockReferenceFactory References;
-        protected Time Time;
+        protected Time.Time Time;
         protected bool IsReady = false;
         public ILog GetLog(IComponent target)
         {

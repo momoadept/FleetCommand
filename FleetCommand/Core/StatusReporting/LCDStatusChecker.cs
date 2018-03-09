@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IngameScript.Core.BlockLoader;
+﻿using System.Collections.Generic;
 using IngameScript.Core.BlockReferences;
 using IngameScript.Core.ComponentModel;
 using IngameScript.Core.FakeAsync;
@@ -20,7 +15,7 @@ namespace IngameScript.Core.StatusReporting
         protected SimpleAsyncWorker UpdateStatusesWorker;
         protected MyGridProgram Context;
         protected Async Async;
-        protected Time Time;
+        protected Time.Time Time;
         protected IBlockReferenceFactory BlockReferenceFactory;
 
         public LcdStatusChecker(List<IStatusReporter> statusReporters)

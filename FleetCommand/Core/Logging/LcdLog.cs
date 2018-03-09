@@ -4,7 +4,6 @@ using System.Linq;
 using IngameScript.Core.BlockReferences;
 using IngameScript.Core.Delegates;
 using IngameScript.Core.Enums;
-using IngameScript.Core.FakeAsync;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.Logging
@@ -19,9 +18,9 @@ namespace IngameScript.Core.Logging
 
         protected string Entity { get; }
         protected TagBlockReference<IMyTextPanel> LcdReference { get; }
-        protected Time Time;
+        protected Time.Time Time;
 
-        public LcdLog(string entity, ILoggingHub hub, IBlockReferenceFactory references, Time time)
+        public LcdLog(string entity, ILoggingHub hub, IBlockReferenceFactory references, Time.Time time)
         {
             hub.RegisterLog(this);
             Entity = entity;
@@ -59,9 +58,8 @@ namespace IngameScript.Core.Logging
                 Entity + "\n"
                        + string.Join(
                            "\n",
-                           entries
-                               .OrderByDescending(entry => entry.Time)
-                               .Take(DisplayedEntriesCount)
+                           Enumerable.Take<LogEntry>(entries
+                                   .OrderByDescending(entry => entry.Time), DisplayedEntriesCount)
                                .OrderBy(entry => entry.Time)
                                .Select(entry =>
                                    $"{entry.Time} [{entry.Type}]: {entry.Text}"));
@@ -82,7 +80,7 @@ namespace IngameScript.Core.Logging
                 }
             }
 
-            return LogEntries.Where(entry => (entry.Type & acceptedTypes) != 0).ToList();
+            return Enumerable.ToList<LogEntry>(LogEntries.Where(entry => (entry.Type & acceptedTypes) != 0));
         }
 
         protected LogType ParseLogType(string str)

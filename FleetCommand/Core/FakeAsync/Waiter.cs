@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using IngameScript.Core.Delegates;
-using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript.Core.FakeAsync
 {
@@ -18,9 +13,9 @@ namespace IngameScript.Core.FakeAsync
 
         protected Func<bool> Condition { get; }
         protected int WaitingCheckDelay { get; }
-        protected Time Time { get; }
+        protected Time.Time Time { get; }
 
-        public Waiter(Func<bool> condition, Time time, int waitingCheckDelay = 1)
+        public Waiter(Func<bool> condition, Time.Time time, int waitingCheckDelay = 1)
         {
             WaitingCheckDelay = waitingCheckDelay;
             Created = time.Now;
