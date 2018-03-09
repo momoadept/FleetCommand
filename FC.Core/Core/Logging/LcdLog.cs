@@ -59,8 +59,8 @@ namespace FC.Core.Core.Logging
                 Entity + "\n"
                        + string.Join(
                            "\n",
-                           Enumerable.Take<LogEntry>(entries
-                                   .OrderByDescending(entry => entry.Time), DisplayedEntriesCount)
+                           entries
+                               .OrderByDescending(entry => entry.Time).Take(DisplayedEntriesCount)
                                .OrderBy(entry => entry.Time)
                                .Select(entry =>
                                    $"{entry.Time} [{entry.Type}]: {entry.Text}"));

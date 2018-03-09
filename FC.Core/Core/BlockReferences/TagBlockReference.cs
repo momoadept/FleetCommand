@@ -32,7 +32,7 @@ namespace FC.Core.Core.BlockReferences
                     .Cast<T>()
                 .Select(block => new BlockAccessor<T>(block, GetArguments(block.CustomName))));
 
-            App.Echo($"{searchString}: {Accessors.Count}");
+            
         }
 
         public int ForEach(Action<T> action, Func<BlockAccessor<T>, bool> filter = null)
@@ -44,7 +44,7 @@ namespace FC.Core.Core.BlockReferences
                 action(blockAccessor.Block);
             }
 
-            return Enumerable.Count<BlockAccessor<T>>(filtered);
+            return filtered.Count();
         }
 
         protected List<string> GetArguments(string name)
@@ -54,12 +54,16 @@ namespace FC.Core.Core.BlockReferences
                 var start = name.IndexOf("[");
                 var end = name.IndexOf("]");
 
-                return name
+                var result =  name
                     .Substring(start + 1, end - start - 1)
                     .Replace(AppTag, "")
                     .Replace(Tag, "")
+                    .Trim()
                     .Split(' ')
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
                     .ToList();
+
+                return result;
             }
             catch (Exception e)
             {

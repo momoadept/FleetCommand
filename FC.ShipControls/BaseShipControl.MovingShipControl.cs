@@ -18,13 +18,11 @@ namespace FC.ShipControls
 
             public void ActivateState(ShipControlState previous, ShipControlState next)
             {
-                Base.Autopilot.SetAutoPilotEnabled(true);
-                Base.Log.Info("Autopilot enabled");
             }
 
             public void DeactivateState(ShipControlState previous, ShipControlState next)
             {
-                Base.Autopilot.SetAutoPilotEnabled(false);
+                Base.Autopilot.ClearWaypoints();
                 Base.Log.Info("Autopilot disabled");
             }
 
@@ -32,6 +30,9 @@ namespace FC.ShipControls
             {
                 Base.Autopilot.ClearWaypoints();
                 Base.Autopilot.AddWaypoint(coords, "Autopilot");
+                Base.Autopilot.SetAutoPilotEnabled(true);
+                Base.Log.Info("Autopilot enabled");
+
                 Base.LastWaypointCoords = coords;
                 return Base.Async.When(() =>  coords.Equals(Base.Autopilot.GetPosition(), 20), 100)
                     .Then(t => Base.State = ShipControlState.Standby);
