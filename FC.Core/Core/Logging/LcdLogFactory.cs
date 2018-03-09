@@ -2,6 +2,7 @@
 using FC.Core.Core.BlockReferences;
 using FC.Core.Core.ComponentModel;
 using FC.Core.Core.ServiceProvider;
+using FC.Core.Core.Times;
 
 namespace FC.Core.Core.Logging
 {
@@ -9,7 +10,7 @@ namespace FC.Core.Core.Logging
     {
         protected ILoggingHub Hub;
         protected IBlockReferenceFactory References;
-        protected Time.Time Time;
+        protected Time Time;
         protected bool IsReady = false;
         public ILog GetLog(IComponent target)
         {

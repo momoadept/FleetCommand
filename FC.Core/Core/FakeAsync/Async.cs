@@ -5,6 +5,7 @@ using FC.Core.Core.ComponentModel;
 using FC.Core.Core.FakeAsync.Promises;
 using FC.Core.Core.Logging;
 using FC.Core.Core.ServiceProvider;
+using FC.Core.Core.Times;
 
 namespace FC.Core.Core.FakeAsync
 {
@@ -14,7 +15,7 @@ namespace FC.Core.Core.FakeAsync
 
         protected List<IAsyncTask> Defered { get; } = new List<IAsyncTask>();
         protected List<IAsyncJob> Jobs { get; } = new List<IAsyncJob>();
-        protected Time.Time Time;
+        protected Time Time;
         protected App App;
         public ILog Log { get; private set; }
 

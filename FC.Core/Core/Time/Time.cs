@@ -1,4 +1,4 @@
-﻿namespace FC.Core.Core.Time
+﻿namespace FC.Core.Core.Times
 {
     public class Time
     {

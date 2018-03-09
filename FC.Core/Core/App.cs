@@ -9,6 +9,7 @@ using FC.Core.Core.Logging;
 using FC.Core.Core.Messaging;
 using FC.Core.Core.ServiceProvider;
 using FC.Core.Core.StatusReporting;
+using FC.Core.Core.Times;
 using Sandbox.ModAPI.Ingame;
 
 namespace FC.Core.Core
@@ -32,7 +33,7 @@ namespace FC.Core.Core
         // Common singleton services
 
         public IMyServiceProvider ServiceProvider { get; } = new MyServiceProvider();
-        public Time.Time Time { get; } = new Time.Time();
+        public Time Time { get; } = new Time();
 
         // Common component instances
 

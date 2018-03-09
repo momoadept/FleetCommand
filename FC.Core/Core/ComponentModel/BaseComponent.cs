@@ -1,5 +1,6 @@
 ﻿using FC.Core.Core.FakeAsync;
 using FC.Core.Core.Logging;
+using FC.Core.Core.Times;
 using Sandbox.ModAPI.Ingame;
 
 namespace FC.Core.Core.ComponentModel
@@ -10,7 +11,7 @@ namespace FC.Core.Core.ComponentModel
         protected ILog Log { get; private set; }
         protected MyGridProgram Context { get; private set; }
         protected Async Async { get; private set; }
-        protected Time.Time Time { get; private set; }
+        protected Time Time { get; private set; }
 
         public BaseComponent(string componentId)
         {

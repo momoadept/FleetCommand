@@ -2,6 +2,7 @@
 using FC.Core.Core.BlockReferences;
 using FC.Core.Core.ComponentModel;
 using FC.Core.Core.FakeAsync;
+using FC.Core.Core.Times;
 using Sandbox.ModAPI.Ingame;
 
 namespace FC.Core.Core.StatusReporting
@@ -15,7 +16,7 @@ namespace FC.Core.Core.StatusReporting
         protected SimpleAsyncWorker UpdateStatusesWorker;
         protected MyGridProgram Context;
         protected Async Async;
-        protected Time.Time Time;
+        protected Time Time;
         protected IBlockReferenceFactory BlockReferenceFactory;
 
         public LcdStatusChecker(List<IStatusReporter> statusReporters)

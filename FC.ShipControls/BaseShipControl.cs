@@ -14,7 +14,7 @@ namespace FC.ShipControls
 {
     public partial class BaseShipControl : StatefullComponent<ShipControlState, IShipControlStrategy>, IService, IShipControl, IStatusReporter, IActionProvider
     {
-        public BaseShipControl() : base((string) "ShipControl")
+        public BaseShipControl() : base("ShipControl")
         {
             Actions.HasAction("MoveTo", args =>
                 MoveTo(new Vector3D(

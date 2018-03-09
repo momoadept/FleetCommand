@@ -1,5 +1,6 @@
 ﻿using System;
 using FC.Core.Core;
+using FC.ShipControls;
 using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
@@ -15,7 +16,8 @@ namespace IngameScript
                     EnableMasterLog = true
                 };
 
-                MyApp = new App("TestShip", this);
+                MyApp = new App("TestShip", this)
+                    .BootstrapComponents(new BaseShipControl());
                 MyApp.Start();
             }
             catch (Exception e)

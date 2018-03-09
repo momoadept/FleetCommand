@@ -4,6 +4,7 @@ using System.Linq;
 using FC.Core.Core.BlockReferences;
 using FC.Core.Core.Delegates;
 using FC.Core.Core.Enums;
+using FC.Core.Core.Times;
 using Sandbox.ModAPI.Ingame;
 
 namespace FC.Core.Core.Logging
@@ -18,9 +19,9 @@ namespace FC.Core.Core.Logging
 
         protected string Entity { get; }
         protected TagBlockReference<IMyTextPanel> LcdReference { get; }
-        protected Time.Time Time;
+        protected Time Time;
 
-        public LcdLog(string entity, ILoggingHub hub, IBlockReferenceFactory references, Time.Time time)
+        public LcdLog(string entity, ILoggingHub hub, IBlockReferenceFactory references, Time time)
         {
             hub.RegisterLog(this);
             Entity = entity;
