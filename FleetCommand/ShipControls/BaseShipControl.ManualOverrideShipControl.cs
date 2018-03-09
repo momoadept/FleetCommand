@@ -1,4 +1,4 @@
-﻿using IngameScript.Core.FakeAsync.Promises;
+﻿using FC.Core.Core.FakeAsync.Promises;
 using VRageMath;
 
 namespace IngameScript.ShipControls

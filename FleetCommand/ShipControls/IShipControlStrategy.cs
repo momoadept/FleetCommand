@@ -1,5 +1,5 @@
-﻿using IngameScript.Core.ComponentModel;
-using IngameScript.Core.FakeAsync.Promises;
+﻿using FC.Core.Core.ComponentModel;
+using FC.Core.Core.FakeAsync.Promises;
 using VRageMath;
 
 namespace IngameScript.ShipControls

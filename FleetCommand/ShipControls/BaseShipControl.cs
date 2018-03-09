@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using IngameScript.Core;
-using IngameScript.Core.BlockReferences;
-using IngameScript.Core.ComponentModel;
-using IngameScript.Core.FakeAsync.Promises;
-using IngameScript.Core.Interfaces;
-using IngameScript.Core.ServiceProvider;
+using FC.Core.Core;
+using FC.Core.Core.BlockReferences;
+using FC.Core.Core.ComponentModel;
+using FC.Core.Core.FakeAsync.Promises;
+using FC.Core.Core.Interfaces;
+using FC.Core.Core.ServiceProvider;
 using Sandbox.ModAPI.Ingame;
 using VRageMath;
 

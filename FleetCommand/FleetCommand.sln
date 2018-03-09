@@ -10,6 +10,7 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\FC.Core\FC.Core.projitems*{6fec9101-6097-4b8e-9a61-d4d6c4b32c41}*SharedItemsImports = 13
+		..\FC.Core\FC.Core.projitems*{c146224d-7b33-46dd-a829-dddf09d25e33}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

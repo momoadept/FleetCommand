@@ -1,4 +1,6 @@
-﻿namespace IngameScript.Core
+﻿using FC.Core.Core.Enums;
+
+namespace FC.Core.Core
 {
     public class AppConfig
     {
