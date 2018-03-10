@@ -9,10 +9,14 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FC.Core", "..\FC.Core\FC.Co
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FC.ShipControls", "..\FC.ShipControls\FC.ShipControls.shproj", "{D550B91C-9845-48F0-AC5E-A5E24ABC0715}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FC.GravityDrive", "..\FC.GravityDrive\FC.GravityDrive.shproj", "{70ECE365-9A03-4BE9-B42D-B35EC40FEAAD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\FC.Core\FC.Core.projitems*{6fec9101-6097-4b8e-9a61-d4d6c4b32c41}*SharedItemsImports = 13
+		..\FC.GravityDrive\FC.GravityDrive.projitems*{70ece365-9a03-4be9-b42d-b35ec40feaad}*SharedItemsImports = 13
 		..\FC.Core\FC.Core.projitems*{c146224d-7b33-46dd-a829-dddf09d25e33}*SharedItemsImports = 4
+		..\FC.GravityDrive\FC.GravityDrive.projitems*{c146224d-7b33-46dd-a829-dddf09d25e33}*SharedItemsImports = 4
 		..\FC.ShipControls\FC.ShipControls.projitems*{c146224d-7b33-46dd-a829-dddf09d25e33}*SharedItemsImports = 4
 		..\FC.ShipControls\FC.ShipControls.projitems*{d550b91c-9845-48f0-ac5e-a5e24abc0715}*SharedItemsImports = 13
 	EndGlobalSection

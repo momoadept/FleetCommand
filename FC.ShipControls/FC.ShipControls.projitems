@@ -14,6 +14,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)BaseShipControl.MovingShipControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseShipControl.StandbyShipControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IShipControlStrategy.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ShipControlState.cs" />
   </ItemGroup>
 </Project>

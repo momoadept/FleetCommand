@@ -14,7 +14,7 @@ namespace FC.Core.Core.Logging
         public Type[] Provides { get; } = {typeof(ILoggingHub)};
         public string StatusEntityId { get; } = "Priority Messages";
         public int RefreshStatusDelay { get; } = 10;
-        public int DisplayedEntriesCount { get; set; } = 20;
+        public int DisplayedEntriesCount => App.GlobalConfiguration.PriorityLogShownEntries;
 
         protected List<ILog> Logs { get; } = new List<ILog>();
         protected TagBlockReference<IMyTerminalBlock> FlightRecorder;
@@ -58,7 +58,7 @@ namespace FC.Core.Core.Logging
 
         private string FormatEntry(LogEntry entry)
         {
-            return $"{entry.Entity} {entry.RealTime.ToShortTimeString()} [{entry.Type}]: {entry.Text}";
+            return $"{entry.Entity} {entry.RealTime.ToShortTimeString()} [{entry.Type}]:\n{entry.Text}";
         }
 
         private List<LogEntry> CreateCombinedLog()

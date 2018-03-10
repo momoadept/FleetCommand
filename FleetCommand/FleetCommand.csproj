@@ -110,6 +110,7 @@
   </ItemGroup>
   <Import Project="..\FC.Core\FC.Core.projitems" Label="Shared" />
   <Import Project="..\FC.ShipControls\FC.ShipControls.projitems" Label="Shared" />
+  <Import Project="..\FC.GravityDrive\FC.GravityDrive.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Copy SourceFiles="mdk\mdk.options" DestinationFolder="$(TargetDir)\mdk" />

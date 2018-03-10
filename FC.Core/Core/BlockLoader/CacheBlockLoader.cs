@@ -20,7 +20,7 @@ namespace FC.Core.Core.BlockLoader
         protected SimpleAsyncWorker BlockPollingWorker;
 
         public CacheBlockLoader()
-            :base("DefaultBlockLoader")
+            :base("BlockLoader")
         {
             
         }

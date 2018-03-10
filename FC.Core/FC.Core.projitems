@@ -35,7 +35,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\FakeAsync\SimpleAsyncTask.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\FakeAsync\SimpleAsyncWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\FakeAsync\Waiter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IGravityDrive.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IShipControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\OnOffState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\ShipControlState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Logging\EmptyLog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Logging\ILog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Logging\ILogFactory.cs" />
