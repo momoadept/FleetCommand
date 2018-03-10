@@ -13,7 +13,7 @@ namespace IngameScript
             {
                 App.GlobalConfiguration = new AppConfig
                 {
-                    EnableMasterLog = true
+                    EnablePriorityLog = true
                 };
 
                 MyApp = new App("TestShip", this)

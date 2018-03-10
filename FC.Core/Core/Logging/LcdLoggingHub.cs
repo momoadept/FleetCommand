@@ -12,7 +12,7 @@ namespace FC.Core.Core.Logging
     {
         public string ComponentId { get; } = "LoggingHub";
         public Type[] Provides { get; } = {typeof(ILoggingHub)};
-        public string StatusEntityId { get; } = "Master Log";
+        public string StatusEntityId { get; } = "Priority Messages";
         public int RefreshStatusDelay { get; } = 10;
         public int DisplayedEntriesCount { get; set; } = 20;
 
@@ -27,9 +27,11 @@ namespace FC.Core.Core.Logging
 
         private void PushToFlightRecorder(LogEntry entry)
         {
-            FlightRecorder.ForEach(block => block.CustomData += FormatEntry(entry) + "\n");
+            if (App.GlobalConfiguration.EnableFlightRecorder)
+            {
+                FlightRecorder.ForEach(block => block.CustomData += FormatEntry(entry) + "\n");
+            }
         }
-
 
         public void OnAttached(App app)
         {
@@ -40,10 +42,9 @@ namespace FC.Core.Core.Logging
             };
         }
 
-        
         public string GetStatus()
         {
-            if (!App.GlobalConfiguration.EnableMasterLog)
+            if (!App.GlobalConfiguration.EnablePriorityLog)
             {
                 return "";
             }
@@ -62,11 +63,14 @@ namespace FC.Core.Core.Logging
 
         private List<LogEntry> CreateCombinedLog()
         {
-            var allEntries = Logs.SelectMany(log => log.LogEntries);
+            var allEntries = Logs
+                .SelectMany(log => log.LogEntries)
+                .Where(entry => (entry.Type & App.GlobalConfiguration.PriorityLogTypes)!=0);
 
-            return Enumerable.ToList<LogEntry>(Enumerable.Take<LogEntry>(allEntries
-                        .OrderByDescending(entry => entry.Time), DisplayedEntriesCount)
-                    .OrderBy(entry => entry.Time));
+            return allEntries
+                .OrderByDescending(entry => entry.Time)
+                .Take(DisplayedEntriesCount)
+                .OrderBy(entry => entry.Time).ToList();
         }
     }
 }

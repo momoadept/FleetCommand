@@ -70,7 +70,7 @@ namespace FC.Core.Core.Logging
 
         protected List<LogEntry> FilterByLogTypes(List<string> logTypes)
         {
-            var acceptedTypes = LogType.All;
+            var acceptedTypes = App.GlobalConfiguration.CommonLogTypes;
 
             if (logTypes.Count > 0)
             {
@@ -81,7 +81,7 @@ namespace FC.Core.Core.Logging
                 }
             }
 
-            return Enumerable.ToList<LogEntry>(LogEntries.Where(entry => (entry.Type & acceptedTypes) != 0));
+            return LogEntries.Where(entry => (entry.Type & acceptedTypes) != 0).ToList();
         }
 
         protected LogType ParseLogType(string str)

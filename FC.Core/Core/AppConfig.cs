@@ -5,8 +5,9 @@ namespace FC.Core.Core
     public class AppConfig
     {
         // Logging
-        public bool EnableMasterLog { get; set; } = false;
-        public LogType MasterLogTypes { get; set; } = LogType.All;
+        public bool EnablePriorityLog { get; set; } = true;
+        public bool EnableFlightRecorder { get; set; } = true;
+        public LogType PriorityLogTypes { get; set; } = LogType.All;
         public LogType CommonLogTypes { get; set; } = LogType.All;
     }
 }

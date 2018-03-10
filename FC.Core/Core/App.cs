@@ -21,8 +21,6 @@ namespace FC.Core.Core
 
         protected static MyGridProgram DebugContext;
 
-        public const string ScriptTag = "MFC";
-
         public event Event.Handler<App> Bootstrapped;
 
         public string ComponentId { get; }
@@ -91,6 +89,10 @@ namespace FC.Core.Core
         {
             AdvanceTime();
             Workers.ForEach(w => w.Tick());
+            if (Time.Now % 100 == 0)
+            {
+                EchoHealthCheck();
+            }
         }
 
         protected void HandleExternalMessage(string argument, UpdateType updateSource)
@@ -208,6 +210,13 @@ namespace FC.Core.Core
             {
                 Log.Info(initLogEntry);
             }
+        }
+
+        protected void EchoHealthCheck()
+        {
+            Echo($"Internal time: {Time.Now}");
+            Echo($"Last run time: {Context.Runtime.LastRunTimeMs}");
+            Echo($"Complexity: {Context.Runtime.CurrentInstructionCount}/{Context.Runtime.MaxInstructionCount}");
         }
     }
 }

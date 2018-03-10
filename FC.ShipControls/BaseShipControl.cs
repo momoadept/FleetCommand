@@ -14,6 +14,17 @@ namespace FC.ShipControls
 {
     public partial class BaseShipControl : StatefullComponent<ShipControlState, IShipControlStrategy>, IService, IShipControl, IStatusReporter, IActionProvider
     {
+        public Type[] Provides { get; } = { typeof(IShipControl) };
+        public string StatusEntityId => ComponentId;
+        public string ActionProviderId => ComponentId;
+        public int RefreshStatusDelay { get; } = 10;
+
+        protected IBlockReferenceFactory BlockReferenceFactory;
+        protected TagBlockReference<IMyRemoteControl> Autopilots;
+        protected IMyRemoteControl Autopilot => Autopilots.Accessors.FirstOrDefault()?.Block;
+        protected ActionDescriptor Actions = new ActionDescriptor();
+        protected Vector3D? LastWaypointCoords = null;
+
         public BaseShipControl() : base("ShipControl")
         {
             Actions.HasAction("MoveTo", args =>
@@ -23,7 +34,6 @@ namespace FC.ShipControls
                     Double.Parse(args[2]))
                 )
             );
-
             Actions.HasAction("Stop", args => Stop());
             Actions.HasAction("SetManualOverride", args => SetManualOverride());
             Actions.HasAction("RemoveManualOverride", args => RemoveManualOverride());
@@ -36,7 +46,16 @@ namespace FC.ShipControls
             DefaultState(ShipControlState.Standby);
         }
 
-        public Type[] Provides { get; } = {typeof(IShipControl)};
+        public Promise<string> Invoke(string action, string[] args)
+        {
+            return Actions.Invoke(action, args);
+        }
+
+        public bool CanInvoke(string action)
+        {
+            return Actions.CanInvoke(action);
+        }
+
         public virtual Promise MoveTo(Vector3D coords) => Strategy.MoveTo(coords);
 
         public Promise Stop()
@@ -60,9 +79,7 @@ namespace FC.ShipControls
         {
             return Promise.Resolve(() =>  State = ShipControlState.Standby);
         }
-
-        public string StatusEntityId => ComponentId;
-        public int RefreshStatusDelay { get; } = 10;
+        
         public string GetStatus()
         {
             switch (State)
@@ -78,11 +95,6 @@ namespace FC.ShipControls
             return "wtf";
         }
 
-        protected IBlockReferenceFactory BlockReferenceFactory;
-        protected TagBlockReference<IMyRemoteControl> Autopilots;
-        protected IMyRemoteControl Autopilot => Autopilots.Accessors.FirstOrDefault()?.Block;
-        protected ActionDescriptor Actions = new ActionDescriptor();
-        protected Vector3D? LastWaypointCoords = null;
         protected override void OnAppBootstrapped(App app)
         {
             base.OnAppBootstrapped(app);
@@ -109,17 +121,5 @@ namespace FC.ShipControls
             Autopilot.SetDockingMode(false);
             Autopilot.SetCollisionAvoidance(true);
         }
-
-        public Promise<string> Invoke(string action, string[] args)
-        {
-            return Actions.Invoke(action, args);
-        }
-
-        public bool CanInvoke(string action)
-        {
-            return Actions.CanInvoke(action);
-        }
-
-        public string ActionProviderId => ComponentId;
     }
 }
