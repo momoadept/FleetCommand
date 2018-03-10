@@ -57,7 +57,7 @@ namespace FC.Core.Core.BlockReferences
                 var result =  name
                     .Substring(start + 1, end - start - 1)
                     .Replace(AppTag, "")
-                    .Replace(Tag, "")
+                    .Replace(Tag.Length > 0 ? Tag : " ", "")
                     .Trim()
                     .Split(' ')
                     .Where(s => !string.IsNullOrWhiteSpace(s))
@@ -67,7 +67,7 @@ namespace FC.Core.Core.BlockReferences
             }
             catch (Exception e)
             {
-                throw new Exception($"Cannot parse the block name: {name}");
+                throw new Exception($"Cannot parse the block name: {name} by tag {Tag}: {e.Message}");
             }
         }
     }

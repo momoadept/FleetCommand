@@ -10,6 +10,6 @@ namespace FC.Core.Core.Interfaces
     {
         Promise Enable();
         Promise Disable();
-        Promise SetStrength();
+        Promise SetStrength(double value);
     }
 }

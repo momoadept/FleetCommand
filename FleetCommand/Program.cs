@@ -1,5 +1,6 @@
 ﻿using System;
 using FC.Core.Core;
+using FC.GravityDrive;
 using FC.ShipControls;
 using Sandbox.ModAPI.Ingame;
 
@@ -13,11 +14,15 @@ namespace IngameScript
             {
                 App.GlobalConfiguration = new AppConfig
                 {
-                    EnablePriorityLog = true
+
                 };
 
                 MyApp = new App("TestShip", this)
-                    .BootstrapComponents(new BaseShipControl());
+                    .BootstrapComponents(
+                        new BaseShipControl(),
+                        new GravityDrive()
+                    );
+
                 MyApp.Start();
             }
             catch (Exception e)

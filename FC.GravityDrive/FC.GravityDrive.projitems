@@ -9,5 +9,7 @@
     <Import_RootNamespace>FC.GravityDrive</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)GravityDrive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GravityDriveAccessor.cs" />
   </ItemGroup>
 </Project>
