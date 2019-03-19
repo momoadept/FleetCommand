@@ -23,9 +23,14 @@ namespace IngameScript
         public class Scheduler: IAsync
         {
             private Dictionary<Priority, SortedList<DateTime, Action>> _queue = new Dictionary<Priority, SortedList<DateTime, Action>>();
+            private SchedulerStats _stats;
+            private string _performanceReport = "Waiting for performance snapshot...";
+            private DateTime _now;
 
-            public Scheduler()
+            public Scheduler(IGameContext context)
             {
+                _stats = new SchedulerStats(context);
+
                 _queue.Add(Priority.Critical, new SortedList<DateTime, Action>());
                 _queue.Add(Priority.Routine, new SortedList<DateTime, Action>());
                 _queue.Add(Priority.Unimportant, new SortedList<DateTime, Action>());
@@ -39,7 +44,7 @@ namespace IngameScript
                 _queue[priority]
                     .Add(
                         targetTime,
-                        () => promise.Resolve(DateTime.Now.Subtract(targetTime).Milliseconds)
+                        () => promise.Resolve((int)DateTime.Now.Subtract(targetTime).TotalMilliseconds)
                     );
 
                 return promise;
@@ -49,7 +54,7 @@ namespace IngameScript
             {
                 var promise = new Promise<int>();
                 var startTime = DateTime.Now;
-                var interval = Aos.Seettings.PriorityConfig.ConditionCheckInterval(priority);
+                var interval = Aos.Seettings.Priorities.ConditionCheckInterval(priority);
                 var tartetTime = startTime.AddMilliseconds(interval);
 
                 _queue[priority].Add(
@@ -63,12 +68,12 @@ namespace IngameScript
             private void CheckCondition(Func<bool> condition, Priority priority, int timeout, int interval,
                 Promise<int> promise, DateTime startTime)
             {
-                var elapsed = DateTime.Now.Subtract(startTime).Milliseconds;
+                var elapsed = DateTime.Now.Subtract(startTime).TotalMilliseconds;
 
                 if (timeout > 0 && elapsed > timeout)
                     promise.Fail(new ConditionTimeoutException());
                 else if (condition())
-                    promise.Resolve(elapsed);
+                    promise.Resolve((int)elapsed);
 
                 else
                     _queue[priority].Add(
@@ -77,14 +82,50 @@ namespace IngameScript
                     );
             }
 
-            public IJob AddJob(Action job, Priority priority = Priority.Routine)
+            public IJob CreateJob(Action job, Priority priority = Priority.Routine)
             {
                 return new Job(job, priority);
             }
 
             public string Tick()
             {
+                _now = DateTime.Now;
 
+                RunAllCriticalTasks();
+                RunRoutineTasks();
+                RunUnimportantTasks();
+
+                return TrackPerformance();
+            }
+
+            private void RunAllCriticalTasks() => RunAll(Priority.Critical);
+
+            private void RunRoutineTasks() => RunAll(Priority.Routine);
+
+            private void RunUnimportantTasks() => RunAll(Priority.Unimportant);
+
+
+            private List<DateTime> _done = new List<DateTime>();
+            private void RunAll(Priority priority)
+            {
+                if (_queue[priority].First().Key > _now)
+                    return;
+
+                foreach (var action in (_queue[priority].TakeWhile(it => it.Key >= _now)))
+                {
+                    _queue[priority].Remove(action.Key);
+                    action.Value();
+                }
+            }
+
+            private string TrackPerformance()
+            {
+                _stats.Tick();
+
+                if (_stats.Ticks >= Aos.Seettings.SchedulerPerformance.PerformanceSnapshotTicks)
+                    _performanceReport = _stats.Snapshot();
+
+                return _performanceReport;
             }
         }
     }

@@ -19,10 +19,22 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class Config
+        public class GameContext: IGameContext
         {
-            public PriorityConfiguration Priorities = new PriorityConfiguration();
-            public SchedulerPerformanceConfiguration SchedulerPerformance = new SchedulerPerformanceConfiguration();
+            private MyGridProgram _root;
+
+            public GameContext(MyGridProgram root)
+            {
+                _root = root;
+            }
+
+            public void Echo(string s)
+            {
+                _root.Echo(s);
+            }
+
+            public int CurrentSteps => _root.Runtime.CurrentInstructionCount;
+            public int MaxSteps => _root.Runtime.MaxInstructionCount;
         }
     }
 }

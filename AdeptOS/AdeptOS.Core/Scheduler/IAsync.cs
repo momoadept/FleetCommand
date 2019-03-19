@@ -36,7 +36,7 @@ namespace IngameScript
             /// <returns>Promise that resolves when a given condition is true or fails in a timeout. Result is a time elapsed</returns>
             IPromise<int> When(Func<bool> condition, Priority priority = Priority.Routine, int timeout = 0);
 
-            IJob AddJob(Action job, Priority priority = Priority.Routine);
+            IJob CreateJob(Action job, Priority priority = Priority.Routine);
         }
     }
 }

@@ -56,7 +56,9 @@ namespace IngameScript
                 if (!_stopping)
                 {
                     _action();
-                    Aos.Async.Delay(Aos.Seettings.PriorityConfig.JobCheckInterval(Priority));
+                    Aos.Async
+                        .Delay(Aos.Seettings.Priorities.JobCheckInterval(Priority))
+                        .Then(delay => Work());
                 }
                 else
                 {

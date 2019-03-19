@@ -1,5 +1,4 @@
-﻿using System;
-using Sandbox.Game.EntityComponents;
+﻿using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 using SpaceEngineers.Game.ModAPI.Ingame;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using System;
 using VRage.Collections;
 using VRage.Game.Components;
 using VRage.Game.ModAPI.Ingame;
@@ -19,17 +19,12 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class ScheduledItem
+        public interface IGameContext
         {
-            public DateTime TargetTime;
+            void Echo(string s);
 
-            public Action TargetAction;
-
-            public ScheduledItem(DateTime targetTime, Action targetAction)
-            {
-                TargetTime = targetTime;
-                TargetAction = targetAction;
-            }
+            int CurrentSteps { get; }
+            int MaxSteps { get; }
         }
     }
 }

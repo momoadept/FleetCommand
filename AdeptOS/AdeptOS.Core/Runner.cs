@@ -21,13 +21,44 @@ namespace IngameScript
     {
         public static class Aos
         {
-            public static IAsync Async { get; } = new Scheduler();
-            public static Config Seettings { get; } = new Config();
+            public static IAsync Async;
+            public static Config Seettings = new Config();
         }
 
         public class Runner
         {
-            
+            private RunnerMetadata _metadata;
+            private Scheduler _scheduler;
+            private IGameContext _gameContext;
+
+            public void Create(RunnerMetadata metadata, IGameContext gameContext)
+            {
+                _gameContext = gameContext;
+                _metadata = metadata;
+                Aos.Async = _scheduler = new Scheduler(gameContext);
+            }
+
+            public void Tick(string argument)
+            {
+                if (string.IsNullOrEmpty(argument))
+                {
+                    DoBackgroundTasks();
+                }
+                else
+                {
+                    ExecuteCommand(argument);
+                }
+            }
+
+            private void DoBackgroundTasks()
+            {
+                _scheduler.Tick();
+            }
+
+            private void ExecuteCommand(string argument)
+            {
+
+            }
         }
     }
 }

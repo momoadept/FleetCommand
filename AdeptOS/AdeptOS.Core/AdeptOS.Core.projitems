@@ -10,8 +10,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Config.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\GameContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\IGameContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Runner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Configuration\PriorityConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Configuration\SchedulerPerformanceConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\RunnerMetadata.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\SchedulerStats.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataStructures\ITimedQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Enums\Priority.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Exceptions\ConditionTimeoutException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\IAsync.cs" />
@@ -20,11 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\IPromise.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\IResolvablePromise.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\Promise.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\PromiseStatus.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\ScheduledItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Scheduler.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\" />
   </ItemGroup>
 </Project>

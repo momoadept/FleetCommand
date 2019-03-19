@@ -19,10 +19,15 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class Config
+        public interface ITimedQueue<T>
         {
-            public PriorityConfiguration Priorities = new PriorityConfiguration();
-            public SchedulerPerformanceConfiguration SchedulerPerformance = new SchedulerPerformanceConfiguration();
+            void Push(DateTime time, T value);
+
+            bool AnyLessThan(DateTime time);
+
+            IList<T> PopLessThan(DateTime time);
+
+            int Count { get; }
         }
     }
 }

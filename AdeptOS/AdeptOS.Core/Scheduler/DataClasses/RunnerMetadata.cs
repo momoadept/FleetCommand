@@ -19,10 +19,13 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class Config
+        public class RunnerMetadata
         {
-            public PriorityConfiguration Priorities = new PriorityConfiguration();
-            public SchedulerPerformanceConfiguration SchedulerPerformance = new SchedulerPerformanceConfiguration();
+            public string ShipId;
+            public string ShipAlias;
+            public string RunnerId;
+            public string RunnerAlias;
+            public bool IsMain;
         }
     }
 }

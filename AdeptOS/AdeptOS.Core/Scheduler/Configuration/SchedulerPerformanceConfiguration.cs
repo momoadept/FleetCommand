@@ -19,11 +19,9 @@ namespace IngameScript
 {
     partial class Program
     {
-        public enum PromiseStatus
+        public class SchedulerPerformanceConfiguration
         {
-            Pending,
-            Queued,
-            Completed
+            public int PerformanceSnapshotTicks = 5000;
         }
     }
 }

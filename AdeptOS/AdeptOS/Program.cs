@@ -70,7 +70,6 @@ namespace IngameScript
             // 
             // The method itself is required, but the arguments above
             // can be removed if not needed.
-            IGC.
         }
     }
 }
