@@ -9,18 +9,22 @@
     <Import_RootNamespace>AdeptOS.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Modules\" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\Config.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Runner.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Configuration\PriorityConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Enums\Priority.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Exceptions\ConditionTimeoutException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\IAsync.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Jobs\IJob.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Jobs\Job.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\IPromise.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\IResolvablePromise.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\Promise.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\PromiseStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\ScheduledItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Scheduler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Async\AsyncPriority.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Async\AsyncQueue.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Async\AsyncResult.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Async\AsyncState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Async\IAsyncQueue.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameAdapters\IGameContext.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Runners\Runner.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Runners\RunnerMetadata.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utility\ITrackable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Utility\BaseTrackable.cs" />
+    <Folder Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\" />
   </ItemGroup>
 </Project>
