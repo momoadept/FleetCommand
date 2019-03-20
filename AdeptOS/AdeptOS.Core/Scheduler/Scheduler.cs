@@ -22,7 +22,7 @@ namespace IngameScript
         
         public class Scheduler: IAsync
         {
-            private Dictionary<Priority, SortedList<DateTime, Action>> _queue = new Dictionary<Priority, SortedList<DateTime, Action>>();
+            private Dictionary<Priority, ITimedQueue<Action>> _queue = new Dictionary<Priority, ITimedQueue<Action>>();
             private SchedulerStats _stats;
             private string _performanceReport = "Waiting for performance snapshot...";
             private DateTime _now;
@@ -31,9 +31,9 @@ namespace IngameScript
             {
                 _stats = new SchedulerStats(context);
 
-                _queue.Add(Priority.Critical, new SortedList<DateTime, Action>());
-                _queue.Add(Priority.Routine, new SortedList<DateTime, Action>());
-                _queue.Add(Priority.Unimportant, new SortedList<DateTime, Action>());
+                _queue.Add(Priority.Critical, new SortedSetTimedQueue<Action>());
+                _queue.Add(Priority.Routine, new SortedSetTimedQueue<Action>());
+                _queue.Add(Priority.Unimportant, new SortedSetTimedQueue<Action>());
             }
 
             public IPromise<int> Delay(int ms, Priority priority = Priority.Routine)
@@ -42,7 +42,7 @@ namespace IngameScript
                 var targetTime = DateTime.Now.AddMilliseconds(ms);
 
                 _queue[priority]
-                    .Add(
+                    .Push(
                         targetTime,
                         () => promise.Resolve((int)DateTime.Now.Subtract(targetTime).TotalMilliseconds)
                     );
@@ -57,7 +57,7 @@ namespace IngameScript
                 var interval = Aos.Seettings.Priorities.ConditionCheckInterval(priority);
                 var tartetTime = startTime.AddMilliseconds(interval);
 
-                _queue[priority].Add(
+                _queue[priority].Push(
                     tartetTime,
                     () => CheckCondition(condition, priority, timeout, interval, promise, startTime)
                 );
@@ -76,7 +76,7 @@ namespace IngameScript
                     promise.Resolve((int)elapsed);
 
                 else
-                    _queue[priority].Add(
+                    _queue[priority].Push(
                         DateTime.Now.AddMilliseconds(interval),
                         () => CheckCondition(condition, priority, timeout, interval, promise, startTime)
                     );
@@ -104,17 +104,15 @@ namespace IngameScript
 
             private void RunUnimportantTasks() => RunAll(Priority.Unimportant);
 
-
-            private List<DateTime> _done = new List<DateTime>();
             private void RunAll(Priority priority)
             {
-                if (_queue[priority].First().Key > _now)
+                if (_queue[priority].AnyLessThan(_now))
                     return;
 
-                foreach (var action in (_queue[priority].TakeWhile(it => it.Key >= _now)))
+                foreach (var action in _queue[priority].PopLessThan(_now))
                 {
-                    _queue[priority].Remove(action.Key);
-                    action.Value();
+                    _stats.IncActions();
+                    action();
                 }
             }
 

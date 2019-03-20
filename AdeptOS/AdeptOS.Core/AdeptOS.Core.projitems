@@ -9,15 +9,21 @@
     <Import_RootNamespace>AdeptOS.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Builder\DataClasses\BindingContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Builder\DataClasses\IBindingContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Builder\DataClasses\IModuleCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Builder\DataClasses\ModuleCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\GameContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\IGameContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modules\IModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Runner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Configuration\PriorityConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Configuration\SchedulerPerformanceConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\RunnerMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\SchedulerStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataStructures\ITimedQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataStructures\SortedSetTimedQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Enums\Priority.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Exceptions\ConditionTimeoutException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\IAsync.cs" />

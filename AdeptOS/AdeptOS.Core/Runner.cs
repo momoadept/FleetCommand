@@ -31,7 +31,7 @@ namespace IngameScript
             private Scheduler _scheduler;
             private IGameContext _gameContext;
 
-            public void Create(RunnerMetadata metadata, IGameContext gameContext)
+            public void Start(IGameContext gameContext, RunnerMetadata metadata)
             {
                 _gameContext = gameContext;
                 _metadata = metadata;
@@ -52,7 +52,7 @@ namespace IngameScript
 
             private void DoBackgroundTasks()
             {
-                _scheduler.Tick();
+                _gameContext.Echo(_scheduler.Tick());
             }
 
             private void ExecuteCommand(string argument)

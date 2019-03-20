@@ -19,17 +19,9 @@ namespace IngameScript
 {
     partial class Program
     {
-        public interface ITimedQueue<TValue>
+        public class ModuleCollection
         {
-            void Push(DateTime time, TValue value);
 
-            bool AnyLessThan(DateTime time);
-
-            IEnumerable<TValue> PopLessThan(DateTime time);
-
-            void Clear();
-
-            int Count { get; }
         }
     }
 }

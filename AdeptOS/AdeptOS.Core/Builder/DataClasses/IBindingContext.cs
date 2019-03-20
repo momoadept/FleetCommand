@@ -19,17 +19,13 @@ namespace IngameScript
 {
     partial class Program
     {
-        public interface ITimedQueue<TValue>
+        public interface IBindingContext
         {
-            void Push(DateTime time, TValue value);
+            IEnumerable<TModule> Any<TModule>() where TModule : IModule;
+            IEnumerable<TModule> RequireAny<TModule>(IModule caller) where TModule : IModule;
 
-            bool AnyLessThan(DateTime time);
-
-            IEnumerable<TValue> PopLessThan(DateTime time);
-
-            void Clear();
-
-            int Count { get; }
+            TModule One<TModule>() where TModule : IModule;
+            TModule RequireOne<TModule>(IModule caller) where TModule : IModule;
         }
     }
 }
