@@ -19,9 +19,9 @@ namespace IngameScript
 {
     partial class Program
     {
-        public interface IModuleCollection
+        public interface IStore
         {
-            void Add(IModule instance)
+
         }
     }
 }

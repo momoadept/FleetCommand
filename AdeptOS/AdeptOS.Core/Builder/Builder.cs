@@ -19,11 +19,23 @@ namespace IngameScript
 {
     partial class Program
     {
-        public interface IModule
+        public class Builder
         {
-            void Bind(IBindingContext context);
-            void Run();
-            string UniqueName { get; }
+            private IEnumerable<IModule> _modules;
+            public void BindModules(IEnumerable<IModule> modules)
+            {
+                _modules = modules;
+                var bindingContext = new BindingContext(modules);
+
+                foreach (var module in modules)
+                    module.Bind(bindingContext);
+            }
+
+            public void RunModules()
+            {
+                foreach (var module in _modules)
+                    module.Run();
+            }
         }
     }
 }

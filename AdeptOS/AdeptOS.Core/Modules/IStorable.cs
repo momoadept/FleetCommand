@@ -19,13 +19,9 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class RunnerMetadata
+        public interface IStorable
         {
-            public string ShipId;
-            public string ShipAlias;
-            public string RunnerId;
-            public string RunnerAlias;
-            public bool IsMain;
+
         }
     }
 }

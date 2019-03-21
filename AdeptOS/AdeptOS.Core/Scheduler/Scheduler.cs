@@ -56,7 +56,7 @@ namespace IngameScript
                 var startTime = DateTime.Now;
                 var interval = Aos.Seettings.Priorities.ConditionCheckInterval(priority);
                 var tartetTime = startTime.AddMilliseconds(interval);
-
+                
                 _queue[priority].Push(
                     tartetTime,
                     () => CheckCondition(condition, priority, timeout, interval, promise, startTime)

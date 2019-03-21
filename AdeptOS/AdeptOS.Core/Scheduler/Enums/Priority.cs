@@ -22,17 +22,17 @@ namespace IngameScript
         public enum Priority
         {
             /// <summary>
-            /// Guaranteed to execute when scheduled
+            /// Dependant on real-time execution
             /// </summary>
-            Critical = 1,
+            Critical = 10,
 
             /// <summary>
-            /// Can be delayed, but always runs before unimportant
+            /// Needs to be done but not time-sensitive
             /// </summary>
-            Routine = 100,
+            Routine = 1000,
 
             /// <summary>
-            /// Run only if have time
+            /// Not crucial to ship operation
             /// </summary>
             Unimportant = 5000
         }

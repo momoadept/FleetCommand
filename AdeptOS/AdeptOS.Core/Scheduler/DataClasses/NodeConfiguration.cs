@@ -19,9 +19,18 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class ModuleCollection
+        public class NodeConfiguration
         {
+            public string ShipId;
+            public string ShipAlias;
 
+            public string NodeId;
+            public string NodeAlias;
+
+            public bool IsMainNode;
+            public string MainNodeId;
+
+            public List<IModule> Modules;
         }
     }
 }

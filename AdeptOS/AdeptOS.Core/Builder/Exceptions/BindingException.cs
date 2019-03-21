@@ -19,11 +19,15 @@ namespace IngameScript
 {
     partial class Program
     {
-        public interface IModule
+        public class BindingException : Exception
         {
-            void Bind(IBindingContext context);
-            void Run();
-            string UniqueName { get; }
+            public BindingException(string message) : base(message)
+            {
+            }
+
+            public BindingException(string message, Exception innerException) : base(message, innerException)
+            {
+            }
         }
     }
 }
