@@ -4,7 +4,8 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class NodeConfiguration
+        #region mdk preserve
+        public class NConf
         {
             public string ShipId;
             public string ShipAlias;
@@ -17,5 +18,6 @@ namespace IngameScript
 
             public List<IModule> Modules;
         }
+        #endregion
     }
 }

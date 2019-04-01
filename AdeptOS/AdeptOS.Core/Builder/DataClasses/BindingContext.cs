@@ -14,12 +14,12 @@ namespace IngameScript
                 _modules = modules;
             }
 
-            public IEnumerable<TModule> Any<TModule>() where TModule : IModule
+            public IEnumerable<TModule> Any<TModule>()
             {
                 return Get<TModule>();
             }
 
-            public IEnumerable<TModule> RequireAny<TModule>(IModule caller) where TModule : IModule
+            public IEnumerable<TModule> RequireAny<TModule>(IModule caller)
             {
                 var modules = Get<TModule>();
 
@@ -29,7 +29,7 @@ namespace IngameScript
                 return modules;
             }
 
-            public TModule One<TModule>(IModule caller) where TModule : IModule
+            public TModule One<TModule>(IModule caller)
             {
                 var modules = Get<TModule>();
 
@@ -39,7 +39,7 @@ namespace IngameScript
                 return modules.FirstOrDefault();
             }
 
-            public TModule RequireOne<TModule>(IModule caller) where TModule : IModule
+            public TModule RequireOne<TModule>(IModule caller)
             {
                 var modules = Get<TModule>();
 

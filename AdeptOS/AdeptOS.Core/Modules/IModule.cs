@@ -2,11 +2,12 @@
 {
     partial class Program
     {
-        public interface IModule: IStringifiable
+        public interface IModule
         {
+            string UniqueName { get; }
+            string Alias { get; }
             void Bind(IBindingContext context);
             void Run();
-            string UniqueName { get; }
         }
     }
 }

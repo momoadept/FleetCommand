@@ -5,23 +5,28 @@ namespace IngameScript
 {
     partial class Program : MyGridProgram
     {
+        #region mdk preserve
+        NConf Pckg = new NConf
+        {
+            IsMainNode = true,
+            NodeAlias = "AdeptOS Demo",
+            NodeId = "AOSDEMO",
+            ShipAlias = "Demo Ship",
+            ShipId = "DS1",
+            Modules = new List<IModule>()
+            {
+                new Logger(LogSeverity.Debug)
+            }
+        };
+
+        #endregion
+
         private AdeptOSNode node = new AdeptOSNode(); 
 
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
-            node.Start(new GameContext(this, x => Storage = x), new NodeConfiguration
-            {
-                IsMainNode = true,
-                NodeAlias = "AdeptOS Demo",
-                NodeId = "AOSDEMO",
-                ShipAlias = "Demo Ship",
-                ShipId = "DS1",
-                Modules = new List<IModule>()
-                {
-
-                }
-            });
+            node.Start(new GameContext(this, x => Storage = x), Pckg);
         }
 
         public void Save()

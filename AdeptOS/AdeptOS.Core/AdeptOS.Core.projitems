@@ -16,12 +16,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\GameContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\IGameContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Enumerables\LogSeverity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Modules\Interfaces\ILog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Modules\Interfaces\ILogProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Modules\Logger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Modules\LogProviders\BlackBoxLogger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\IModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AdeptOSNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Modules\IStorable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modules\StorableModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Configuration\PriorityConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Configuration\SchedulerPerformanceConfiguration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\NodeConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\_NodeConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataClasses\SchedulerStats.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataStructures\ITimedQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\DataStructures\SortedSetTimedQueue.cs" />
@@ -40,6 +45,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)StateMachine\StateMachine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\BaseDataObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\CollectionParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Interfaces\IStorableModule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Readers\CollectionReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Readers\KeyValueReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Readers\ObjectReader.cs" />
@@ -47,5 +53,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\ObjectParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Interfaces\IStringifiable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Writers\ValueWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Logging\Configuration\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Logging\DataClasses\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Terminal\" />
   </ItemGroup>
 </Project>

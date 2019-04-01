@@ -1,4 +1,5 @@
-﻿using Sandbox.ModAPI.Ingame;
+﻿using System;
+using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
 {
@@ -8,26 +9,46 @@ namespace IngameScript
         {
             public static IAsync Async;
             public static Config Seettings = new Config();
+            public static NConf Node;
         }
 
         public class AdeptOSNode
         {
-            private NodeConfiguration _node;
+            private NConf _node;
             private Scheduler _scheduler;
             private Builder _builder;
             private IGameContext _gameContext;
 
-            public void Start(IGameContext gameContext, NodeConfiguration metadata)
+            public void Start(IGameContext gameContext, NConf metadata)
             {
                 _gameContext = gameContext;
-                _node = metadata;
+                _node = Aos.Node = metadata;
                 Aos.Async = _scheduler = new Scheduler(gameContext);
-                BuildAndRun();
+                try
+                {
+                    BuildAndRun();
+                }
+                catch (Exception e)
+                {
+                    gameContext.Echo("FUCK at Build phase");
+                    gameContext.Echo(e.ToString());
+                    throw;
+                }
+                
             }
 
             public void Save()
             {
-                _builder.SaveModules();
+                try
+                {
+                    _builder.SaveModules();
+                }
+                catch (Exception e)
+                {
+                    _gameContext.Echo("FUCK at Save phase");
+                    _gameContext.Echo(e.ToString());
+                    throw;
+                }
             }
 
             private void BuildAndRun()
@@ -40,14 +61,23 @@ namespace IngameScript
 
             public void Tick(string argument, UpdateType updateSource)
             {
-                if ((updateSource & UpdateType.Update1) == UpdateType.Update1
-                    || (updateSource & UpdateType.Update10) == UpdateType.Update10
-                    || (updateSource & UpdateType.Update100) == UpdateType.Update100)
-                    DoBackgroundTasks();
-                
-                if (!string.IsNullOrEmpty(argument))
+                try
                 {
-                    ExecuteCommand(argument);
+                    if (!string.IsNullOrEmpty(argument))
+                    {
+                        ExecuteCommand(argument);
+                    }
+
+                    if ((updateSource & UpdateType.Update1) == UpdateType.Update1
+                        || (updateSource & UpdateType.Update10) == UpdateType.Update10
+                        || (updateSource & UpdateType.Update100) == UpdateType.Update100)
+                        DoBackgroundTasks();
+                }
+                catch (Exception e)
+                {
+                    _gameContext.Echo("FUCK at Tick phase");
+                    _gameContext.Echo(e.ToString());
+                    throw;
                 }
             }
 

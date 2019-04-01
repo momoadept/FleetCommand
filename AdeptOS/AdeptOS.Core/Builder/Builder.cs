@@ -33,7 +33,7 @@ namespace IngameScript
                 try
                 {
                     var appParser = CreateParser();
-                    appParser.Parse(_modules, _gameContext.Storage);
+                    appParser.Parse(GetStorableModules(), _gameContext.Storage);
                 }
                 catch (Exception e)
                 {
@@ -42,17 +42,17 @@ namespace IngameScript
                 }
             }
 
-            private ObjectParser<IEnumerable<IModule>> CreateParser()
+            private ObjectParser<IEnumerable<IStorableModule>> CreateParser()
             {
                 // we dynamically create properties for each module to save them with named keys
                 var moduleMappings = _modules.Select(
-                    it => new Property<IEnumerable<IModule>>(
+                    it => new Property<IEnumerable<IStorableModule>>(
                         it.UniqueName,
                         modules => modules.First(mod => mod.UniqueName == it.UniqueName),
                         (modules, value) => modules.First(mod => mod.UniqueName == it.UniqueName)?.Restore(value))
                 ).ToList();
 
-                var appParser = new ObjectParser<IEnumerable<IModule>>(moduleMappings);
+                var appParser = new ObjectParser<IEnumerable<IStorableModule>>(moduleMappings);
                 return appParser;
             }
 
@@ -65,8 +65,13 @@ namespace IngameScript
             public void SaveModules()
             {
                 var appParser = CreateParser();
-                var state = appParser.Stringify(_modules);
+                var state = appParser.Stringify(GetStorableModules());
                 _gameContext.Storage = state;
+            }
+
+            private IEnumerable<IStorableModule> GetStorableModules()
+            {
+                return _modules.Where(it => it is IStorableModule).Cast<IStorableModule>();
             }
         }
     }
