@@ -8,17 +8,18 @@ namespace IngameScript
     {
         public class Builder
         {
-            private IEnumerable<IModule> _modules;
+            private List<IModule> _modules = new List<IModule>();
             private IGameContext _gameContext;
 
             public Builder(IGameContext gameContext)
             {
                 _gameContext = gameContext;
+                _modules.Add(_gameContext as IModule);
             }
 
             public void BindModules(IEnumerable<IModule> modules)
             {
-                _modules = modules;
+                _modules.AddRange(modules);
                 var bindingContext = new BindingContext(_modules);
 
                 foreach (var module in _modules)

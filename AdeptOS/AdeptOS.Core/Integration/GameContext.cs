@@ -5,7 +5,7 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class GameContext: IGameContext
+        public class GameContext: IGameContext, IModule
         {
             private MyGridProgram _root;
             private Action<string> _storageSetter;
@@ -27,6 +27,19 @@ namespace IngameScript
             {
                 get { return _root.Storage; }
                 set { _storageSetter(value); }
+            }
+
+            public IMyGridTerminalSystem Grid => _root.GridTerminalSystem;
+
+            public string UniqueName => "Root";
+            public string Alias => "Root";
+
+            public void Bind(IBindingContext context)
+            {
+            }
+
+            public void Run()
+            {
             }
         }
     }
