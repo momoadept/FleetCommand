@@ -1,19 +1,5 @@
-﻿using Sandbox.Game.EntityComponents;
-using Sandbox.ModAPI.Ingame;
-using Sandbox.ModAPI.Interfaces;
-using SpaceEngineers.Game.ModAPI.Ingame;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
+﻿using Sandbox.ModAPI.Ingame;
 using System;
-using VRage.Collections;
-using VRage.Game.Components;
-using VRage.Game.ModAPI.Ingame;
-using VRage.Game.ModAPI.Ingame.Utilities;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Game;
-using VRageMath;
 
 namespace IngameScript
 {
@@ -22,10 +8,12 @@ namespace IngameScript
         public class GameContext: IGameContext
         {
             private MyGridProgram _root;
+            private Action<string> _storageSetter;
 
-            public GameContext(MyGridProgram root)
+            public GameContext(MyGridProgram root, Action<string> storageSetter)
             {
                 _root = root;
+                _storageSetter = storageSetter;
             }
 
             public void Echo(string s)
@@ -35,6 +23,11 @@ namespace IngameScript
 
             public int CurrentSteps => _root.Runtime.CurrentInstructionCount;
             public int MaxSteps => _root.Runtime.MaxInstructionCount;
+            public string Storage
+            {
+                get { return _root.Storage; }
+                set { _storageSetter(value); }
+            }
         }
     }
 }

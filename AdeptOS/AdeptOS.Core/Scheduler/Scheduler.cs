@@ -1,19 +1,5 @@
-﻿using Sandbox.Game.EntityComponents;
-using Sandbox.ModAPI.Ingame;
-using Sandbox.ModAPI.Interfaces;
-using SpaceEngineers.Game.ModAPI.Ingame;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System;
-using VRage.Collections;
-using VRage.Game.Components;
-using VRage.Game.ModAPI.Ingame;
-using VRage.Game.ModAPI.Ingame.Utilities;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Game;
-using VRageMath;
 
 namespace IngameScript
 {
@@ -74,9 +60,8 @@ namespace IngameScript
                     promise.Fail(new ConditionTimeoutException());
                 else if (condition())
                     promise.Resolve((int)elapsed);
-
                 else
-                    _queue[priority].Push(
+                    _queue[priority].Push(          
                         DateTime.Now.AddMilliseconds(interval),
                         () => CheckCondition(condition, priority, timeout, interval, promise, startTime)
                     );
@@ -108,7 +93,7 @@ namespace IngameScript
             {
                 if (_queue[priority].AnyLessThan(_now))
                     return;
-
+                
                 foreach (var action in _queue[priority].PopLessThan(_now))
                 {
                     _stats.IncActions();

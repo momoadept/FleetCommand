@@ -34,6 +34,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\IResolvablePromise.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Promises\Promise.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scheduler\Scheduler.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Storage\Interfaces\IStore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StateMachine\BaseHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StateMachine\IStateMachineController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StateMachine\IStateMachineControlObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StateMachine\StateMachine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\BaseDataObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\CollectionParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Readers\CollectionReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Readers\KeyValueReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Readers\ObjectReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Mappings\Property.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\ObjectParser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Interfaces\IStringifiable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\Writers\ValueWriter.cs" />
   </ItemGroup>
 </Project>
