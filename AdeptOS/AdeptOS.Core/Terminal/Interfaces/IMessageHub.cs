@@ -2,7 +2,7 @@
 {
     partial class Program
     {
-        public interface ITerminal
+        public interface IMessageHub
         {
             void RegisterHandler(string protocol, IMessageHandler handler);
             void ProcessMessage(string message);

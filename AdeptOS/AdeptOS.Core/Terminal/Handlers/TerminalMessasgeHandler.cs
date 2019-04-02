@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
 {
     partial class Program
     {
-        public class TerminalMessasgeHandler: StorableModule<TerminalMessasgeHandler>, IMessageHandler
+        public class TerminalMessasgeHandler: IModule, IMessageHandler, ITerminalMessageSender
         {
-            public override string UniqueName { get; }
-            public override string Alias { get; }
+            public string UniqueName => "TProtocol";
+            public string Alias => "Terminal Protocol Handler";
 
             IGameContext _gameContext;
             Dictionary<string, OperationGroup> _controllers;
             ILog _log;
 
-            private static List<Property<TerminalMessasgeHandler>> mapping = new List<Property<TerminalMessasgeHandler>>()
-            {
+            Dictionary<string, IMyProgrammableBlock> _targetsByTag;
+            List<IMyProgrammableBlock> _targetsBuffer = new List<IMyProgrammableBlock>(10);
 
-            };
-
-            public TerminalMessasgeHandler() : base(mapping)
-            {
-            }
-
-            public override void Bind(IBindingContext context)
+            public void Bind(IBindingContext context)
             {
                 _gameContext = context.RequireOne<IGameContext>(this);
                 var controllables = context.RequireAny<IControllable>(this);
@@ -32,7 +27,16 @@ namespace IngameScript
                 _log = context.RequireOne<ILog>(this);
             }
 
-            public override void Run()
+            public void Run()
+            {
+                Aos.Async
+                    .CreateJob(DiscoverProgrammables, Priority.Unimportant)
+                    .Start();
+
+                DiscoverProgrammables();
+            }
+
+            public void OnSaving()
             {
             }
 
@@ -55,41 +59,47 @@ namespace IngameScript
             {
                 var messageParts = message.Split('|');
                 var path = messageParts[1];
-                var arg = messageParts.Length >= 3 ? messageParts[3] : null;
+                var arg = messageParts.Length >= 3 ? messageParts[2] : null;
 
                 var nodeNames = path.Split('.');
                 if (!_controllers.ContainsKey(nodeNames[0]))
                     throw new Exception($"no module to handle group \"{nodeNames[0]}\"");
 
-                var operation = FindOperation(nodeNames);
-                
+                var operations = _controllers[nodeNames[0]].OperationsByPath();
+                if (!operations.ContainsKey(path))
+                    throw new Exception($"Can't find terminal node: {path}");
+
+                operations[path].Invoke(arg);
             }
 
-            private OperationContract FindOperation(string[] nodeNames)
+            private void DiscoverProgrammables()
             {
-                var currentNode = _controllers[nodeNames[1]] as IOperationNode;
-                var nextInPath = 0;
-
-                while (true)
+                _gameContext.Grid.GetBlocksOfType(_targetsBuffer);
+                _targetsByTag = new Dictionary<string, IMyProgrammableBlock>();
+                foreach (var block in _targetsBuffer)
                 {
-                    ++nextInPath;
+                    var tags = Tag.Tags(block.CustomName);
+                    foreach (var tag in tags)
+                    {
+                        _targetsByTag.Add(tag, block);
+                    }
+                }
+            }
 
-                    if (nextInPath >= nodeNames.Length)
-                        break;
-
-                    var nextNodeName = nodeNames[nextInPath];
-                    var group = (OperationGroup)currentNode;
-
-                    if (!group.Children.ContainsKey(nextNodeName))
-                        throw new Exception($"Can't find terminal node: {nextNodeName}");
-
-                    currentNode = group.Children[nextNodeName];
+            public void Send(string targetTag, string operationPath, string argument = null)
+            {
+                if (!_targetsByTag.ContainsKey(targetTag))
+                {
+                    _log.Error($"No target for T operation found: [{targetTag}]");
+                    return;
                 }
 
-                if (!(currentNode is OperationContract))
-                    throw new Exception($"{currentNode.Name} is not an operation");
+                var message = $"T|{operationPath}|{argument}";
 
-                return (OperationContract) currentNode;
+                Aos.Async
+                    .When(() => _targetsByTag[targetTag].TryRun(message), Priority.Critical, 10000)
+                    .Then(x => _log.Debug(message, "T message sent, delay: " + x))
+                    .Catch(e => _log.Error(message, "couldn't send", e.ToString()));
             }
         }
     }

@@ -10,7 +10,8 @@ namespace IngameScript
         {
             private List<IModule> _modules = new List<IModule>();
             private IGameContext _gameContext;
-            private Terminal _terminal;
+            private MessageHub _messageHub;
+            private ILog _log;
 
             public Builder(IGameContext gameContext)
             {
@@ -21,11 +22,12 @@ namespace IngameScript
             private void SetupCoreModules()
             {
                 _modules.Add(_gameContext as IModule);
-                _terminal = new Terminal();
-                _modules.Add(_terminal);
+                _modules.Add((_log = new Logger(LogSeverity.Debug)) as IModule);
+                _messageHub = new MessageHub();
+                _modules.Add(_messageHub);
                 var terminalHandler = new TerminalMessasgeHandler();
                 _modules.Add(terminalHandler);
-                _terminal.RegisterHandler("T", terminalHandler);
+                _messageHub.RegisterHandler("T", terminalHandler);
             }
 
             public void BindModules(IEnumerable<IModule> modules)
@@ -47,7 +49,7 @@ namespace IngameScript
                     var appParser = CreateParser();
                     appParser.Parse(GetStorableModules(), _gameContext.Storage);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     _gameContext.Storage = "";
                     //Assume that code has changed and reset state
@@ -68,10 +70,12 @@ namespace IngameScript
                 return appParser;
             }
 
-            public void RunModules()
+            public ILog RunModules()
             {
                 foreach (var module in _modules)
                     module.Run();
+
+                return _log;
             }
 
             public void SaveModules()

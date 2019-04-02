@@ -19,6 +19,7 @@ namespace IngameScript
             private Scheduler _scheduler;
             private Builder _builder;
             private IGameContext _gameContext;
+            private ILog _log;
 
             public void Start(IGameContext gameContext, NConf metadata)
             {
@@ -57,7 +58,7 @@ namespace IngameScript
                 _builder = new Builder(_gameContext);
                 _builder.BindModules(_node.Modules);
                 _builder.RestoreModules();
-                _builder.RunModules();
+                _log = _builder.RunModules();
             }
 
             public void Tick(string argument, UpdateType updateSource)
@@ -79,6 +80,7 @@ namespace IngameScript
                 {
                     _gameContext.Echo("FUCK at Tick phase");
                     _gameContext.Echo(e.ToString());
+                    _log.Fatal(e.ToString());
                     throw;
                 }
             }

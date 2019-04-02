@@ -15,7 +15,6 @@ namespace IngameScript
             ShipId = "DS1",
             Modules = new List<IModule>()
             {
-                new Logger(LogSeverity.Debug),
                 new BlackBoxLogger()
             }
         };

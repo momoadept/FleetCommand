@@ -13,11 +13,17 @@ namespace Tester.Tests.Storage
         public DataObject object2;
         public IEnumerable<DataObject> objectCollection;
 
+        public string Alias { get; }
+
         public void Bind(IngameScript.Program.IBindingContext context)
         {
         }
 
         public void Run()
+        {
+        }
+
+        public void OnSaving()
         {
         }
 

@@ -1,4 +1,6 @@
-﻿namespace IngameScript
+﻿using System.Collections.Generic;
+
+namespace IngameScript
 {
     partial class Program
     {
@@ -6,6 +8,10 @@
         {
             string Name { get; }
             string Alias { get; }
+            string FullPath { get; }
+            OperationContract Find(string fullPath);
+            Dictionary<string, OperationContract> OperationsByPath(string prefix = "");
+            OperationGroup Parent { get; }
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Sandbox.ModAPI.Ingame;
 using Tester.Tests.Storage;
-using VRage.Game.ModAPI.Ingame;
 
 namespace Tester
 {
