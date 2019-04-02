@@ -10,11 +10,22 @@ namespace IngameScript
         {
             private List<IModule> _modules = new List<IModule>();
             private IGameContext _gameContext;
+            private Terminal _terminal;
 
             public Builder(IGameContext gameContext)
             {
                 _gameContext = gameContext;
+                SetupCoreModules();
+            }
+
+            private void SetupCoreModules()
+            {
                 _modules.Add(_gameContext as IModule);
+                _terminal = new Terminal();
+                _modules.Add(_terminal);
+                var terminalHandler = new TerminalMessasgeHandler();
+                _modules.Add(terminalHandler);
+                _terminal.RegisterHandler("T", terminalHandler);
             }
 
             public void BindModules(IEnumerable<IModule> modules)

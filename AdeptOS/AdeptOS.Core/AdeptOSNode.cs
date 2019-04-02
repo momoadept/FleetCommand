@@ -10,6 +10,7 @@ namespace IngameScript
             public static IAsync Async;
             public static Config Seettings = new Config();
             public static NConf Node;
+            public static DateTime Now;
         }
 
         public class AdeptOSNode
@@ -61,6 +62,7 @@ namespace IngameScript
 
             public void Tick(string argument, UpdateType updateSource)
             {
+                Aos.Now = DateTime.Now;
                 try
                 {
                     if (!string.IsNullOrEmpty(argument))

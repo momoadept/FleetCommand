@@ -14,9 +14,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Builder\DataClasses\IBindingContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Builder\Exceptions\BindingException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Config.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Tag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\GameContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\IGameContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Enumerables\LogSeverity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Logging\Helpers\LogHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Modules\Interfaces\ILog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Modules\Interfaces\ILogProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Modules\Logger.cs" />
@@ -53,10 +55,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\ObjectParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Interfaces\IStringifiable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Writers\ValueWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\DataClasses\IOperationNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\DataClasses\OperationContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\DataClasses\OperationGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Handlers\TerminalMessasgeHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\IControllable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\IMessageHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\ITerminal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Terminal.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Logging\Configuration\" />
     <Folder Include="$(MSBuildThisFileDirectory)Logging\DataClasses\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Terminal\" />
   </ItemGroup>
 </Project>

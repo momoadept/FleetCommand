@@ -6,6 +6,9 @@ namespace IngameScript
     {
         public abstract class StorableModule<TType>: IModule, IStringifiable where TType: class
         {
+            public abstract string UniqueName { get; }
+            public abstract string Alias { get; }
+
             private List<Property<TType>> _mapping;
             private ObjectParser<TType> _parser;
 
@@ -29,8 +32,10 @@ namespace IngameScript
 
             public abstract void Run();
 
-            public abstract string UniqueName { get; }
-            public abstract string Alias { get; }
+            public virtual void OnSaving()
+            {
+
+            }
         }
     }
 }

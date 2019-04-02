@@ -28,6 +28,10 @@ namespace IngameScript
                 Info($"Log started on {Aos.Node.ShipAlias}-{Aos.Node.ShipId}.{Aos.Node.NodeId} {Aos.Node.NodeAlias}");
             }
 
+            public void OnSaving()
+            {
+            }
+
             public void Debug(params string[] items) => Log(LogSeverity.Debug, items);
 
             public void Info(params string[] items) => Log(LogSeverity.Info, items);

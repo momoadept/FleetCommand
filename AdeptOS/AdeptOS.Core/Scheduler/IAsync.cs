@@ -11,7 +11,7 @@ namespace IngameScript
             /// <param name="ms"></param>
             /// <param name="priority"></param>
             /// <returns>Promise that resolves in a given time with a time error in ms</returns>
-            IPromise<int> Delay(int ms, Priority priority = Priority.Routine);
+            IPromise<int> Delay(int ms = 0, Priority priority = Priority.Routine);
 
             /// <summary>
             /// </summary>

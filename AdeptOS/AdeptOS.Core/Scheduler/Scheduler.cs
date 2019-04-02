@@ -22,7 +22,7 @@ namespace IngameScript
                 _queue.Add(Priority.Unimportant, new SortedSetTimedQueue<Action>());
             }
 
-            public IPromise<int> Delay(int ms, Priority priority = Priority.Routine)
+            public IPromise<int> Delay(int ms = 0, Priority priority = Priority.Routine)
             {
                 var promise = new Promise<int>();
                 var targetTime = DateTime.Now.AddMilliseconds(ms);

@@ -8,6 +8,7 @@
             string Alias { get; }
             void Bind(IBindingContext context);
             void Run();
+            void OnSaving();
         }
     }
 }

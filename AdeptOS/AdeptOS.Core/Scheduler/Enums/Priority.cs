@@ -17,7 +17,7 @@
             /// <summary>
             /// Not crucial to ship operation
             /// </summary>
-            Unimportant = 5000
+            Unimportant = 30000
         }
     }
 }
