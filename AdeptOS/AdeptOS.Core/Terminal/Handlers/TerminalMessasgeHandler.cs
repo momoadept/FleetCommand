@@ -14,12 +14,14 @@ namespace IngameScript
 
             ILog _log;
             Dictionary<string, IControllable> _controllersByName;
+            IMessageSender _sender;
 
             public void Bind(IBindingContext context)
             {
                 var controllables = context.RequireAny<IControllable>(this);
                 _controllersByName = controllables.ToDictionary(it => it.UniqueName);
                 _log = context.RequireOne<ILog>(this);
+                _sender = context.RequireOne<IMessageSender>(this);
             }
 
             public void Run()
@@ -49,8 +51,15 @@ namespace IngameScript
             {
                 var message = new TerminalMessage(messageString);
                 if (!_controllersByName.ContainsKey(message.ControllerName))
-                    throw new Exception($"no controller \"{message.ControllerName}\"");
+                {
+                    if (Aos.Node.IsMainNode)
+                        throw new Exception($"no controller \"{message.ControllerName}\"");
 
+                    _log.Warning($"Can't handle message here, redirecting to main node: {messageString}");
+                    _sender.DispatchMessage(Aos.Node.MainNodeId, messageString);
+                    return;
+                }
+                    
                 var controller = _controllersByName[message.ControllerName];
 
                 if(!controller.Actions.ContainsKey(message.ActionName))

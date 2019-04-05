@@ -23,7 +23,7 @@ namespace IngameScript
             /// <returns>
             /// Returns a new promise
             /// </returns>
-            IPromise<TNewResult> Next<TNewResult>(Func<IPromise<TNewResult>> nextPromiseGenerator);
+            IPromise<TNewResult> Next<TNewResult>(Func<TResult, IPromise<TNewResult>> nextPromiseGenerator);
         }
     }
 }

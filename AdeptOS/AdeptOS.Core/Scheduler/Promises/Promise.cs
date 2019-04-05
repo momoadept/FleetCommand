@@ -48,13 +48,13 @@ namespace IngameScript
                 return this;
             }
 
-            public IPromise<TNewResult> Next<TNewResult>(Func<IPromise<TNewResult>> nextPromiseGenerator)
+            public IPromise<TNewResult> Next<TNewResult>(Func<TResult, IPromise<TNewResult>> nextPromiseGenerator)
             {
                 var nextPromise = new Promise<TNewResult>();
 
                 _thens.Add(r =>
                 {
-                    nextPromiseGenerator()
+                    nextPromiseGenerator(r)
                         .Then(result => nextPromise.Resolve(result))
                         .Catch(e => nextPromise.Fail(e));
                 });

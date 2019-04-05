@@ -120,7 +120,11 @@ namespace IngameScript
                 _stats.Tick();
 
                 if (_stats.Ticks >= Aos.Seettings.SchedulerPerformance.PerformanceSnapshotTicks)
-                    _performanceReport = _stats.Snapshot();
+                {
+                    var pendingRoutines = _queue[Priority.Routine].Count;
+                    _performanceReport = $"{_stats.Snapshot()}\n{pendingRoutines} Routine tasks pending (>6 = stagnation)";
+                }
+                    
 
                 return _performanceReport;
             }
