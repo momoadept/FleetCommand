@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Enumerables\RpcMessageType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IRemoteImpl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IRPC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Modules\Implementation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\Proxy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Modules\RPC.cs" />
   </ItemGroup>

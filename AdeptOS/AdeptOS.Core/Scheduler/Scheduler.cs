@@ -5,7 +5,6 @@ namespace IngameScript
 {
     partial class Program
     {
-        
         public class Scheduler: IAsync
         {
             private Dictionary<Priority, ITimedQueue<Action>> _queue = new Dictionary<Priority, ITimedQueue<Action>>();

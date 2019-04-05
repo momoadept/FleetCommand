@@ -6,7 +6,7 @@
   <installpath>c:\users\user\appdata\local\microsoft\visualstudio\15.0_28fed4ae\extensions\gtb1poiq.v2x</installpath>
   <outputpath>C:\Users\User\AppData\Roaming\SpaceEngineers\IngameScripts\local</outputpath>
   <trimtypes>no</trimtypes>
-  <minify>no</minify>
+  <minify>yes</minify>
   <ignore>
     <folder>mdk</folder>
   </ignore>
