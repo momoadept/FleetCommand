@@ -11,7 +11,7 @@
 
             public int JobCheckInterval(Priority priority)
             {
-                return (int)priority;
+                return (int) priority;
             }
         }
     }

@@ -22,6 +22,8 @@ namespace IngameScript
                 _queue.Add(Priority.Unimportant, new SortedSetTimedQueue<Action>());
             }
 
+            // Promise generators
+
             public IPromise<int> Delay(int ms = 0, Priority priority = Priority.Routine)
             {
                 var promise = new Promise<int>();
@@ -72,6 +74,8 @@ namespace IngameScript
                 return new Job(job, priority);
             }
 
+            // Execution and Balancing
+
             public string Tick()
             {
                 _now = DateTime.Now;
@@ -83,15 +87,16 @@ namespace IngameScript
                 return TrackPerformance();
             }
 
+            // criticals are guaranteed to run
             private void RunAllCriticalTasks() => RunAll(Priority.Critical);
 
-            private void RunRoutineTasks() => RunAll(Priority.Routine);
-
-            private void RunUnimportantTasks() => RunAll(Priority.Unimportant);
+            // Balancing iteration 1. This will spread out pikes of scheduled operations, but may stagnate under high load
+            private void RunRoutineTasks() => RunSingle(Priority.Routine); // given 6 global ticks per second, this will start stagnating with 6 concurrent jobs and slowing down execution
+            private void RunUnimportantTasks() => RunSingle(Priority.Unimportant); // stagnation at 180 concurrent jobs, but jobs are spaced out much more (twice a minute)
 
             private void RunAll(Priority priority)
             {
-                if (_queue[priority].AnyLessThan(_now))
+                if (!_queue[priority].AnyLessThan(_now))
                     return;
                 
                 foreach (var action in _queue[priority].PopLessThan(_now))
@@ -99,6 +104,15 @@ namespace IngameScript
                     _stats.IncActions();
                     action();
                 }
+            }
+
+            private void RunSingle(Priority priority)
+            {
+                if (!_queue[priority].AnyLessThan(_now))
+                    return;
+
+                _stats.IncActions();
+                _queue[priority].PopNext()();
             }
 
             private string TrackPerformance()

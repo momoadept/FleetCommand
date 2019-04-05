@@ -94,6 +94,13 @@ namespace IngameScript
                 _catches.Clear();
                 _finallies.Clear();
             }
+
+            public static IPromise<TValue> FromValue<TValue>(TValue result)
+            {
+                var promise = new Promise<TValue>();
+                promise.Resolve(result);
+                return promise;
+            }
         }
     }
 }

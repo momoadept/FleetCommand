@@ -4,7 +4,12 @@ namespace IngameScript
 {
     partial class Program
     {
-        public interface IPromise<out TResult>
+        public interface IPromise
+        {
+
+        }
+
+        public interface IPromise<out TResult>: IPromise
         {
             IPromise<TResult> Then(Action<TResult> callback);
 

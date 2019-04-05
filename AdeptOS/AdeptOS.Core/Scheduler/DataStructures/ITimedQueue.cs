@@ -13,6 +13,8 @@ namespace IngameScript
 
             IEnumerable<TValue> PopLessThan(DateTime time);
 
+            TValue PopNext();
+
             void Clear();
 
             int Count { get; }

@@ -1,10 +1,13 @@
-﻿namespace IngameScript
+﻿using System.Collections.Generic;
+
+namespace IngameScript
 {
     partial class Program
     {
         public interface IControllable
         {
-            OperationGroup Controller { get; }
+            Dictionary<string, IActionContract> Actions { get; }
+            string UniqueName { get; }
         }
     }
 }

@@ -55,14 +55,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\ObjectParser.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Interfaces\IStringifiable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Writers\ValueWriter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Terminal\DataClasses\IOperationNode.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Terminal\DataClasses\OperationContract.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Terminal\DataClasses\OperationGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Contracts\ActionContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Contracts\IActionContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\DataClasses\TerminalMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\Handlers\TerminalMessasgeHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\IControllable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\IMessageHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\IMessageHub.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\ITerminalMessageSender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\IMessageSender.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\MessageHub.cs" />
   </ItemGroup>
   <ItemGroup>
