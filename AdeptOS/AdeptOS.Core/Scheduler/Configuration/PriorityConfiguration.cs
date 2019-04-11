@@ -4,15 +4,9 @@
     {
         public class PriorityConfiguration
         {
-            public int ConditionCheckInterval(Priority priority)
-            {
-                return (int) priority;
-            }
+            public int ConditionCheckInterval(Priority priority) => (int)priority;
 
-            public int JobCheckInterval(Priority priority)
-            {
-                return (int) priority;
-            }
+            public int JobCheckInterval(Priority priority) => (int)priority;
         }
     }
 }

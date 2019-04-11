@@ -15,11 +15,12 @@ namespace IngameScript
 
         public class AdeptOSNode
         {
-            private NConf _node;
-            private Scheduler _scheduler;
-            private Builder _builder;
-            private IGameContext _gameContext;
-            private ILog _log;
+            NConf _node;
+            Scheduler _scheduler;
+            Builder _builder;
+            IGameContext _gameContext;
+            ILog _log;
+            IMessageHub _messageHub;
 
             public void Start(IGameContext gameContext, NConf metadata)
             {
@@ -53,12 +54,14 @@ namespace IngameScript
                 }
             }
 
-            private void BuildAndRun()
+            void BuildAndRun()
             {
                 _builder = new Builder(_gameContext);
                 _builder.BindModules(_node.Modules);
                 _builder.RestoreModules();
-                _log = _builder.RunModules();
+                _builder.RunModules();
+                _log = _builder.GetLog();
+                _messageHub = _builder.GetMessageHub();
             }
 
             public void Tick(string argument, UpdateType updateSource)
@@ -67,9 +70,7 @@ namespace IngameScript
                 try
                 {
                     if (!string.IsNullOrEmpty(argument))
-                    {
                         ExecuteCommand(argument);
-                    }
 
                     if ((updateSource & UpdateType.Update1) == UpdateType.Update1
                         || (updateSource & UpdateType.Update10) == UpdateType.Update10
@@ -85,14 +86,14 @@ namespace IngameScript
                 }
             }
 
-            private void DoBackgroundTasks()
+            void DoBackgroundTasks()
             {
                 _gameContext.Echo(_scheduler.Tick());
             }
 
-            private void ExecuteCommand(string argument)
+            void ExecuteCommand(string argument)
             {
-
+                _messageHub.ProcessMessage(argument);
             }
         }
     }

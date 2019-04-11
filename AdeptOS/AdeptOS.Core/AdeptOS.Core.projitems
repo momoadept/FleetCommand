@@ -14,7 +14,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Builder\DataClasses\IBindingContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Builder\Exceptions\BindingException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Config.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Tag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\StringExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Contract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Tag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\GameContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\IGameContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Logging\Enumerables\LogSeverity.cs" />
@@ -57,6 +59,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Storage\Writers\ValueWriter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\Contracts\ActionContract.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\Contracts\IActionContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Contracts\Wrappers\Void.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Contracts\Wrappers\Pair.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Terminal\Contracts\Wrappers\Primitive.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\DataClasses\TerminalMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\Handlers\TerminalMessasgeHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Terminal\Interfaces\IControllable.cs" />

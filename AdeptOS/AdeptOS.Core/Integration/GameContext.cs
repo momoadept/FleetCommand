@@ -7,8 +7,8 @@ namespace IngameScript
     {
         public class GameContext: IGameContext, IModule
         {
-            private MyGridProgram _root;
-            private Action<string> _storageSetter;
+            MyGridProgram _root;
+            Action<string> _storageSetter;
 
             public GameContext(MyGridProgram root, Action<string> storageSetter)
             {
@@ -16,10 +16,7 @@ namespace IngameScript
                 _storageSetter = storageSetter;
             }
 
-            public void Echo(string s)
-            {
-                _root.Echo(s);
-            }
+            public void Echo(string s) => _root.Echo(s);
 
             public int CurrentSteps => _root.Runtime.CurrentInstructionCount;
             public int MaxSteps => _root.Runtime.MaxInstructionCount;

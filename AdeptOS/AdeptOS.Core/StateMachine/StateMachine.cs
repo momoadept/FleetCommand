@@ -11,7 +11,7 @@ namespace IngameScript
             public TActions Actions => _controlObjects.ContainsKey(CurrentState) ? _controlObjects[CurrentState] : null;
             public TSynchContext Context { get; }
 
-            private Dictionary<TState, THandler> _controlObjects;
+            Dictionary<TState, THandler> _controlObjects;
 
             public StateMachine(Dictionary<TState, THandler> controlObjects, TState initialState, TSynchContext context)
             {

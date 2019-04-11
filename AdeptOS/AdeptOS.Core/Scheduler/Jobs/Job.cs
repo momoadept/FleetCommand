@@ -7,12 +7,10 @@ namespace IngameScript
         public class Job: IJob
         {
             public bool Running { get; private set; }
-
             public Priority Priority { get; set; }
 
-            private Action _action;
-
-            private bool _stopping;
+            Action _action;
+            bool _stopping;
 
             public Job(Action action, Priority priority)
             {

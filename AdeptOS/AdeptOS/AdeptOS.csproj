@@ -90,10 +90,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="MDKUtilities">
-      <HintPath>c:\users\g.model\appdata\local\microsoft\visualstudio\15.0_a1baf511\extensions\lv4guese.3vo\MDKUtilities.dll</HintPath>
+      <HintPath>c:\users\g.model\appdata\local\microsoft\visualstudio\15.0_a1baf511\extensions\p2p2xuld.eaw\MDKUtilities.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Analyzer Include="c:\users\g.model\appdata\local\microsoft\visualstudio\15.0_a1baf511\extensions\lv4guese.3vo\Analyzers\MDKAnalyzer.dll" />
+    <Analyzer Include="c:\users\g.model\appdata\local\microsoft\visualstudio\15.0_a1baf511\extensions\p2p2xuld.eaw\Analyzers\MDKAnalyzer.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MDK\Bootstrapper.cs" />
@@ -108,6 +108,9 @@
   </ItemGroup>
   <Import Project="..\AdeptOS.Core\AdeptOS.Core.projitems" Label="Shared" />
   <Import Project="..\AdeptOS.RPC\AdeptOS.RPC.projitems" Label="Shared" />
+  <Import Project="..\AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Contract\AdeptOS.CoreFunctions.Contract.projitems" Label="Shared" />
+  <Import Project="..\AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Impl\AdeptOS.CoreFunctions.Impl.projitems" Label="Shared" />
+  <Import Project="..\AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Remote\AdeptOS.CoreFunctions.Remote.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Copy SourceFiles="mdk\mdk.options" DestinationFolder="$(TargetDir)\mdk" />

@@ -25,7 +25,7 @@ namespace IngameScript
             public Dictionary<string, IActionContract> Actions { get; } = new Dictionary<string, IActionContract>();
             public abstract string UniqueName { get; }
             public abstract string Alias { get; }
-            protected abstract string ImplementationTag { get; }
+            protected abstract Tag ImplementationTag { get; }
 
             IRPC _rpc;
 
@@ -38,13 +38,12 @@ namespace IngameScript
 
             public void OnSaving() { }
 
-            protected IActionContract<TArgument, TResult> Remote<TArgument, TResult>(string name, bool noArgument = false) 
+            protected void Remote<TArgument, TResult>(string name, ref IActionContract<TArgument, TResult> contract, bool noArgument = false) 
                 where TResult : class, IStringifiable, new() 
                 where TArgument : class, IStringifiable, new()
             {
-                var contract =  new RemoteActionContract<TArgument, TResult>(_rpc, ImplementationTag, UniqueName, name, noArgument);
+                contract =  new RemoteActionContract<TArgument, TResult>(_rpc, ImplementationTag, UniqueName, name, noArgument);
                 Actions.Add("name", contract);
-                return contract;
             }
         }
     }

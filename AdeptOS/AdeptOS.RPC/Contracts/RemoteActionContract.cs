@@ -26,10 +26,10 @@ namespace IngameScript
             public string Name { get; }
             public bool NoArgument { get; }
             string _controllerName;
-            string _targetTag;
+            Tag _targetTag;
             IRPC _rpc;
 
-            public RemoteActionContract(IRPC rpc, string targetTag, string controllerName, string name, bool noArgument = false)
+            public RemoteActionContract(IRPC rpc, Tag targetTag, string controllerName, string name, bool noArgument = false)
             {
                 _controllerName = controllerName;
                 Name = name;
@@ -51,7 +51,7 @@ namespace IngameScript
                 return DoStringed((string) arg);
             }
 
-            private IPromise<TResult> DoStringed(string arg)
+            IPromise<TResult> DoStringed(string arg)
             {
                 return _rpc.Call(new RpcRoute(_targetTag, _controllerName, Name), arg)
                     .Next(resultString =>

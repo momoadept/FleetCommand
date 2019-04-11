@@ -6,12 +6,10 @@ namespace IngameScript
     {
         public abstract class BaseDataObject<TType>: IStringifiable where TType: class, new ()
         {
-            private List<Property<TType>> _mapping;
-            private ObjectParser<TType> _parser;
+            ObjectParser<TType> _parser;
 
             protected BaseDataObject(List<Property<TType>> mapping)
             {
-                _mapping = mapping;
                 _parser = new ObjectParser<TType>(mapping);
             }
 

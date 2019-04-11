@@ -47,7 +47,7 @@ namespace IngameScript
                 }
             }
 
-            private void ExecuteMessage(string messageString)
+            void ExecuteMessage(string messageString)
             {
                 var message = new TerminalMessage(messageString);
                 if (!_controllersByName.ContainsKey(message.ControllerName))
@@ -56,7 +56,7 @@ namespace IngameScript
                         throw new Exception($"no controller \"{message.ControllerName}\"");
 
                     _log.Warning($"Can't handle message here, redirecting to main node: {messageString}");
-                    _sender.DispatchMessage(Aos.Node.MainNodeId, messageString);
+                    _sender.DispatchMessage(new Tag(Aos.Node.MainNodeId), messageString);
                     return;
                 }
                     

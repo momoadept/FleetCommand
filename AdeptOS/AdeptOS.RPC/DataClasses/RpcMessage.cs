@@ -24,7 +24,8 @@ namespace IngameScript
         public class RpcMessage
         {
             public RpcMessageType Type;
-            public string Id, ControllerName, ActionName, ReturnTag, Data;
+            public Tag ReturnTag;
+            public string Id, ControllerName, ActionName, Data;
 
             public override string ToString()
             {
@@ -52,9 +53,9 @@ namespace IngameScript
                     ParseReturnedResult(messageParts);
             }
 
-            private void ParseActionRequest(string[] messageParts)
+            void ParseActionRequest(string[] messageParts)
             {
-                ReturnTag = messageParts[4];
+                ReturnTag = new Tag(messageParts[4]);
                 Data = string.Join("", messageParts.Skip(5));
 
                 var path = messageParts[3].Split('.');
@@ -62,7 +63,7 @@ namespace IngameScript
                 ActionName = path[1];
             }
 
-            private void ParseReturnedResult(string[] messageParts)
+            void ParseReturnedResult(string[] messageParts)
             {
                 Data = string.Join("", messageParts.Skip(3));
             }

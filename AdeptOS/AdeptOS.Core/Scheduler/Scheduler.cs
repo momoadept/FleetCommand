@@ -7,10 +7,10 @@ namespace IngameScript
     {
         public class Scheduler: IAsync
         {
-            private Dictionary<Priority, ITimedQueue<Action>> _queue = new Dictionary<Priority, ITimedQueue<Action>>();
-            private SchedulerStats _stats;
-            private string _performanceReport = "Waiting for performance snapshot...";
-            private DateTime _now;
+            Dictionary<Priority, ITimedQueue<Action>> _queue = new Dictionary<Priority, ITimedQueue<Action>>();
+             SchedulerStats _stats;
+            string _performanceReport = "Waiting for performance snapshot...";
+            DateTime _now;
 
             public Scheduler(IGameContext context)
             {
@@ -42,17 +42,16 @@ namespace IngameScript
                 var promise = new Promise<int>();
                 var startTime = DateTime.Now;
                 var interval = Aos.Seettings.Priorities.ConditionCheckInterval(priority);
-                var tartetTime = startTime.AddMilliseconds(interval);
                 
                 _queue[priority].Push(
-                    tartetTime,
+                    startTime,
                     () => CheckCondition(condition, priority, timeout, interval, promise, startTime)
                 );
 
                 return promise;
             }
 
-            private void CheckCondition(Func<bool> condition, Priority priority, int timeout, int interval,
+            void CheckCondition(Func<bool> condition, Priority priority, int timeout, int interval,
                 Promise<int> promise, DateTime startTime)
             {
                 var elapsed = DateTime.Now.Subtract(startTime).TotalMilliseconds;
@@ -87,13 +86,13 @@ namespace IngameScript
             }
 
             // criticals are guaranteed to run
-            private void RunAllCriticalTasks() => RunAll(Priority.Critical);
+            void RunAllCriticalTasks() => RunAll(Priority.Critical);
 
             // Balancing iteration 1. This will spread out pikes of scheduled operations, but may stagnate under high load
-            private void RunRoutineTasks() => RunSingle(Priority.Routine); // given 6 global ticks per second, this will start stagnating with 6 concurrent jobs and slowing down execution
-            private void RunUnimportantTasks() => RunSingle(Priority.Unimportant); // stagnation at 180 concurrent jobs, but jobs are spaced out much more (twice a minute)
+            void RunRoutineTasks() => RunSingle(Priority.Routine); // given 6 global ticks per second, this will start stagnating with 6 concurrent jobs and slowing down execution
+            void RunUnimportantTasks() => RunSingle(Priority.Unimportant); // stagnation at 180 concurrent jobs, but jobs are spaced out much more (twice a minute)
 
-            private void RunAll(Priority priority)
+            void RunAll(Priority priority)
             {
                 if (!_queue[priority].AnyLessThan(_now))
                     return;
@@ -105,7 +104,7 @@ namespace IngameScript
                 }
             }
 
-            private void RunSingle(Priority priority)
+            void RunSingle(Priority priority)
             {
                 if (!_queue[priority].AnyLessThan(_now))
                     return;
@@ -114,7 +113,7 @@ namespace IngameScript
                 _queue[priority].PopNext()();
             }
 
-            private string TrackPerformance()
+            string TrackPerformance()
             {
                 _stats.Tick();
 

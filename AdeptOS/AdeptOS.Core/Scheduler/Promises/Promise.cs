@@ -11,12 +11,12 @@ namespace IngameScript
             public bool Failed { get; private set; }
             public bool Completed { get; private set; }
 
-            private TResult _result;
-            private Exception _error;
+            TResult _result;
+            Exception _error;
 
-            private List<Action<TResult>> _thens = new List<Action<TResult>>();
-            private List<Action<Exception>> _catches = new List<Action<Exception>>();
-            private List<Action> _finallies = new List<Action>();
+            List<Action<TResult>> _thens = new List<Action<TResult>>();
+            List<Action<Exception>> _catches = new List<Action<Exception>>();
+            List<Action> _finallies = new List<Action>();
 
             public IPromise<TResult> Then(Action<TResult> callback)
             {
@@ -53,11 +53,10 @@ namespace IngameScript
                 var nextPromise = new Promise<TNewResult>();
 
                 _thens.Add(r =>
-                {
                     nextPromiseGenerator(r)
                         .Then(result => nextPromise.Resolve(result))
-                        .Catch(e => nextPromise.Fail(e));
-                });
+                        .Catch(e => nextPromise.Fail(e))
+                );
 
                 _catches.Add(e => nextPromise.Fail(e));
 
@@ -84,7 +83,7 @@ namespace IngameScript
                 Complete();
             }
 
-            private void Complete()
+            void Complete()
             {
                 Completed = true;
                 foreach (var @finally in _finallies)

@@ -24,14 +24,13 @@ namespace IngameScript
             public Dictionary<string, IActionContract> Actions { get; } = new Dictionary<string, IActionContract>();
             public abstract string UniqueName { get; }
 
-            protected IActionContract<TArgument, TResult> Action<TArgument, TResult>(string name,
+            protected void Action<TArgument, TResult>(string name, ref IActionContract<TArgument, TResult> contract,
                 Func<TArgument, IPromise<TResult>> impl, bool noArgument = false)
                 where TResult : class, IStringifiable, new()
                 where TArgument : class, IStringifiable, new()
             {
-                var contract = new ActionContract<TArgument, TResult>(name, impl, noArgument);
+                contract = new ActionContract<TArgument, TResult>(name, impl, noArgument);
                 Actions.Add("name", contract);
-                return contract;
             }
         }
     }

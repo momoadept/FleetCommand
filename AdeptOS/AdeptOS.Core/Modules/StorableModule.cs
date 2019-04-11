@@ -9,12 +9,10 @@ namespace IngameScript
             public abstract string UniqueName { get; }
             public abstract string Alias { get; }
 
-            private List<Property<TType>> _mapping;
-            private ObjectParser<TType> _parser;
+            ObjectParser<TType> _parser;
 
             protected StorableModule(List<Property<TType>> mapping)
             {
-                _mapping = mapping;
                 _parser = new ObjectParser<TType>(mapping);
             }
 

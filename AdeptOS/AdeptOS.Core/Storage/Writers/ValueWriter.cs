@@ -25,9 +25,7 @@ namespace IngameScript
                 var result = new StringBuilder();
                 var index = 0;
                 foreach (var value in enumerable)
-                {
                     result.Append($"{index++}:{{{StringifyValue(value)}}},");
-                }
 
                 if (result.Length > 0)
                     result.Remove(result.Length - 1, 1);

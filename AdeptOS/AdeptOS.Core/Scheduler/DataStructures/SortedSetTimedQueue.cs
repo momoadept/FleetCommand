@@ -8,9 +8,9 @@ namespace IngameScript
     {
         public class SortedSetTimedQueue<TValue>: ITimedQueue<TValue>
         {
-            private SortedSet<DateTime> _keys = new SortedSet<DateTime>();
-            private Dictionary<DateTime, List<TValue>> _values = new Dictionary<DateTime, List<TValue>>();
-            private DateTime _minTime = DateTime.MinValue;
+            SortedSet<DateTime> _keys = new SortedSet<DateTime>();
+            Dictionary<DateTime, List<TValue>> _values = new Dictionary<DateTime, List<TValue>>();
+            DateTime _minTime = DateTime.MinValue;
 
             public void Push(DateTime time, TValue value)
             {

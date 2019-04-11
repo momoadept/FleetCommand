@@ -6,12 +6,12 @@ namespace IngameScript
     {
         public class SchedulerStats
         {
-            private int _totalSteps = 0;
-            private int _totalAllowedSteps = 0;
+            int _totalSteps = 0;
+            int _totalAllowedSteps = 0;
             public int Ticks { get; private set; } = 0;
-            private int _actions = 0;
-            private DateTime _timeStart = DateTime.Now;
-            private IGameContext _context;
+            int _actions = 0;
+            DateTime _timeStart = DateTime.Now;
+            IGameContext _context;
 
             public SchedulerStats(IGameContext context)
             {
@@ -25,10 +25,7 @@ namespace IngameScript
                 _totalAllowedSteps += _context.MaxSteps;
             }
 
-            public void IncActions()
-            {
-                ++_actions;
-            }
+            public void IncActions() => ++_actions;
 
             public string Snapshot()
             {

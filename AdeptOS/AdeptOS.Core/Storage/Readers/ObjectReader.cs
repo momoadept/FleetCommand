@@ -6,7 +6,7 @@ namespace IngameScript
     {
         public class ObjectReader<TSource>
         {
-            private List<Property<TSource>> _mapping;
+            List<Property<TSource>> _mapping;
 
             public ObjectReader(List<Property<TSource>> mapping)
             {
@@ -19,10 +19,7 @@ namespace IngameScript
                 var keyValues = reader.Parse(values);
 
                 foreach (var property in _mapping)
-                {
-                    var value = keyValues[property.Key];
-                    property.Setter(target, value);
-                }
+                    property.Setter(target, keyValues[property.Key]);
 
                 return target;
             }

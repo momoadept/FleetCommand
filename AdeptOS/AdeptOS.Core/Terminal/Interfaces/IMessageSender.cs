@@ -4,7 +4,7 @@
     {
         public interface IMessageSender
         {
-            void DispatchMessage(string targetTag, string message);
+            void DispatchMessage(Tag targetTag, string message);
         }
     }
 }

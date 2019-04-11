@@ -8,7 +8,7 @@ namespace IngameScript
     {
         public class ObjectParser<TSource>
         {
-            private List<Property<TSource>> _mapping;
+            List<Property<TSource>> _mapping;
 
             public ObjectParser(List<Property<TSource>> mapping)
             {

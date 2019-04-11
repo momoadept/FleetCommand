@@ -14,14 +14,14 @@ namespace IngameScript
             IGameContext _gameContext;
 
             LogSeverity _level;
-            string _targetTag;
+            Tag _targetTag;
 
             List<string> _lines = new List<string>(500);
             List<IMyTerminalBlock> _target = new List<IMyTerminalBlock>();
 
             public BlackBoxLogger(LogSeverity level = LogSeverity.Info, string targetTag = "BLACKBOX")
             {
-                _targetTag = Tag.Wrap(targetTag);
+                _targetTag = new Tag(targetTag);
                 _level = level;
             }
 
@@ -32,7 +32,7 @@ namespace IngameScript
 
             public void Run()
             {
-                _gameContext.Grid.SearchBlocksOfName(_targetTag, _target);
+                _gameContext.Grid.SearchBlocksOfName(_targetTag.Wrapped, _target);
                 Aos.Async.CreateJob(Flush).Start();
             }
             
@@ -45,13 +45,13 @@ namespace IngameScript
                 _lines.Add($"{Aos.Now} [{LogHelper.SeverityString(severity)}]: {line}");
             }
 
-            public void OnSaving()
-            {
-                Flush();
-            }
+            public void OnSaving() => Flush();
 
-            private void Flush()
+            void Flush()
             {
+                if (_lines.Count <= 0)
+                    return;
+
                 var output = string.Join("\n", _lines);
                 foreach (var block in _target)
                     block.CustomData += output;

@@ -7,17 +7,14 @@ namespace IngameScript
     {
         public class BindingContext: IBindingContext
         {
-            private IEnumerable<IModule> _modules;
+            IEnumerable<IModule> _modules;
 
             public BindingContext(IEnumerable<IModule> modules)
             {
                 _modules = modules;
             }
 
-            public IEnumerable<TModule> Any<TModule>()
-            {
-                return Get<TModule>();
-            }
+            public IEnumerable<TModule> Any<TModule>() => Get<TModule>();
 
             public IEnumerable<TModule> RequireAny<TModule>(IModule caller)
             {
@@ -52,10 +49,7 @@ namespace IngameScript
                 return modules.First();
             }
 
-            private IEnumerable<TModule> Get<TModule>()
-            {
-                return _modules.Where(it => it is TModule).Cast<TModule>();
-            }
+            IEnumerable<TModule> Get<TModule>() => _modules.Where(it => it is TModule).Cast<TModule>();
         }
     }
 }

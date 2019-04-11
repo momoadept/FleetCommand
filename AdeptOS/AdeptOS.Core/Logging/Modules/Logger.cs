@@ -6,8 +6,8 @@ namespace IngameScript
     {
         public class Logger: IModule, ILog
         {
-            private IEnumerable<ILogProvider> _providers;
-            private LogSeverity _globalLogSeverity;
+            IEnumerable<ILogProvider> _providers;
+            LogSeverity _globalLogSeverity;
 
             public Logger(LogSeverity globalLogSeverity)
             {
@@ -42,7 +42,7 @@ namespace IngameScript
 
             public void Fatal(params string[] items) => Log(LogSeverity.Fatal, items);
 
-            private void Log(LogSeverity severity, params string[] items)
+            void Log(LogSeverity severity, params string[] items)
             {
                 if (severity < _globalLogSeverity)
                     return;

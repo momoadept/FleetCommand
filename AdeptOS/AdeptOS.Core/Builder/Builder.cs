@@ -8,10 +8,10 @@ namespace IngameScript
     {
         public class Builder
         {
-            private List<IModule> _modules = new List<IModule>();
-            private IGameContext _gameContext;
-            private MessageHub _messageHub;
-            private ILog _log;
+            List<IModule> _modules = new List<IModule>();
+            IGameContext _gameContext;
+            MessageHub _messageHub;
+            ILog _log;
 
             public Builder(IGameContext gameContext)
             {
@@ -56,27 +56,28 @@ namespace IngameScript
                 }
             }
 
-            private ObjectParser<IEnumerable<IStorableModule>> CreateParser()
+            ObjectParser<IEnumerable<IStorableModule>> CreateParser()
             {
                 // we dynamically create properties for each module to save them with named keys
                 var moduleMappings = _modules.Select(
                     it => new Property<IEnumerable<IStorableModule>>(
                         it.UniqueName,
-                        modules => modules.First(mod => mod.UniqueName == it.UniqueName),
-                        (modules, value) => modules.First(mod => mod.UniqueName == it.UniqueName)?.Restore(value))
+                        modules => modules.FirstOrDefault(mod => mod.UniqueName == it.UniqueName),
+                        (modules, value) => modules.FirstOrDefault(mod => mod.UniqueName == it.UniqueName)?.Restore(value))
                 ).ToList();
 
                 var appParser = new ObjectParser<IEnumerable<IStorableModule>>(moduleMappings);
                 return appParser;
             }
 
-            public ILog RunModules()
+            public void RunModules()
             {
                 foreach (var module in _modules)
                     module.Run();
-
-                return _log;
             }
+
+            public ILog GetLog() => _log;
+            public IMessageHub GetMessageHub() => _messageHub;
 
             public void SaveModules()
             {
@@ -85,10 +86,7 @@ namespace IngameScript
                 _gameContext.Storage = state;
             }
 
-            private IEnumerable<IStorableModule> GetStorableModules()
-            {
-                return _modules.Where(it => it is IStorableModule).Cast<IStorableModule>();
-            }
+            IEnumerable<IStorableModule> GetStorableModules() => _modules.Where(it => it is IStorableModule).Cast<IStorableModule>();
         }
     }
 }

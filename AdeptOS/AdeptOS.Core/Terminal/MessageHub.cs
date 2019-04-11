@@ -14,7 +14,7 @@ namespace IngameScript
             IGameContext _gameContext;
 
             Dictionary<string, IMessageHandler> _handlerByProtocol = new Dictionary<string, IMessageHandler>(3);
-            Dictionary<string, IMyProgrammableBlock> _targetsByTag;
+            Dictionary<Tag, IMyProgrammableBlock> _targetsByTag;
             List<IMyProgrammableBlock> _targetsBuffer = new List<IMyProgrammableBlock>(10);
 
             public void Bind(IBindingContext context)
@@ -48,7 +48,7 @@ namespace IngameScript
                     .Then(x => _handlerByProtocol[protocol].Handle(message));
             }
 
-            public void DispatchMessage(string targetTag, string message)
+            public void DispatchMessage(Tag targetTag, string message)
             {
                 if (!_targetsByTag.ContainsKey(targetTag))
                 {
@@ -62,18 +62,13 @@ namespace IngameScript
                     .Catch(e => _log.Error(message, "couldn't send", e.ToString()));
             }
 
-            private void DiscoverProgrammables()
+            void DiscoverProgrammables()
             {
                 _gameContext.Grid.GetBlocksOfType(_targetsBuffer);
-                _targetsByTag = new Dictionary<string, IMyProgrammableBlock>();
+                _targetsByTag = new Dictionary<Tag, IMyProgrammableBlock>();
                 foreach (var block in _targetsBuffer)
-                {
-                    var tags = Tag.Tags(block.CustomName);
-                    foreach (var tag in tags)
-                    {
+                    foreach (var tag in Tag.FromName(block.CustomName))
                         _targetsByTag.Add(tag, block);
-                    }
-                }
             }
         }
     }

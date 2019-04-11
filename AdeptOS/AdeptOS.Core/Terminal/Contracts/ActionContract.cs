@@ -12,7 +12,7 @@ namespace IngameScript
 
             public bool NoArgument { get; }
 
-            private Func<TArgument, IPromise<TResult>> _invoke;
+            Func<TArgument, IPromise<TResult>> _invoke;
 
             public ActionContract(string name, Func<TArgument, IPromise<TResult>> invoke, bool noArgument = true)
             {

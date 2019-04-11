@@ -18,9 +18,7 @@ namespace IngameScript
                 var writer = new ValueWriter();
                 var values = new List<string>();
                 foreach (var value in source)
-                {
                     values.Add(writer.StringifyValue(value));
-                }
 
                 var result = new StringBuilder();
                 result.Append("{");

@@ -32,7 +32,7 @@ namespace IngameScript
                 Argument = agrumentParts;
             }
 
-            private void ParsePath()
+            void ParsePath()
             {
                 var pathDetails = Path.Split('.');
                 ControllerName = pathDetails[0];

@@ -55,7 +55,7 @@ namespace IngameScript
                     ControllerName = route.ControllerName,
                     ActionName = route.ActionName,
                     Data = argument,
-                    ReturnTag = Aos.Node.NodeId
+                    ReturnTag = new Tag(Aos.Node.NodeId)
                 };
 
                 var promise = new Promise<string>();
@@ -73,7 +73,7 @@ namespace IngameScript
                     AcceptResult(rpcMessage);
             }
 
-            private void ExecuteAction(RpcMessage message)
+            void ExecuteAction(RpcMessage message)
             {
                 var impl = _implementationsByName[message.ControllerName];
                 var operation = impl.Actions[message.ActionName];
@@ -92,7 +92,7 @@ namespace IngameScript
                     });
             }
 
-            private void AcceptResult(RpcMessage message)
+            void AcceptResult(RpcMessage message)
             {
                 var promise = _waitingForResult[message.Id];
                 _waitingForResult.Remove(message.Id);
@@ -100,7 +100,7 @@ namespace IngameScript
             }
 
             int _counter;
-            private string Id()
+            string Id()
             {
                 if (_counter >= 10000)
                     _counter = 0;

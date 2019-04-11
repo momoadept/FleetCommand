@@ -21,9 +21,10 @@ namespace IngameScript
     {
         public class RpcRoute
         {
-            public string TargetTag, ControllerName, ActionName;
+            public string ControllerName, ActionName;
+            public Tag TargetTag;
 
-            public RpcRoute(string targetTag, string controllerName, string actionName)
+            public RpcRoute(Tag targetTag, string controllerName, string actionName)
             {
                 TargetTag = targetTag;
                 ControllerName = controllerName;

@@ -37,7 +37,7 @@ namespace IngameScript
                 return stateMachine.Context.KeysToValues;
             }
 
-            private enum ReaderState
+            enum ReaderState
             {
                 Key,
                 KeySeparator,
@@ -46,12 +46,12 @@ namespace IngameScript
                 Finished
             }
 
-            private interface IReaderActions
+            interface IReaderActions
             {
                 void Next();
             }
 
-            private class ReaderContext
+            class ReaderContext
             {
                 public string Data;
                 public int Index = 0;
@@ -59,7 +59,7 @@ namespace IngameScript
                 public string CurrentKey;
             }
 
-            private abstract class ReaderHandler : BaseHandler<ReaderState, ReaderContext>, IReaderActions
+            abstract class ReaderHandler : BaseHandler<ReaderState, ReaderContext>, IReaderActions
             {
                 public abstract void Next();
 
@@ -68,9 +68,9 @@ namespace IngameScript
                 protected void Inc() => _stateMachine.Context.Index++;
             }
 
-            private class KeyReader : ReaderHandler
+            class KeyReader : ReaderHandler
             {
-                private StringBuilder _key = new StringBuilder();
+                StringBuilder _key = new StringBuilder();
 
                 public override void Enter()
                 {
@@ -101,7 +101,7 @@ namespace IngameScript
                 }
             }
 
-            private class KeySeparatorReader : ReaderHandler
+            class KeySeparatorReader : ReaderHandler
             {
                 public override void Enter()
                 {
@@ -120,10 +120,10 @@ namespace IngameScript
                 }
             }
 
-            private class ValueReader : ReaderHandler
+            class ValueReader : ReaderHandler
             {
-                private StringBuilder _value = new StringBuilder();
-                private int _bracketBalance = 0;
+                StringBuilder _value = new StringBuilder();
+                int _bracketBalance = 0;
 
                 public override void Enter()
                 {
@@ -158,7 +158,7 @@ namespace IngameScript
                 }
             }
 
-            private class EntrySeparatorReader : ReaderHandler
+            class EntrySeparatorReader : ReaderHandler
             {
                 public override void Enter()
                 {
