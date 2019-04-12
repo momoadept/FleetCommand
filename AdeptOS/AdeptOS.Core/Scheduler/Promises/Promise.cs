@@ -100,6 +100,13 @@ namespace IngameScript
                 promise.Resolve(result);
                 return promise;
             }
+
+            public static IPromise<TResult> FromError(Exception e)
+            {
+                var promise = new Promise<TResult>();
+                promise.Fail(e);
+                return promise;
+            }
         }
     }
 }

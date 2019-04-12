@@ -24,15 +24,36 @@ namespace IngameScript
         /// </summary>
         public interface ICoreFunctions
         {
-            IActionContract<Pair<Primitive<string>, Primitive<string>>, Void> ChangeShipNameAndId { get; }
-            IActionContract<Pair<Primitive<string>, Primitive<string>>, Void> ChangeNodeNameAndId { get; }
+            IActionContract<
+                    Pair<Primitive<string>, Primitive<string>>,
+                    Void>
+                ChangeShipNameAndId { get; }
+
+            IActionContract<
+                    Pair<Primitive<string>, Primitive<string>>,
+                    Void>
+                ChangeNodeNameAndId { get; }
+
             IActionContract<Primitive<string>, Void> ChangeShipName { get; }
             IActionContract<Void, Void> AssignRandomShipId { get; }
-            
+
             /// <summary>
             /// Sets NodeId to the PB tag
             /// </summary>
             IActionContract<Void, Void> UpdatePbTag { get; }
+
+            /// <summary>
+            /// Returns ShipAlias and ShipId
+            /// </summary>
+            IActionContract<
+                    Void,
+                    Pair<Primitive<string>, Primitive<string>>>
+                GetShipMeta { get; }
+
+            IActionContract<
+                    Void,
+                    NodeMeta>
+                GetNodeMeta { get; }
         }
     }
 }

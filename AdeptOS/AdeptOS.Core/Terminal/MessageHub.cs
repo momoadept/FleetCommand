@@ -56,8 +56,13 @@ namespace IngameScript
                     return;
                 }
 
+                DispatchMessage(_targetsByTag[targetTag], message);
+            }
+
+            public void DispatchMessage(IMyProgrammableBlock target, string message)
+            {
                 Aos.Async
-                    .When(() => _targetsByTag[targetTag].TryRun(message), Priority.Critical, 10000)
+                    .When(() => target.TryRun(message), Priority.Critical, 10000)
                     .Then(x => _log.Debug(message, "message sent, delay: " + x))
                     .Catch(e => _log.Error(message, "couldn't send", e.ToString()));
             }

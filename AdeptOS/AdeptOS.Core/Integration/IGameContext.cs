@@ -13,6 +13,7 @@ namespace IngameScript
             string Storage { get; set; }
 
             IMyGridTerminalSystem Grid { get; }
+            IMyProgrammableBlock Me { get; }
         }
     }
 }

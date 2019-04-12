@@ -27,6 +27,7 @@ namespace IngameScript
             }
 
             public IMyGridTerminalSystem Grid => _root.GridTerminalSystem;
+            public IMyProgrammableBlock Me => _root.Me;
 
             public string UniqueName => "Root";
             public string Alias => "Root";

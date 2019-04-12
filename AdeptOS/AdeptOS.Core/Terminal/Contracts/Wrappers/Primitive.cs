@@ -25,6 +25,12 @@ namespace IngameScript
 
             public string Stringify() => $"{Value}";
 
+            public T Retrieve(string value)
+            {
+                Restore(value);
+                return Value;
+            }
+
             public void Restore(string value)
             {
                 var val = value.Replace("{", "").Replace("}", "");

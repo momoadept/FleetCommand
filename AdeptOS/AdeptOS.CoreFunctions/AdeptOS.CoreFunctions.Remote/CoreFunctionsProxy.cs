@@ -29,6 +29,8 @@ namespace IngameScript
             public IActionContract<Primitive<string>, Void> ChangeShipName { get; }
             public IActionContract<Void, Void> AssignRandomShipId { get; }
             public IActionContract<Void, Void> UpdatePbTag { get; }
+            public IActionContract<Void, Pair<Primitive<string>, Primitive<string>>> GetShipMeta { get; }
+            public IActionContract<Void, NodeMeta> GetNodeMeta { get; }
         }
     }
 }
