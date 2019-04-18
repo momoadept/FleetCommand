@@ -54,6 +54,8 @@ namespace IngameScript
                 var nodeTag = new Tag(Aos.Node.NodeId);
                 if (!nodeTag.InName(_gameContext.Me.CustomName))
                     _gameContext.Me.CustomName = nodeTag.AddToName(_gameContext.Me.CustomName);
+
+                _log.Debug("System functions started OK");
             }
 
             public void OnSaving()

@@ -36,6 +36,7 @@ Global
 		AdeptOS.Core\AdeptOS.Core.projitems*{36c187a8-c2f7-4f49-89c2-2cb3308d5543}*SharedItemsImports = 13
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Remote\AdeptOS.CoreFunctions.Remote.projitems*{4a1dd7e8-f415-4702-a2ea-494e26d05162}*SharedItemsImports = 13
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Contract\AdeptOS.CoreFunctions.Contract.projitems*{570887fe-765e-4134-a864-bab92289c6f2}*SharedItemsImports = 13
+		AdeptOS.Core\AdeptOS.Core.projitems*{65ba790d-11f7-4f1f-8e87-7e54b1a3eb30}*SharedItemsImports = 4
 		AdeptOS.Core\AdeptOS.Core.projitems*{6fc614f1-0f7f-4226-81da-6649c7c2710b}*SharedItemsImports = 4
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Contract\AdeptOS.CoreFunctions.Contract.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Impl\AdeptOS.CoreFunctions.Impl.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4

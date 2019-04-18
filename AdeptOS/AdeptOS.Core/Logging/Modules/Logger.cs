@@ -30,6 +30,8 @@ namespace IngameScript
 
             public void OnSaving()
             {
+                Info($"System shutdown");
+                Info("==========||||||||||=========");
             }
 
             public void Debug(params string[] items) => Log(LogSeverity.Debug, items);
