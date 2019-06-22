@@ -10,5 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CoreFunctions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemController.cs" />
   </ItemGroup>
 </Project>

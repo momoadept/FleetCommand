@@ -38,11 +38,11 @@ namespace IngameScript
 
             public void OnSaving() { }
 
-            protected void Remote<TArgument, TResult>(string name, ref IActionContract<TArgument, TResult> contract, bool noArgument = false) 
+            protected void Remote<TArgument, TResult>(string name, bool noArgument = false) 
                 where TResult : class, IStringifiable, new() 
                 where TArgument : class, IStringifiable, new()
             {
-                contract =  new RemoteActionContract<TArgument, TResult>(_rpc, ImplementationTag, UniqueName, name, noArgument);
+                var contract =  new RemoteActionContract<TArgument, TResult>(_rpc, ImplementationTag, UniqueName, name, noArgument);
                 Actions.Add("name", contract);
             }
         }

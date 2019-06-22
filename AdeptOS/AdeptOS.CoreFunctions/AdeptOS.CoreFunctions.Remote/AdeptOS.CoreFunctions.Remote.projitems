@@ -9,6 +9,6 @@
     <Import_RootNamespace>AdeptOS.CoreFunctions.Remote</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)CoreFunctionsProxy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SystemProxy.cs" />
   </ItemGroup>
 </Project>

@@ -42,5 +42,18 @@ namespace IngameScript
             builder.Append($"({name})");
             target.CustomName = builder.ToString();
         }
+
+        public static Dictionary<string, Program.IActionContract> Add<TArgument, TResult>(
+            this Dictionary<string, Program.IActionContract> actions,
+            string name,
+            Func<TArgument, Program.IPromise<TResult>> impl,
+            bool noArgument = false)
+            where TResult : class, Program.IStringifiable, new()
+            where TArgument : class, Program.IStringifiable, new()
+        {
+            var contract = new Program.ActionContract<TArgument, TResult>(name, impl, noArgument);
+            actions.Add(name, contract);
+            return actions;
+        }
     }
 }

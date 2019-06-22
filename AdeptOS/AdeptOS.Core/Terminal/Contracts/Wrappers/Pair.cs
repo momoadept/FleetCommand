@@ -36,6 +36,12 @@ namespace IngameScript
             {
                 
             }
+
+            public Pair(T1 first, T2 second) : base(_mapping)
+            {
+                First = first;
+                Second = second;
+            }
         }
     }
 }
