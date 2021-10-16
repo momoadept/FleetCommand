@@ -30,7 +30,7 @@ namespace IngameScript
 
             public void OnSaving()
             {
-                Info($"Systems shutdown");
+                Info($"Systems saving");
                 Info("==========||||||||||=========");
             }
 

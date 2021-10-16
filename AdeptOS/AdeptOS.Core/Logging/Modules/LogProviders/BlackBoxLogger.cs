@@ -36,7 +36,6 @@ namespace IngameScript
                 var _surface = _gameContext.Me.GetSurface(0);
                 _surface.WriteText("");
                 Aos.Async.CreateJob(Flush).Start();
-                //Aos.Async.CreateJob(() => this.Log(LogSeverity.Info, "Test Job")).Start();
             }
             
             public void Log(LogSeverity severity, params string[] items)
@@ -55,12 +54,18 @@ namespace IngameScript
                 if (_lines.Count <= 0)
                     return;
 
+                _lines.Reverse();
+
                 var output = string.Join("\n", _lines);
                 foreach (var block in _target)
                     block.CustomData += output;
 
-                _gameContext.Me.GetSurface(0).WriteText("\n", true);
-                _gameContext.Me.GetSurface(0).WriteText(output, true);
+                var outputSurface = _gameContext.Me.GetSurface(0);
+                var text = outputSurface.GetText();
+                outputSurface.WriteText("", false);
+                outputSurface.WriteText(output, true);
+                outputSurface.WriteText("\n", true);
+                outputSurface.WriteText(text, true);
 
                 _lines.Clear();
             }

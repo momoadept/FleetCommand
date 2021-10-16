@@ -54,5 +54,23 @@ namespace IngameScript
             actions.Add(name, contract);
             return actions;
         }
+
+        public static string FillWhitespace(this string s, int length)
+        {
+            if (s.Length < length)
+            {
+                var spacesToAdd = length - s.Length;
+                var spaces = string.Join("", new int[spacesToAdd].Select(x => " "));
+
+                return $"{s}{spaces}";
+            }
+
+            if (s.Length > length)
+            {
+                return s.Substring(0, length - 4) + "...";
+            }
+
+            return s;
+        }
     }
 }

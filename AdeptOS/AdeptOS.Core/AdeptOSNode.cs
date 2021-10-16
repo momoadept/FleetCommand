@@ -1,6 +1,7 @@
 ﻿using System;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.GUI.TextPanel;
+using VRage.Game.ModAPI.Ingame;
 
 namespace IngameScript
 {
@@ -50,6 +51,7 @@ namespace IngameScript
                 try
                 {
                     _builder.SaveModules();
+                    _surface.WriteText(_gameContext.Storage);
                 }
                 catch (Exception e)
                 {
