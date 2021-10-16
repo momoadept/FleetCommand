@@ -9,7 +9,6 @@
     <Import_RootNamespace>AdeptOS.CoreFunctions.Contract</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ICoreFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NodeMeta.cs" />
   </ItemGroup>

@@ -17,7 +17,7 @@ namespace IngameScript
                 if (enumerable != null && !(enumerable is string))
                     return StringifyCollection(enumerable);
 
-                return value?.ToString() ?? "null";
+                return value?.ToString() ?? "";
             }
 
             public string StringifyCollection(IEnumerable enumerable)

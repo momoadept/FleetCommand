@@ -59,7 +59,7 @@ namespace IngameScript
             ObjectParser<IEnumerable<IStorableModule>> CreateParser()
             {
                 // we dynamically create properties for each module to save them with named keys
-                var moduleMappings = _modules.Select(
+                var moduleMappings = GetStorableModules().Select(
                     it => new Property<IEnumerable<IStorableModule>>(
                         it.UniqueName,
                         modules => modules.FirstOrDefault(mod => mod.UniqueName == it.UniqueName),
@@ -81,6 +81,8 @@ namespace IngameScript
 
             public void SaveModules()
             {
+                _modules.ForEach(x => x.OnSaving());
+
                 var appParser = CreateParser();
                 var state = appParser.Stringify(GetStorableModules());
                 _gameContext.Storage = state;

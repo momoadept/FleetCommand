@@ -31,20 +31,33 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPackages.AosCoreWithRPC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{CB853D3F-B8F7-4E2A-ACCA-F90C2141C0CA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdeptOS.Inventory", "AdeptOS.Inventory", "{4AE70F38-4B09-4A33-B575-3B9ADE272F20}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AdeptOS.Inventory.Contract", "AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.shproj", "{EE091644-755A-4EDF-B8B4-184DB8E36EB5}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AdeptOS.Inventory.Impl", "AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.shproj", "{7C31EBC7-C7E8-4F4A-8C54-A74397058EC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPackages.AosCoreInventory", "..\TestPackages\TestPackages.AosCoreInventory\TestPackages.AosCoreInventory.csproj", "{499FDB05-1955-4B9D-BC8A-B169C2053D53}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Impl\AdeptOS.CoreFunctions.Impl.projitems*{0df5a990-156e-464c-9175-1e3d48682389}*SharedItemsImports = 13
 		AdeptOS.RPC\AdeptOS.RPC.projitems*{232c056d-eb8a-4a00-bb28-6a029e56b083}*SharedItemsImports = 13
 		AdeptOS.Core\AdeptOS.Core.projitems*{36c187a8-c2f7-4f49-89c2-2cb3308d5543}*SharedItemsImports = 13
+		AdeptOS.Core\AdeptOS.Core.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
+		AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
+		AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Remote\AdeptOS.CoreFunctions.Remote.projitems*{4a1dd7e8-f415-4702-a2ea-494e26d05162}*SharedItemsImports = 13
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Contract\AdeptOS.CoreFunctions.Contract.projitems*{570887fe-765e-4134-a864-bab92289c6f2}*SharedItemsImports = 13
 		AdeptOS.Core\AdeptOS.Core.projitems*{65ba790d-11f7-4f1f-8e87-7e54b1a3eb30}*SharedItemsImports = 4
 		AdeptOS.Core\AdeptOS.Core.projitems*{6fc614f1-0f7f-4226-81da-6649c7c2710b}*SharedItemsImports = 4
+		AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems*{7c31ebc7-c7e8-4f4a-8c54-a74397058ec3}*SharedItemsImports = 13
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Contract\AdeptOS.CoreFunctions.Contract.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Impl\AdeptOS.CoreFunctions.Impl.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Remote\AdeptOS.CoreFunctions.Remote.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.Core\AdeptOS.Core.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.RPC\AdeptOS.RPC.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
+		AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.projitems*{ee091644-755a-4edf-b8b4-184db8e36eb5}*SharedItemsImports = 13
 		AdeptOS.Core\AdeptOS.Core.projitems*{ff49f997-61b3-4549-973b-05077d1d8b3b}*SharedItemsImports = 4
 		AdeptOS.RPC\AdeptOS.RPC.projitems*{ff49f997-61b3-4549-973b-05077d1d8b3b}*SharedItemsImports = 4
 	EndGlobalSection
@@ -84,6 +97,13 @@ Global
 		{FF49F997-61B3-4549-973B-05077D1D8B3B}.Release|Any CPU.Build.0 = Debug|x64
 		{FF49F997-61B3-4549-973B-05077D1D8B3B}.Release|x64.ActiveCfg = Debug|x64
 		{FF49F997-61B3-4549-973B-05077D1D8B3B}.Release|x64.Build.0 = Debug|x64
+		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Debug|x64.ActiveCfg = Debug|x64
+		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Debug|x64.Build.0 = Debug|x64
+		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Release|Any CPU.ActiveCfg = Debug|x64
+		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Release|Any CPU.Build.0 = Debug|x64
+		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Release|x64.ActiveCfg = Debug|x64
+		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Release|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +118,10 @@ Global
 		{4A1DD7E8-F415-4702-A2EA-494E26D05162} = {4FFAC40E-B184-4BBE-AF2D-085993D3CAD9}
 		{6FC614F1-0F7F-4226-81DA-6649C7C2710B} = {449C80C2-CE23-4BCA-B4B6-C840CDBE57EE}
 		{FF49F997-61B3-4549-973B-05077D1D8B3B} = {449C80C2-CE23-4BCA-B4B6-C840CDBE57EE}
+		{4AE70F38-4B09-4A33-B575-3B9ADE272F20} = {4170D6EA-E682-4E9C-9144-E598AAB1D6B3}
+		{EE091644-755A-4EDF-B8B4-184DB8E36EB5} = {4AE70F38-4B09-4A33-B575-3B9ADE272F20}
+		{7C31EBC7-C7E8-4F4A-8C54-A74397058EC3} = {4AE70F38-4B09-4A33-B575-3B9ADE272F20}
+		{499FDB05-1955-4B9D-BC8A-B169C2053D53} = {449C80C2-CE23-4BCA-B4B6-C840CDBE57EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BDEF870-93B7-4011-82FD-22D4B16BE55E}

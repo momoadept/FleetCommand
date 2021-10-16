@@ -42,7 +42,7 @@ namespace IngameScript
 
                 _surface = gameContext.Me.GetSurface(1);
                 _surface.ContentType = ContentType.TEXT_AND_IMAGE;
-                _surface.WriteText("Hello World!");
+                _surface.WriteText(gameContext.Storage);
             }
 
             public void Save()

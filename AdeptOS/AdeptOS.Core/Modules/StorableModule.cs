@@ -4,7 +4,7 @@ namespace IngameScript
 {
     partial class Program
     {
-        public abstract class StorableModule<TType>: IModule, IStringifiable where TType: class
+        public abstract class StorableModule<TType>: IStorableModule where TType: class
         {
             public abstract string UniqueName { get; }
             public abstract string Alias { get; }
