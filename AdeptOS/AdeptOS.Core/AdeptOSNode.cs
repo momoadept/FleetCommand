@@ -1,5 +1,6 @@
 ﻿using System;
 using Sandbox.ModAPI.Ingame;
+using VRage.Game.GUI.TextPanel;
 
 namespace IngameScript
 {
@@ -21,6 +22,7 @@ namespace IngameScript
             IGameContext _gameContext;
             ILog _log;
             IMessageHub _messageHub;
+            IMyTextSurface _surface;
 
             public void Start(IGameContext gameContext, NConf metadata)
             {
@@ -37,7 +39,10 @@ namespace IngameScript
                     gameContext.Echo(e.ToString());
                     throw;
                 }
-                
+
+                _surface = gameContext.Me.GetSurface(1);
+                _surface.ContentType = ContentType.TEXT_AND_IMAGE;
+                _surface.WriteText("Hello World!");
             }
 
             public void Save()
@@ -88,7 +93,8 @@ namespace IngameScript
 
             void DoBackgroundTasks()
             {
-                _gameContext.Echo(_scheduler.Tick());
+                var snapshot = _scheduler.Tick();
+                _gameContext.Echo(snapshot);
             }
 
             void ExecuteCommand(string argument)

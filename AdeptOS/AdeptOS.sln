@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.489
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdeptOS", "AdeptOS\AdeptOS.csproj", "{91FCD95E-9EF8-475A-88C0-8AD92F4BCD25}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPackages.AosCore", "..\TestPackages\TestPackages.AosCore\TestPackages.AosCore.csproj", "{6FC614F1-0F7F-4226-81DA-6649C7C2710B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPackages.AosCoreWithRPC", "..\TestPackages\TestPackages.AosCoreWithRPC\TestPackages.AosCoreWithRPC.csproj", "{FF49F997-61B3-4549-973B-05077D1D8B3B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{CB853D3F-B8F7-4E2A-ACCA-F90C2141C0CA}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

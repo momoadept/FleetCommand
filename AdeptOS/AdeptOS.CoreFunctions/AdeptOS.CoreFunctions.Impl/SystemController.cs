@@ -24,10 +24,10 @@ namespace IngameScript
         public class SystemController: IModule, ISystem, IControllable
         {
             public Dictionary<string, IActionContract> Actions { get; } = new Dictionary<string, IActionContract>();
-            public string UniqueName { get; } = "System";
-            public string Alias { get; } = "System";
+            public string UniqueName { get; } = "Systems";
+            public string Alias { get; } = "Systems";
 
-            System _system;
+            Systems _systems;
 
             public SystemController()
             {
@@ -45,21 +45,21 @@ namespace IngameScript
 
             public void Bind(IBindingContext context)
             {
-                _system = new System(context.RequireOne<IGameContext>(this), context.RequireOne<IMessageSender>(this), context.RequireOne<ILog>(this));
+                _systems = new Systems(context.RequireOne<IGameContext>(this), context.RequireOne<IMessageSender>(this), context.RequireOne<ILog>(this));
             }
 
             public void Run()
             {
-                _system.Init();
+                _systems.Init();
             }
 
             public void OnSaving()
             {
             }
 
-            public IPromise<Void> ChangeShipNameAndId(string name, string id) => _system.ChangeShipNameAndId(name, id);
-            public IPromise<Void> ChangeNodeNameAndId(string name, string id) => _system.ChangeNodeNameAndId(name, id);
-            public IPromise<Pair<Primitive<string>, Primitive<string>>> GetShipMeta() => _system.GetShipMeta();
+            public IPromise<Void> ChangeShipNameAndId(string name, string id) => _systems.ChangeShipNameAndId(name, id);
+            public IPromise<Void> ChangeNodeNameAndId(string name, string id) => _systems.ChangeNodeNameAndId(name, id);
+            public IPromise<Pair<Primitive<string>, Primitive<string>>> GetShipMeta() => _systems.GetShipMeta();
             public IPromise<Void> ChangeShipName(string name)
             {
             }

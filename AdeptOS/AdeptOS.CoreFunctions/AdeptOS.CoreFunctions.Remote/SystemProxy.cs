@@ -21,8 +21,8 @@ namespace IngameScript
     {
         public class SystemProxy: Proxy, ISystem
         {
-            public override string UniqueName { get; } = "System";
-            public override string Alias { get; } = "System";
+            public override string UniqueName { get; } = "Systems";
+            public override string Alias { get; } = "Systems";
             protected override Tag ImplementationTag { get; }
 
             public SystemProxy(Tag implementationTag)

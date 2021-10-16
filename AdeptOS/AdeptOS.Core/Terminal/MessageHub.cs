@@ -20,6 +20,7 @@ namespace IngameScript
             public void Bind(IBindingContext context)
             {
                 _gameContext = context.RequireOne<IGameContext>(this);
+                _log = context.RequireOne<ILog>(this);
             }
 
             public void Run()

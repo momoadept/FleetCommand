@@ -4,7 +4,7 @@
     {
         public class SchedulerPerformanceConfiguration
         {
-            public int PerformanceSnapshotTicks = 10000;
+            public int PerformanceSnapshotTicks = 10;
         }
     }
 }

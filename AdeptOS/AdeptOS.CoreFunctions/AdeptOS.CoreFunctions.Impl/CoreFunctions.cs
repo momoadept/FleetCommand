@@ -23,8 +23,8 @@ namespace IngameScript
         public class CoreFunctions: IModule, IControllable, ICoreFunctions
         {
             public Dictionary<string, IActionContract> Actions { get; } = new Dictionary<string, IActionContract>();
-            public string UniqueName => "System";
-            public string Alias => "System";
+            public string UniqueName => "Systems";
+            public string Alias => "Systems";
 
             IGameContext _gameContext;
             IMessageSender _messageSender;
@@ -55,7 +55,7 @@ namespace IngameScript
                 if (!nodeTag.InName(_gameContext.Me.CustomName))
                     _gameContext.Me.CustomName = nodeTag.AddToName(_gameContext.Me.CustomName);
 
-                _log.Debug("System functions started OK");
+                _log.Debug("Systems functions started OK");
             }
 
             public void OnSaving()
@@ -73,7 +73,7 @@ namespace IngameScript
                     _gameContext.Me.UpdateName(Aos.Node.ShipId);
 
                     if (Aos.Node.IsMainNode)
-                        ShipBroadcast($"T|System.ChangeShipNameAndId|{{{nameAndId.Stringify()}}}", oldId);
+                        ShipBroadcast($"T|Systems.ChangeShipNameAndId|{{{nameAndId.Stringify()}}}", oldId);
 
                     _log.Info($"Renamed {oldId} to {Aos.Node.ShipAlias}-{Aos.Node.ShipId}");
 

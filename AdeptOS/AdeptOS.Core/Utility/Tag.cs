@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System;
 
 namespace IngameScript
 {
@@ -38,11 +39,11 @@ namespace IngameScript
             public override bool Equals(object obj) => GetHashCode() == obj?.GetHashCode();
 
             static string Wrap(string tag) => tag.Trim().StartsWith("[") ? tag.Trim() : $"[{tag.Trim()}]";
-            static Regex _tagMatcher = new Regex(" /\\[([^]]+)\\]/;");
+            static System.Text.RegularExpressions.Regex _tagMatcher = new System.Text.RegularExpressions.Regex(" /\\[([^]]+)\\]/;");
 
             public static HashSet<Tag> FromName(string name)
             {
-                var matches = _tagMatcher.Matches(name).Cast<Match>().Select(it => it.Value);
+                var matches = _tagMatcher.Matches(name).Cast<System.Text.RegularExpressions.Match>().Select(it => it.Value);
                 return new HashSet<Tag>(matches.Select(it => new Tag(it)));
             }
         }

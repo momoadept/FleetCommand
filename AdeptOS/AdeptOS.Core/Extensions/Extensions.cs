@@ -7,7 +7,6 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System;
-using System.Text.RegularExpressions;
 using VRage;
 using VRage.Collections;
 using VRage.Game.Components;
@@ -29,7 +28,7 @@ namespace IngameScript
         public static Program.Primitive<int> AsPrimitive(this int src) => new Program.Primitive<int>(src);
         public static Program.Primitive<double> AsPrimitive(this double src) => new Program.Primitive<double>(src);
 
-        static Regex _nameMatcher = new Regex(" /(\\([^)]+\\))/;");
+        static System.Text.RegularExpressions.Regex _nameMatcher = new System.Text.RegularExpressions.Regex(" /(\\([^)]+\\))/;");
         public static void UpdateName(this IMyProgrammableBlock target, string name)
         {
             var builder = new StringBuilder(target.CustomName);

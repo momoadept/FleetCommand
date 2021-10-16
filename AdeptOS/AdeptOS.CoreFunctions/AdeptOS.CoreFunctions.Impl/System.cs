@@ -21,13 +21,13 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class System
+        public class Systems
         {
             IGameContext _gameContext;
             IMessageSender _messageSender;
             ILog _log;
 
-            public System(IGameContext gameContext, IMessageSender messageSender, ILog log)
+            public Systems(IGameContext gameContext, IMessageSender messageSender, ILog log)
             {
                 _gameContext = gameContext;
                 _messageSender = messageSender;
@@ -41,7 +41,7 @@ namespace IngameScript
                 if (!nodeTag.InName(_gameContext.Me.CustomName))
                     _gameContext.Me.CustomName = nodeTag.AddToName(_gameContext.Me.CustomName);
 
-                _log.Debug("System functions started OK");
+                _log.Debug("Systems functions started OK");
             }
 
             public IPromise<Void> ChangeShipNameAndId(string name, string id)
@@ -61,7 +61,7 @@ namespace IngameScript
                             Second = id.AsPrimitive()
                         };
 
-                        ShipBroadcast($"T|System.ChangeShipNameAndId|{{{nameAndId.Stringify()}}}", oldId);
+                        ShipBroadcast($"T|Systems.ChangeShipNameAndId|{{{nameAndId.Stringify()}}}", oldId);
                     }
 
                     _log.Info($"Renamed {oldId} to {Aos.Node.ShipAlias}-{Aos.Node.ShipId}");

@@ -33,7 +33,10 @@ namespace IngameScript
             public void Run()
             {
                 _gameContext.Grid.SearchBlocksOfName(_targetTag.Wrapped, _target);
+                var _surface = _gameContext.Me.GetSurface(0);
+                _surface.WriteText("");
                 Aos.Async.CreateJob(Flush).Start();
+                //Aos.Async.CreateJob(() => this.Log(LogSeverity.Info, "Test Job")).Start();
             }
             
             public void Log(LogSeverity severity, params string[] items)
@@ -42,7 +45,7 @@ namespace IngameScript
                     return;
 
                 var line = string.Join(" ", items);
-                _lines.Add($"{Aos.Now} [{LogHelper.SeverityString(severity)}]: {line}");
+                _lines.Add($"{Aos.Now.ToShortTimeString()} [{LogHelper.SeverityString(severity)}]: {line}");
             }
 
             public void OnSaving() => Flush();
@@ -55,7 +58,10 @@ namespace IngameScript
                 var output = string.Join("\n", _lines);
                 foreach (var block in _target)
                     block.CustomData += output;
-                
+
+                _gameContext.Me.GetSurface(0).WriteText("\n", true);
+                _gameContext.Me.GetSurface(0).WriteText(output, true);
+
                 _lines.Clear();
             }
         }
