@@ -89,7 +89,7 @@ namespace IngameScript
                     _gameContext.Echo("FUCK at Tick phase");
                     _gameContext.Echo(e.ToString());
                     _log.Fatal(e.ToString());
-                    throw;
+                    //throw;
                 }
             }
 

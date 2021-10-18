@@ -1,10 +1,17 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace IngameScript
 {
     partial class Program
     {
+        public class SyncResult<TResultTYpe>
+        {
+            public TResultTYpe[] Results;
+            public Exception[] Errors;
+        }
+
         public class Promise<TResult>: IResolvablePromise<TResult>
         {
             public bool Resolved { get; private set; }
@@ -106,6 +113,34 @@ namespace IngameScript
                 var promise = new Promise<TResult>();
                 promise.Fail(e);
                 return promise;
+            }
+
+            public static IPromise<SyncResult<TResult>> Synch(params IPromise<TResult>[] promises)
+            {
+                var counter = promises.Length;
+                var result = new Promise<SyncResult<TResult>>();
+                var results = new List<TResult>();
+                var errors = new List<Exception>();
+                foreach (var promise in promises)
+                {
+                    promise
+                        .Then(r => results.Add(r))
+                        .Catch(r => errors.Add(r))
+                        .Finally(() =>
+                        {
+                            counter--;
+                            if (counter == 0)
+                            {
+                                result.Resolve(new SyncResult<TResult>
+                                {
+                                    Errors = errors.ToArray(),
+                                    Results = results.ToArray(),
+                                });
+                            }
+                        });
+                }
+
+                return result;
             }
         }
     }

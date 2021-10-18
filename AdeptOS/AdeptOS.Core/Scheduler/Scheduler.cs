@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace IngameScript
 {
@@ -37,7 +38,7 @@ namespace IngameScript
                 return promise;
             }
 
-            public IPromise<int> When(Func<bool> condition, Priority priority = Priority.Routine, int timeout = 0)
+            public IPromise<int> When(Func<bool> condition, Priority priority = Priority.Routine, int timeout = 1000*60)
             {
                 var promise = new Promise<int>();
                 var startTime = DateTime.Now;
@@ -96,8 +97,9 @@ namespace IngameScript
             {
                 if (!_queue[priority].AnyLessThan(_now))
                     return;
-                
-                foreach (var action in _queue[priority].PopLessThan(_now))
+
+                var actions = _queue[priority].PopLessThan(_now).ToList();
+                foreach (var action in actions)
                 {
                     _stats.IncActions();
                     action();
@@ -120,7 +122,9 @@ namespace IngameScript
                 if (_stats.Ticks >= Aos.Seettings.SchedulerPerformance.PerformanceSnapshotTicks)
                 {
                     var pendingRoutines = _queue[Priority.Routine].Count;
-                    _performanceReport = $"{_stats.Snapshot()}\n{pendingRoutines} Routine tasks pending (>6 = stagnation)";
+                    var pendingCritical = _queue[Priority.Critical].Count;
+                    var pendingOther = _queue[Priority.Unimportant].Count;
+                    _performanceReport = $"{_stats.Snapshot()}\n{pendingRoutines} Routine tasks pending (>6 = stagnation)\n{pendingCritical} Critical\n{pendingOther} Other";
                 }
                     
 

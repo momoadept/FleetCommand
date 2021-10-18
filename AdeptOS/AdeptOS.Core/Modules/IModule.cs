@@ -2,6 +2,7 @@
 {
     partial class Program
     {
+        #region mdk preserve
         public interface IModule
         {
             string UniqueName { get; }
@@ -10,5 +11,6 @@
             void Run();
             void OnSaving();
         }
+        #endregion
     }
 }

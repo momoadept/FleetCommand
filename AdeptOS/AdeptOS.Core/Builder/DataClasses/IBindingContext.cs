@@ -4,8 +4,10 @@ namespace IngameScript
 {
     public partial class Program
     {
+        #region mdk preserve
         public interface IBindingContext
         {
+            #endregion
             IEnumerable<TModule> Any<TModule>();
             IEnumerable<TModule> RequireAny<TModule>(IModule caller);
 

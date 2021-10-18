@@ -26,7 +26,7 @@ namespace IngameScript
         public class SequenceStoppedException : Exception
         {
             public SequenceStoppedException()
-            :base("Sequence terminated")
+            :base("Sequence terminated before promise could resolve")
             {
                 
             }
@@ -35,6 +35,7 @@ namespace IngameScript
         public class StepSequence: ISequence
         {
             protected IStepper Stepper;
+            private ILog _log;
 
             private Promise<Void> _currentlyRunning;
             private string _currentlyRunningTag;
@@ -51,46 +52,62 @@ namespace IngameScript
 
             private Exception _terminatedWith;
 
+            private bool _continueOnError;
+
             private Queue<Func<bool, IPromise<Void>>> _pending = new Queue<Func<bool, IPromise<Void>>>();
 
-            public StepSequence(IStepper stepper)
+            public StepSequence(IStepper stepper, ILog _log, bool continueOnError = false)
             {
                 Stepper = stepper;
+                this._log = _log;
+                _continueOnError = continueOnError;
             }
 
-            public StepSequence Extend(Func<IStepper, IStepper> extend) => new StepSequence(extend(Stepper));
+            public StepSequence Extend(Func<IStepper, IStepper> extend) => new StepSequence(extend(Stepper), _log, _continueOnError);
 
             private void Work()
             {
-                Aos.Async.Delay().Then(x =>
+                Aos.Async.Delay(0, Priority.Critical).Then(x =>
                 {
                     if (!CanStepNow())
                         return;
 
-                    _isStarted = true;
                     if (_pending.Any())
+                    {
+                        _isStarted = true;
                         _pending.Dequeue()(false);
+                    }
                 });
             }
 
             private IPromise<Void> AddPendingStep()
             {
+                _log?.Debug("SQ---- add pending step");
                 var result = new Promise<Void>();
 
                 _pending.Enqueue(reset =>
                 {
+                    _log?.Debug("SQ---- enqueue");
                     if (reset)
                         return Promise<Void>.FromError(new SequenceStoppedException());
 
+                    var step = Stepper.Next();
+                    if (step == null)
+                    {
+                        _log?.Debug("SQ---- stepper empty");
+                        _isComplete = true;
+                        return Void.Promise();
+                    }
+                    _log?.Debug("SQ---- step received");
+
                     _isWorking = true;
 
-                    var step = Stepper.Next();
                     var promise = step.PromiseGenerator()
                         .Then(x => result.Resolve(x))
                         .Catch(e =>
                         {
                             _terminatedWith = e;
-                            _isComplete = true;
+                            _isComplete = !_continueOnError || _isComplete;
                             result.Fail(e);
                         })
                         .Finally(() =>
@@ -133,7 +150,7 @@ namespace IngameScript
 
             public bool IsComplete() => _isComplete;
 
-            public bool HasWork() => !_isComplete && !_pending.Any();
+            public bool HasWork() => !_isComplete && _pending.Any();
 
             public bool IsStepInProgress() => _isWorking;
 
@@ -159,15 +176,20 @@ namespace IngameScript
                 _currentlyRunningTag = null;
                 _isPaused = false;
                 if (_currentlyRunning != null)
+                {
                     _currentlyRunning.Finally(() =>
                     {
                         _currentlyRunning = null;
-                        _isResetting = false;
+                        _isResetting = _isComplete = _isWorking = _isStarted = false;
+                        _terminatedWith = null;
                     });
+                    _currentlyRunning.Fail(new SequenceStoppedException());
+                }
                 else
-                    _isResetting = false;
+                    _isResetting = _isComplete = _isWorking = _isStarted = false;
 
                 ClosePending();
+                _terminatedWith = null;
             }
 
             public void Interrupt()
@@ -197,8 +219,7 @@ namespace IngameScript
                     s.AppendLine("NOT STARTED");
 
                 if (_terminatedWith != null)
-                    s.AppendLine("Last exception:")
-                        .AppendLine(_terminatedWith.Message);
+                    s.AppendLine($"Last exception: {_terminatedWith.Message}");
 
                 if (_currentlyRunning != null)
                     s.AppendLine($"Current step: {_currentlyRunningTag}");

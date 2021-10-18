@@ -31,34 +31,56 @@ namespace IngameScript
 
             private IMyPistonBase _verticalPiston;
             private IMyPistonBase _horizontalPiston;
+            private List<IMyPistonBase> _horizontalPistonArm = new List<IMyPistonBase>();
             private IMyShipDrill _drill;
             private IMyTextPanel _reportLcd;
             private bool valid;
             private StepSequence _extend;
+            private StepSequence _extendArm;
+            private StepSequence _contract;
+            private StepSequence _contractArm;
 
             public IPromise<Void> Start()
             {
-                if (_extend == null)
+                _log.Debug("drill start");
+                try
+                {
+                    _contractArm.Reset();
+
+                    if (!_extendArm.IsStarted())
+                        _extendArm.StepAll();
+
+                    if (_extendArm.IsPaused())
+                        _extendArm.Resume();
+
                     return Void.Promise();
-
-                if (!_extend.IsStarted())
-                    _extend.StepAll();
-
-                if (_extend.IsPaused())
-                    _extend.Resume();
-
-                return Void.Promise();
+                }
+                catch (Exception e)
+                {
+                    _log.Error(e.Message);
+                    _gameContext.Echo(e.Message);
+                    return Void.Promise();
+                }
             }
 
             public IPromise<Void> Stop()
             {
-                _extend.Pause();
+                _extendArm.Reset();
+
+                if (!_contractArm.IsStarted())
+                    _contractArm.StepAll();
+
+                if (_contractArm.IsPaused())
+                    _contractArm.Resume();
 
                 return Void.Promise();
             }
 
             public IPromise<Void> Reset()
             {
+                _contractArm.Reset();
+                _extendArm.Reset();
+
                 return Void.Promise();
             }
 
@@ -73,8 +95,14 @@ namespace IngameScript
 
             public void Run()
             {
+                DetectBlocks();
+                _extend = new ExtendPiston(_horizontalPiston, 1, "Horizontal", 8f, 1f, _log).Sequence();
+                _contract = new ContractPiston(_horizontalPiston, 3, "Horizontal", 0.5f, 1f, _log).Sequence();
+                _extendArm = new ExtendContractPistonArm(_horizontalPistonArm.ToArray(), 1, "Arm extend", 30, 2f).Sequence();
+                _contractArm = new ExtendContractPistonArm(_horizontalPistonArm.ToArray(), -1, "Arm contract", 1, 2f).Sequence();
+
                 Aos.Async.CreateJob(Report).Start();
-                _extend = new ExtendPiston(_horizontalPiston, 1, "Horizontal").Sequence();
+                _log.Debug("drill initialized");
             }
 
             public void OnSaving()
@@ -94,17 +122,22 @@ namespace IngameScript
                 if (_reportLcd == null)
                     return;
 
-                var report = _extend.GetReport().Split('\n').Reverse();
+                var report = _extendArm.GetReport().Split('\n').Reverse();
+                var report2 = _contractArm.GetReport().Split('\n').Reverse();
 
-                _reportLcd.WriteText("\n");
-                _reportLcd.WriteText(string.Join("\n", report));
-                _reportLcd.WriteText("\n");
+                _reportLcd.WriteText("\n[Extend]\n");
+                _reportLcd.WriteText(string.Join("\n", report), true);
+                _reportLcd.WriteText("\n", true);
+                _reportLcd.WriteText("\n[Contract]\n", true);
+                _reportLcd.WriteText(string.Join("\n", report2), true);
+                _reportLcd.WriteText("\n", true);
             }
 
             private void DetectBlocks()
             {
                 var verticalTag = new Tag("AD_V"); // [AD_V] huipizda
                 var horizontalTag = new Tag("AD_H");
+                var horizontalArmTag = new Tag("AD_HH");
                 var drillTag = new Tag("AD_D");
                 var lcdTag = new Tag("AD_S");
 
@@ -124,6 +157,17 @@ namespace IngameScript
                 _gameContext.Grid.SearchBlocksOfName(lcdTag.Wrapped, blocks, it => it is IMyTextPanel);
                 _reportLcd = blocks.FirstOrDefault() as IMyTextPanel;
                 blocks.Clear();
+
+                var groups = new List<IMyBlockGroup>();
+                _horizontalPistonArm.Clear();
+                _gameContext.Grid.GetBlockGroups(groups, x => x.Name.Contains(horizontalArmTag.Wrapped));
+                foreach (var blockGroup in groups)
+                {
+                    blocks.Clear();
+                    blockGroup.GetBlocksOfType<IMyPistonBase>(blocks);
+                    _horizontalPistonArm.AddRange(blocks.Cast<IMyPistonBase>());
+                }
+                
 
                 if (_verticalPiston == null || _horizontalPiston == null || _drill == null)
                 {

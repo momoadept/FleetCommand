@@ -32,11 +32,13 @@ namespace IngameScript
 
             public IEnumerable<TValue> PopLessThan(DateTime time)
             {
-                var keys = _keys.GetViewBetween(_minTime, time);
+                var keys = _keys.GetViewBetween(_minTime, time).ToList();
                 _keys.ExceptWith(keys);
 
                 var items = keys
-                    .SelectMany(it => _values[it]);
+                    .SelectMany(it => _values[it])
+                    .ToList();
+
                 foreach (var key in keys)
                 {
                     _values.Remove(key);

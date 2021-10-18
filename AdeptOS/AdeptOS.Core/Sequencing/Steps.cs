@@ -128,7 +128,11 @@ namespace IngameScript
 
             public SequenceStep Next()
             {
-                return _done ? null : _step;
+                if (_done)
+                    return null;
+
+                _done = true;
+                return _step;
             }
 
             public bool IsComplete() => _done;
@@ -156,6 +160,7 @@ namespace IngameScript
 
                 if (_first && !_while())
                 {
+                    _first = false;
                     _done = true;
                     return null;
                 }
@@ -181,6 +186,60 @@ namespace IngameScript
                 _done = false;
                 _first = true;
                 _body.Reset();
+            }
+        }
+
+        public class ParallelStepper : IStepper
+        {
+            private bool _asyncMode;
+            private IStepper[] _parallels;
+            private int _current = 0;
+
+            public ParallelStepper(bool asyncMode, params IStepper[] parallels)
+            {
+                _asyncMode = asyncMode;
+                _parallels = parallels;
+            }
+
+            public SequenceStep Next()
+            {
+                if (_current >= _parallels.Length)
+                    _current = 0;
+
+                if (IsComplete())
+                    return null;
+
+               
+
+                if (!_asyncMode)
+                {
+                    while (_parallels[_current].IsComplete())
+                        _current++;
+
+                    return _parallels[_current++].Next();
+                }
+
+                var items = _parallels.Select(x => x.Next()).Where(x => x != null).ToArray();
+                var tag = $"Parallel: {string.Join(", ", items.Select(x => x.StepTag))}";
+                Func<IPromise<Void>> runAll = () => Promise<Void>
+                    .Synch(items.Select(x => x.PromiseGenerator()).ToArray())
+                    .Next(x => Void.Promise());
+
+                return new SequenceStep()
+                {
+                    StepTag = tag,
+                    PromiseGenerator = runAll,
+                };
+            }
+
+            public bool IsComplete() => _parallels.All(x => x.IsComplete());
+
+            public void Reset()
+            {
+                foreach (var x in _parallels)
+                    x.Reset();
+
+                _current = 0;
             }
         }
     }

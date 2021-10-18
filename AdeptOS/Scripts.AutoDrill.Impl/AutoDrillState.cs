@@ -28,6 +28,8 @@ namespace IngameScript
             Working = 2,
             Done = 3,
             Rewinding = 4,
+            Paused = 5,
+            Error = 6,
         }
 
         public class AutoDrillState : BaseDataObject<AutoDrillState>
