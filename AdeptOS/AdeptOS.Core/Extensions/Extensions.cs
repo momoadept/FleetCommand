@@ -72,5 +72,10 @@ namespace IngameScript
 
             return s;
         }
+
+        public static bool AlmostEquals(this float a, float b, float delta = 0.01f)
+        {
+            return Math.Abs(a - b) < delta;
+        }
     }
 }

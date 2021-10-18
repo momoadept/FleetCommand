@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AutoDrill.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoDrillController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExtendPistonSequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoDrillState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IAutoDrill.cs" />
   </ItemGroup>

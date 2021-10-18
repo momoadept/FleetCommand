@@ -15,6 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Builder\Exceptions\BindingException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\Config.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\ISequence.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Sequence.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steps.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Contract.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Tag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\GameContext.cs" />

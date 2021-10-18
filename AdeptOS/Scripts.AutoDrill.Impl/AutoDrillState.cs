@@ -24,18 +24,16 @@ namespace IngameScript
     {
         public enum DrillingStage
         {
-            DrillForwards = 1,
-            LowerPiston = 2,
-            DrillBackwards = 3,
-            Resetting = 4,
-            Ready = 5,
-            Done = 6,
+            StartingPosition = 1,
+            Working = 2,
+            Done = 3,
+            Rewinding = 4,
         }
 
         public class AutoDrillState : BaseDataObject<AutoDrillState>
         {
             public bool IsWorking;
-            public DrillingStage Stage = DrillingStage.Resetting;
+            public DrillingStage Stage = DrillingStage.Rewinding;
 
             public AutoDrillState()
                 : base(new List<Property<AutoDrillState>>(

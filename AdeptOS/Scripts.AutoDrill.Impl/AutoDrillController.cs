@@ -31,7 +31,8 @@ namespace IngameScript
             {
                 Actions
                     .Add<Void, Void>("Start", v => Start())
-                    .Add<Void, Void>("Stop", v => Stop());
+                    .Add<Void, Void>("Stop", v => Stop())
+                    .Add<Void, Void>("Reset", v => Reset());
 
                 _impl = new AutoDrill();
             }
@@ -63,6 +64,8 @@ namespace IngameScript
             public IPromise<Void> Start() => _impl.Start();
 
             public IPromise<Void> Stop() => _impl.Stop();
+
+            public IPromise<Void> Reset() => _impl.Reset();
         }
     }
 }

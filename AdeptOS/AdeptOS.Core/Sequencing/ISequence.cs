@@ -5,7 +5,6 @@ using SpaceEngineers.Game.ModAPI.Ingame;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using VRage;
@@ -22,13 +21,35 @@ namespace IngameScript
 {
     partial class Program
     {
-        public interface IAutoDrill
+        public interface ISequence
         {
-            IPromise<Void> Start();
+            IPromise<Void> StepOnce();
 
-            IPromise<Void> Stop();
+            IPromise<Void> StepAll();
 
-            IPromise<Void> Reset();
+            bool IsComplete();
+
+            bool HasWork();
+
+            bool IsStepInProgress();
+
+            bool CanStepNow();
+
+            bool IsStarted();
+
+            bool IsPaused();
+
+            void Pause();
+
+            void Resume();
+
+            void Reset();
+
+            void Interrupt();
+
+            string GetReport();
+
+            Exception GetException();
         }
     }
 }
