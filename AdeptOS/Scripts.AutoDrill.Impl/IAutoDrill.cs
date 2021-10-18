@@ -24,9 +24,11 @@ namespace IngameScript
     {
         public interface IAutoDrill
         {
-            IPromise<Void> Start();
+            IPromise<Void> Drill();
 
-            IPromise<Void> Stop();
+            IPromise<Void> Pause();
+
+            IPromise<Void> Resume();
 
             IPromise<Void> Reset();
         }

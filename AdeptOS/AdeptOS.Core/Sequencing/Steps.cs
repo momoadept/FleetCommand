@@ -5,7 +5,6 @@ using SpaceEngineers.Game.ModAPI.Ingame;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using VRage;
@@ -15,6 +14,7 @@ using VRage.Game.Components;
 using VRage.Game.GUI.TextPanel;
 using VRage.Game.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame.Utilities;
+using VRage.Game.ObjectBuilders.Components.BankingAndCurrency;
 using VRage.Game.ObjectBuilders.Definitions;
 using VRageMath;
 
@@ -66,14 +66,34 @@ namespace IngameScript
         {
             private IStepper _a;
             private IStepper _b;
+            private ILog _log;
 
-            public CombinedStepper(IStepper a, IStepper b)
+            public CombinedStepper(IStepper a, IStepper b, ILog log = null)
             {
                 _a = a;
                 _b = b;
+                _log = log;
             }
 
-            public SequenceStep Next() => _a.IsComplete() ? _b.IsComplete() ? null : _b.Next() : _a.Next();
+            public SequenceStep Next()
+            {
+                if (_a.IsComplete())
+                    if (_b.IsComplete())
+                    {
+                        _log?.Debug("COMBINED NULL");
+                        return null;
+                    }
+                    else
+                    {
+                        _log?.Debug("COMBINED B");
+                        return _b.Next();
+                    }
+                else
+                {
+                    _log?.Debug("COMBINED A");
+                    return _a.Next();
+                }
+            }
 
             public bool IsComplete() => _a.IsComplete() && _b.IsComplete();
 
@@ -103,10 +123,10 @@ namespace IngameScript
                     
                 _interruptNow = !_interruptNow;
 
-                return _interruptNow ? _interruptor.Next() ?? _main.Next() : _main.Next();
+                return _interruptNow ? (_interruptor.Next() ?? _main.Next()) : _main.Next();
             }
 
-            public bool IsComplete() => _main.IsComplete() && _interruptor.IsComplete();
+            public bool IsComplete() => _main.IsComplete() && !_interruptNow;
 
             public void Reset()
             {
@@ -144,7 +164,6 @@ namespace IngameScript
         {
             private IStepper _body;
             private Func<bool> _while;
-            private bool _done;
             private bool _first = true;
 
             public CycleStepper(IStepper body, Func<bool> @while)
@@ -155,35 +174,28 @@ namespace IngameScript
 
             public SequenceStep Next()
             {
-                if (_done)
+                if (IsComplete())
                     return null;
-
-                if (_first && !_while())
-                {
-                    _first = false;
-                    _done = true;
-                    return null;
-                }
-
-                _first = false;
-                var result = _body.Next();
 
                 if (_body.IsComplete())
                 {
                     if (_while())
+                    {
                         _body.Reset();
-                    else
-                        _done = true;
+                        return _body.Next();
+                    }
+
+                    return null;
                 }
 
-                return result;
+                _first = false;
+                return _body.Next();
             }
 
-            public bool IsComplete() => _done;
+            public bool IsComplete() => (_first && !_while()) || (_body.IsComplete() && !_while());
 
             public void Reset()
             {
-                _done = false;
                 _first = true;
                 _body.Reset();
             }

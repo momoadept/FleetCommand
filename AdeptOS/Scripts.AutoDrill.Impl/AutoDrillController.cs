@@ -30,9 +30,10 @@ namespace IngameScript
             }))
             {
                 Actions
-                    .Add<Void, Void>("Start", v => Start())
-                    .Add<Void, Void>("Stop", v => Stop())
-                    .Add<Void, Void>("Reset", v => Reset());
+                    .Add<Void, Void>("Drill", v => Drill())
+                    .Add<Void, Void>("Pause", v => Pause())
+                    .Add<Void, Void>("Reset", v => Reset())
+                    .Add<Void, Void>("Resume", v => Resume());
 
                 _impl = new AutoDrill();
             }
@@ -61,9 +62,11 @@ namespace IngameScript
             }
 
             //T|DRILL.Start|{}
-            public IPromise<Void> Start() => _impl.Start();
+            public IPromise<Void> Drill() => _impl.Drill();
 
-            public IPromise<Void> Stop() => _impl.Stop();
+            public IPromise<Void> Pause() => _impl.Pause();
+
+            public IPromise<Void> Resume() => _impl.Resume();
 
             public IPromise<Void> Reset() => _impl.Reset();
         }

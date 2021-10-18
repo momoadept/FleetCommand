@@ -44,6 +44,7 @@ namespace IngameScript
 
             private IPromise<Void> Step()
             {
+                _log?.Debug("STEPPER---- extend piston step: ", _prefix);
                 _piston.MaxLimit = _piston.CurrentPosition + _pistonStep;
                 _piston.MaxLimit = Math.Min(_piston.MaxLimit, _distanceEnd);
                 _piston.Velocity = _speed;
@@ -114,7 +115,7 @@ namespace IngameScript
                     .Next(x => Void.Promise());
             }
 
-            private bool IsFullyExtended()
+            private bool IsFullyRetracted()
             {
                 var isExtended = _piston.CurrentPosition <= _distanceEnd ||
                        _piston.CurrentPosition.AlmostEquals(_piston.LowestPosition);
@@ -129,7 +130,7 @@ namespace IngameScript
                     StepTag = _prefix + " Piston contract step",
                 });
 
-                var cycle = new CycleStepper(stepper, () => !IsFullyExtended());
+                var cycle = new CycleStepper(stepper, () => !IsFullyRetracted());
 
                 return cycle;
             }
@@ -148,8 +149,9 @@ namespace IngameScript
             private float _distanceEnd;
             private float _step;
             private bool _asyncMode;
+            private ILog _log;
 
-            public ExtendContractPistonArm(IMyPistonBase[] pistons, float speed, string prefix, float distanceEnd = 10f, float step = 1f, bool asyncMode = false)
+            public ExtendContractPistonArm(IMyPistonBase[] pistons, float speed, string prefix, float distanceEnd = 10f, float step = 1f, bool asyncMode = false, ILog log = null)
             {
                 _pistons = pistons;
                 _speed = speed;
@@ -157,14 +159,15 @@ namespace IngameScript
                 _distanceEnd = distanceEnd;
                 _step = step;
                 _asyncMode = asyncMode;
+                _log = log;
             }
 
             public IStepper Stepper()
             {
                 var N = _pistons.Length;
                 var baseSteppers = _pistons.Select(x => _speed > 0 
-                    ? new ExtendPiston(x, _speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / N).Stepper()
-                    : new ContractPiston(x, -_speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / N).Stepper());
+                    ? new ExtendPiston(x, _speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / N, _log).Stepper()
+                    : new ContractPiston(x, -_speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / N, _log).Stepper());
 
                 var combinedStepper = new ParallelStepper(_asyncMode, baseSteppers.ToArray());
                 return combinedStepper;

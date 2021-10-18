@@ -28,19 +28,19 @@ namespace IngameScript
             Working = 2,
             Done = 3,
             Rewinding = 4,
-            Paused = 5,
-            Error = 6,
+            PausedWorking = 5,
+            PausedRewinding = 6,
+            WaitingForCargoSpace = 7,
+            Error = 8,
         }
 
         public class AutoDrillState : BaseDataObject<AutoDrillState>
         {
-            public bool IsWorking;
             public DrillingStage Stage = DrillingStage.Rewinding;
 
             public AutoDrillState()
                 : base(new List<Property<AutoDrillState>>(
                 new []{
-                    new Property<AutoDrillState>("IsWorking", s => s.IsWorking, (s, v) => s.IsWorking = bool.Parse(v)),
                     new Property<AutoDrillState>("Stage", s => s.Stage, (s, v) => s.Stage = (DrillingStage)Enum.Parse(typeof(DrillingStage), v)),
                 }))
 

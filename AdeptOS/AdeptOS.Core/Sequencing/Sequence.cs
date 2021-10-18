@@ -56,6 +56,8 @@ namespace IngameScript
 
             private Queue<Func<bool, IPromise<Void>>> _pending = new Queue<Func<bool, IPromise<Void>>>();
 
+            private int counter = 0;
+
             public StepSequence(IStepper stepper, ILog _log, bool continueOnError = false)
             {
                 Stepper = stepper;
@@ -69,11 +71,13 @@ namespace IngameScript
             {
                 Aos.Async.Delay(0, Priority.Critical).Then(x =>
                 {
+                    _log.Debug("SQ---- Work");
                     if (!CanStepNow())
                         return;
 
                     if (_pending.Any())
                     {
+                        _log.Debug("SQ---- Work -> dequeue");
                         _isStarted = true;
                         _pending.Dequeue()(false);
                     }
@@ -89,29 +93,36 @@ namespace IngameScript
                 {
                     _log?.Debug("SQ---- enqueue");
                     if (reset)
+                    {
+                        result.Fail(new SequenceStoppedException());
                         return Promise<Void>.FromError(new SequenceStoppedException());
+                    }
+                        
 
                     var step = Stepper.Next();
                     if (step == null)
                     {
                         _log?.Debug("SQ---- stepper empty");
                         _isComplete = true;
+                        result.Resolve(new Void());
                         return Void.Promise();
                     }
                     _log?.Debug("SQ---- step received");
+                    _log?.Debug($"{++counter} {step.StepTag}");
 
                     _isWorking = true;
 
                     var promise = step.PromiseGenerator()
-                        .Then(x => result.Resolve(x))
                         .Catch(e =>
                         {
+                            _log.Debug($"{counter} step failed");
                             _terminatedWith = e;
                             _isComplete = !_continueOnError || _isComplete;
                             result.Fail(e);
                         })
                         .Finally(() =>
                         {
+                            _log.Debug($"{counter} step completed");
                             _isWorking = false;
                             _currentlyRunning = null;
                             _currentlyRunningTag = null;
@@ -122,30 +133,44 @@ namespace IngameScript
 
                     if (Stepper.IsComplete())
                         promise
-                            .Then(x => _isComplete = true);
+                            .Then(x =>
+                            {
+                                _log.Debug($"{counter} step resolved and last");
+                                _isComplete = true;
+                            });
 
-                    Work();
+                    promise
+                        .Then(x =>
+                        {
+                            _log.Debug($"{counter} step resolved");
+                            result.Resolve(x);
+                        });
 
                     return promise;
                 });
 
-                Work();
-
+                //result.Resolve(new Void());
                 return result;
             }
 
             public IPromise<Void> StepOnce()
             {
+                Work();
                 return AddPendingStep();
             }
 
             public IPromise<Void> StepAll()
             {
+                _log.Debug("SQ---- step all");
                 if (_isComplete)
+                {
+                    _log.Debug("SQ---- step all -> complete");
                     return Void.Promise();
+                }
 
+                _log.Debug("SQ---- step all -> step once");
                 return StepOnce()
-                    .Next(x => StepAll());
+                    .Next(x => Aos.Async.Delay().Next(y => StepAll()));
             }
 
             public bool IsComplete() => _isComplete;
@@ -172,23 +197,31 @@ namespace IngameScript
             {
                 _isResetting = true;
                 _isStarted = false;
-                Stepper.Reset();
+                Stepper?.Reset();
+                _log.Debug("Stepper?.Reset()");
                 _currentlyRunningTag = null;
                 _isPaused = false;
-                if (_currentlyRunning != null)
+                if (_currentlyRunning != null && !_currentlyRunning.Completed)
                 {
-                    _currentlyRunning.Finally(() =>
+                    _log.Debug("_currentlyRunning != null");
+                    _currentlyRunning?.Finally(() =>
                     {
+                        _log.Debug("_currentlyRunning finally");
                         _currentlyRunning = null;
                         _isResetting = _isComplete = _isWorking = _isStarted = false;
                         _terminatedWith = null;
                     });
-                    _currentlyRunning.Fail(new SequenceStoppedException());
+                    _currentlyRunning?.Fail(new SequenceStoppedException());
+
+                    _log.Debug("_currentlyRunning things");
                 }
                 else
                     _isResetting = _isComplete = _isWorking = _isStarted = false;
 
+                _currentlyRunning = null;
+
                 ClosePending();
+                _log.Debug("ClosePending");
                 _terminatedWith = null;
             }
 

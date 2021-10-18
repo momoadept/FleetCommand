@@ -59,6 +59,19 @@ namespace IngameScript
             {
                 var nextPromise = new Promise<TNewResult>();
 
+                if (Completed)
+                {
+                    if (Resolved)
+                    {
+                        return nextPromiseGenerator(_result);
+                    }
+
+                    if (Failed)
+                    {
+                        return Promise<TNewResult>.FromError(_error);
+                    }
+                }
+
                 _thens.Add(r =>
                     nextPromiseGenerator(r)
                         .Then(result => nextPromise.Resolve(result))
