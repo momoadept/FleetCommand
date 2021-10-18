@@ -149,7 +149,7 @@ namespace IngameScript
             private float _step;
             private bool _asyncMode;
 
-            public ExtendContractPistonArm(IMyPistonBase[] pistons, float speed, string prefix, float distanceEnd = 10f, float step = 1f, bool asyncMode = true)
+            public ExtendContractPistonArm(IMyPistonBase[] pistons, float speed, string prefix, float distanceEnd = 10f, float step = 1f, bool asyncMode = false)
             {
                 _pistons = pistons;
                 _speed = speed;

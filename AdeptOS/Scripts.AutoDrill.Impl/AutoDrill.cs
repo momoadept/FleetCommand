@@ -45,13 +45,18 @@ namespace IngameScript
                 _log.Debug("drill start");
                 try
                 {
-                    _contractArm.Reset();
+                    
 
-                    if (!_extendArm.IsStarted())
-                        _extendArm.StepAll();
+                    Aos.Async.Delay().Then(x =>
+                    {
+                        _contractArm.Reset();
 
-                    if (_extendArm.IsPaused())
-                        _extendArm.Resume();
+                        if (!_extendArm.IsStarted())
+                            _extendArm.StepAll();
+
+                        if (_extendArm.IsPaused())
+                            _extendArm.Resume();
+                    });
 
                     return Void.Promise();
                 }
@@ -65,13 +70,17 @@ namespace IngameScript
 
             public IPromise<Void> Stop()
             {
-                _extendArm.Reset();
+             
+                Aos.Async.Delay().Then(x =>
+                {
+                    _extendArm.Reset();
 
-                if (!_contractArm.IsStarted())
-                    _contractArm.StepAll();
+                    if (!_contractArm.IsStarted())
+                        _contractArm.StepAll();
 
-                if (_contractArm.IsPaused())
-                    _contractArm.Resume();
+                    if (_contractArm.IsPaused())
+                        _contractArm.Resume();
+                });
 
                 return Void.Promise();
             }

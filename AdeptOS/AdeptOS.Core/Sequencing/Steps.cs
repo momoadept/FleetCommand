@@ -103,7 +103,7 @@ namespace IngameScript
                     
                 _interruptNow = !_interruptNow;
 
-                return _interruptNow ? _interruptor.Next() : _main.Next();
+                return _interruptNow ? _interruptor.Next() ?? _main.Next() : _main.Next();
             }
 
             public bool IsComplete() => _main.IsComplete() && _interruptor.IsComplete();
@@ -214,7 +214,13 @@ namespace IngameScript
                 if (!_asyncMode)
                 {
                     while (_parallels[_current].IsComplete())
+                    {
                         _current++;
+
+                        if (_current >= _parallels.Length)
+                            _current = 0;
+                    }
+                     
 
                     return _parallels[_current++].Next();
                 }
