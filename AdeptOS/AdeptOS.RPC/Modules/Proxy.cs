@@ -43,7 +43,7 @@ namespace IngameScript
                 where TArgument : class, IStringifiable, new()
             {
                 var contract =  new RemoteActionContract<TArgument, TResult>(_rpc, ImplementationTag, UniqueName, name, noArgument);
-                Actions.Add("name", contract);
+                Actions.Add(name, contract);
             }
         }
     }

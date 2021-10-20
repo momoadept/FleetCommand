@@ -7,7 +7,7 @@
             /// <summary>
             /// Dependant on real-time execution
             /// </summary>
-            Critical = 10,
+            Critical = 1,
 
             /// <summary>
             /// Needs to be done but not time-sensitive

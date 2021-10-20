@@ -29,8 +29,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPackages.AosCore", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPackages.AosCoreWithRPC", "..\TestPackages\TestPackages.AosCoreWithRPC\TestPackages.AosCoreWithRPC.csproj", "{FF49F997-61B3-4549-973B-05077D1D8B3B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts.AutoDrill", "Scripts.AutoDrill", "{CB853D3F-B8F7-4E2A-ACCA-F90C2141C0CA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdeptOS.Inventory", "AdeptOS.Inventory", "{4AE70F38-4B09-4A33-B575-3B9ADE272F20}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AdeptOS.Inventory.Contract", "AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.shproj", "{EE091644-755A-4EDF-B8B4-184DB8E36EB5}"
@@ -39,13 +37,17 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AdeptOS.Inventory.Impl", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPackages.AosCoreInventory", "..\TestPackages\TestPackages.AosCoreInventory\TestPackages.AosCoreInventory.csproj", "{499FDB05-1955-4B9D-BC8A-B169C2053D53}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Scripts.AutoDrill.Impl", "Scripts.AutoDrill.Impl\Scripts.AutoDrill.Impl.shproj", "{89A4A4ED-E0CF-45A5-811C-B3438F0C5C1B}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AutoDrill.Impl", "Modules\AutoDrill\AutoDrill.Impl\AutoDrill.Impl.shproj", "{89A4A4ED-E0CF-45A5-811C-B3438F0C5C1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdeptOS.Navigation", "AdeptOS.Navigation", "{6BA881F4-FC1E-4864-9F90-C532487B7883}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AdeptOS.Navigation.Contract", "AdeptOS.Navigation\AdeptOS.Navigation.Contract\AdeptOS.Navigation.Contract.shproj", "{B3AFB483-EFB5-42C4-831E-B792BD56B258}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AdeptOS.Navigation.Impl", "AdeptOS.Navigation\AdeptOS.Navigation.Impl\AdeptOS.Navigation.Impl.shproj", "{9E9CCC72-66DB-489C-BDE5-949FCB134210}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Modules", "3. Modules", "{47D12005-86EE-4D95-A146-BFD3C33D9017}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoDrill", "AutoDrill", "{87F5745B-7444-4DC2-B2AB-95FEC7075407}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -54,9 +56,9 @@ Global
 		AdeptOS.Core\AdeptOS.Core.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
-		Scripts.AutoDrill.Impl\Scripts.AutoDrill.Impl.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
+		Modules\AutoDrill\AutoDrill.Impl\AutoDrill.Impl.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems*{7c31ebc7-c7e8-4f4a-8c54-a74397058ec3}*SharedItemsImports = 13
-		Scripts.AutoDrill.Impl\Scripts.AutoDrill.Impl.projitems*{89a4a4ed-e0cf-45a5-811c-b3438f0c5c1b}*SharedItemsImports = 13
+		Modules\AutoDrill\AutoDrill.Impl\AutoDrill.Impl.projitems*{89a4a4ed-e0cf-45a5-811c-b3438f0c5c1b}*SharedItemsImports = 13
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Contract\AdeptOS.CoreFunctions.Contract.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Impl\AdeptOS.CoreFunctions.Impl.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Remote\AdeptOS.CoreFunctions.Remote.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
@@ -129,10 +131,11 @@ Global
 		{EE091644-755A-4EDF-B8B4-184DB8E36EB5} = {4AE70F38-4B09-4A33-B575-3B9ADE272F20}
 		{7C31EBC7-C7E8-4F4A-8C54-A74397058EC3} = {4AE70F38-4B09-4A33-B575-3B9ADE272F20}
 		{499FDB05-1955-4B9D-BC8A-B169C2053D53} = {449C80C2-CE23-4BCA-B4B6-C840CDBE57EE}
-		{89A4A4ED-E0CF-45A5-811C-B3438F0C5C1B} = {CB853D3F-B8F7-4E2A-ACCA-F90C2141C0CA}
+		{89A4A4ED-E0CF-45A5-811C-B3438F0C5C1B} = {87F5745B-7444-4DC2-B2AB-95FEC7075407}
 		{6BA881F4-FC1E-4864-9F90-C532487B7883} = {4170D6EA-E682-4E9C-9144-E598AAB1D6B3}
 		{B3AFB483-EFB5-42C4-831E-B792BD56B258} = {6BA881F4-FC1E-4864-9F90-C532487B7883}
 		{9E9CCC72-66DB-489C-BDE5-949FCB134210} = {6BA881F4-FC1E-4864-9F90-C532487B7883}
+		{87F5745B-7444-4DC2-B2AB-95FEC7075407} = {47D12005-86EE-4D95-A146-BFD3C33D9017}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BDEF870-93B7-4011-82FD-22D4B16BE55E}
