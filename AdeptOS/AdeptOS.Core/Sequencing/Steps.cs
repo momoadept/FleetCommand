@@ -260,5 +260,62 @@ namespace IngameScript
                 _current = 0;
             }
         }
+
+        public class SkipStepper : IStepper
+        {
+            private IStepper _base;
+            private readonly string _tag;
+            private int _steps;
+            private bool _done;
+
+            private StepSequence _internalSequence;
+
+            public SkipStepper(IStepper @base, string tag = "multiple steps", int steps = 0)
+            {
+                _base = @base;
+                _tag = tag;
+                _steps = steps;
+                _internalSequence = new StepSequence(@base, null, false);
+            }
+
+            public SequenceStep Next()
+            {
+                Func<IPromise<Void>> target;
+                if (_steps == 0)
+                    target = () => _internalSequence.StepAll();
+                else
+                    target = () => _internalSequence.Step(_steps);
+
+                return new SequenceStep()
+                {
+                    PromiseGenerator = () =>
+                    {
+                        var promise = new Promise<Void>();
+                        var steps = target();
+                        promise.Catch(e =>
+                        {
+                            if (e is SequenceStoppedException)
+                                _internalSequence.Interrupt();
+                        });
+                        steps.Finally(() =>
+                        {
+                            _done = _internalSequence.IsComplete() || _internalSequence.GetException() != null;
+                            promise.Resolve(new Void());
+                        });
+
+                        return promise;
+                    },
+                    StepTag = _tag,
+                };
+            }
+
+            public bool IsComplete() => _done;
+
+            public void Reset()
+            {
+                _done = false;
+                _internalSequence.Reset();
+            }
+        }
     }
 }

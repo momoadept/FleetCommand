@@ -12,6 +12,7 @@ namespace IngameScript
             int _actions = 0;
             DateTime _timeStart = DateTime.Now;
             IGameContext _context;
+            private float _maxLoad = 0;
 
             public SchedulerStats(IGameContext context)
             {
@@ -30,8 +31,10 @@ namespace IngameScript
             public string Snapshot()
             {
                 var elapsedSeconds = DateTime.Now.Subtract(_timeStart).TotalMilliseconds / 1000;
+                var load = _totalSteps / _totalAllowedSteps * 100;
+                _maxLoad = Math.Max(load, _maxLoad);
                 var report =
-                    $"{_totalSteps / _totalAllowedSteps * 100:F1}% Load\n{_actions} microtasks\nLast {elapsedSeconds:F2} seconds, {Ticks} ticks";
+                    $"{load:F1}% ({_maxLoad:F1}% max) Load\n{_actions} microtasks\nLast {elapsedSeconds:F2} seconds, {Ticks} ticks";
 
                 _actions = _totalSteps = _totalAllowedSteps = Ticks = 0;
                 _timeStart = DateTime.Now;

@@ -33,42 +33,36 @@ namespace IngameScript
                 Remote<Void, Pair<Primitive<string>, Primitive<string>>>("GetShipMeta");
             }
 
-            public IPromise<Void> ChangeShipNameAndId(string name, string id)
-            {
-                return (IPromise<Void>) Actions["ChangeShipNameAndId"]
+            public IPromise<Void> ChangeShipNameAndId(string name, string id) =>
+                (IPromise<Void>) Actions["ChangeShipNameAndId"]
                     .Do(new Pair<Primitive<string>, Primitive<string>>(name.AsPrimitive(), id.AsPrimitive()));
-            }
 
-            public IPromise<Void> ChangeNodeNameAndId(string name, string id)
-            {
-                return (IPromise<Void>)Actions["ChangeNodeNameAndId"]
+            public IPromise<Void> ChangeNodeNameAndId(string name, string id) =>
+                (IPromise<Void>)Actions["ChangeNodeNameAndId"]
                     .Do(new Pair<Primitive<string>, Primitive<string>>(name.AsPrimitive(), id.AsPrimitive()));
-            }
 
-            public IPromise<Pair<Primitive<string>, Primitive<string>>> GetShipMeta()
-            {
-                return (IPromise<Pair<Primitive<string>, Primitive<string>>>) Actions["GetShipMeta"]
+            public IPromise<Pair<Primitive<string>, Primitive<string>>> GetShipMeta() =>
+                (IPromise<Pair<Primitive<string>, Primitive<string>>>) Actions["GetShipMeta"]
                     .Do(new Void());
-            }
 
             public IPromise<Void> ChangeShipName(string name)
             {
-                throw new NotImplementedException();
+                return Void.Promise();
             }
 
             public IPromise<Void> AssignRandomShipId()
             {
-                throw new NotImplementedException();
+                return Void.Promise();
             }
 
             public IPromise<Void> UpdatePbTag()
             {
-                throw new NotImplementedException();
+                return Void.Promise();
             }
 
             public IPromise<NodeMeta> GetNodeMeta()
             {
-                throw new NotImplementedException();
+                return Promise<NodeMeta>.FromValue(new NodeMeta());
             }
         }
     }

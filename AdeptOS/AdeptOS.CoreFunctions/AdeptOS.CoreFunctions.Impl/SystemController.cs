@@ -62,18 +62,22 @@ namespace IngameScript
             public IPromise<Pair<Primitive<string>, Primitive<string>>> GetShipMeta() => _systems.GetShipMeta();
             public IPromise<Void> ChangeShipName(string name)
             {
+                return Void.Promise();
             }
 
             public IPromise<Void> AssignRandomShipId()
             {
+                return Void.Promise();
             }
 
             public IPromise<Void> UpdatePbTag()
             {
+                return Void.Promise();
             }
 
             public IPromise<NodeMeta> GetNodeMeta()
             {
+                return Promise<NodeMeta>.FromValue(new NodeMeta());
             }
         }
     }

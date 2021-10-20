@@ -159,6 +159,29 @@ namespace IngameScript
                 return AddPendingStep();
             }
 
+            public IPromise<Void> Step(int times)
+            {
+                var promises = new List<IPromise<Void>>();
+                var result = new Promise<Void>();
+                for (int i = 0; i < times; i++)
+                {
+                    var next = StepOnce();
+
+                    promises.Add(next);
+                }
+
+                Promise<Void>.Synch(promises.ToArray())
+                    .Then(sync =>
+                    {
+                        if (sync.Errors.Any())
+                            result.Fail(sync.Errors[0]);
+                        else
+                            result.Resolve(new Void());
+                    });
+
+                return result;
+            }
+
             public IPromise<Void> StepAll()
             {
                 _log.Debug("SQ---- step all");

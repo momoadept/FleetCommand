@@ -29,6 +29,8 @@ namespace IngameScript
             /// <returns>Promise that completes or fails when step is done</returns>
             IPromise<Void> StepOnce();
 
+            IPromise<Void> Step(int times);
+
             /// <summary>
             /// </summary>
             /// <returns>Promise that completes when sequence is done, or fails</returns>
