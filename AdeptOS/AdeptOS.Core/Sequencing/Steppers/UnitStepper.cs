@@ -47,7 +47,7 @@ namespace IngameScript
             public bool IsComplete() => _done;
 
             public void Reset() => _done = false;
-            public IStepper Clone() => new UnitStepper(_step);
+            public IStepper New() => new UnitStepper(_step);
 
             public string Trace(int depth = 0, string prefix = "")
             {

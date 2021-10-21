@@ -31,7 +31,7 @@ namespace IngameScript
 
             public virtual void Bind(IBindingContext context)
             {
-                _rpc = context.RequireOne<IRPC>(this);
+                _rpc = context.RequireOne<IRPC>();
             }
 
             public void Run() { }

@@ -60,7 +60,7 @@ namespace IngameScript
                 _interruptNow = true;
             }
 
-            public IStepper Clone() => new InterruptingStepper(_main.Clone(), _interruptor.Clone());
+            public IStepper New() => new InterruptingStepper(_main.New(), _interruptor.New());
 
             public string Trace(int depth = 0, string prefix = "")
             {

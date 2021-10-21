@@ -62,6 +62,22 @@ namespace IngameScript
         {
             public Func<IPromise<Void>> PromiseGenerator;
             public string StepTag;
+
+            public static implicit operator SequenceStep(Func<IPromise<Void>> v) => new SequenceStep()
+            {
+                PromiseGenerator = v,
+                StepTag = string.Empty,
+            };
+
+            public static implicit operator SequenceStep(Action v) => new SequenceStep()
+            {
+                PromiseGenerator = () =>
+                {
+                    v();
+                    return Void.Promise();
+                },
+                StepTag = string.Empty,
+            };
         }
 
         public interface IStepper
@@ -72,7 +88,7 @@ namespace IngameScript
 
             void Reset();
 
-            IStepper Clone();
+            IStepper New();
 
             string Trace(int depth = 0, string prefix = "");
 

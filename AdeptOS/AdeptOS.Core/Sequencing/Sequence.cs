@@ -32,7 +32,7 @@ namespace IngameScript
             }
         }
 
-        public class StepSequence: ISequence
+        public class SequenceController: ISequenceController
         {
             protected IStepper Stepper;
             private ILog _log;
@@ -58,14 +58,14 @@ namespace IngameScript
 
             private int counter = 0;
 
-            public StepSequence(IStepper stepper, ILog _log = null, bool continueOnError = false)
+            public SequenceController(IStepper stepper, ILog _log = null, bool continueOnError = false)
             {
                 Stepper = stepper;
                 this._log = _log;
                 _continueOnError = continueOnError;
             }
 
-            public StepSequence Extend(Func<IStepper, IStepper> extend) => new StepSequence(extend(Stepper), _log, _continueOnError);
+            public SequenceController Extend(Func<IStepper, IStepper> extend) => new SequenceController(extend(Stepper), _log, _continueOnError);
 
             private void Work()
             {

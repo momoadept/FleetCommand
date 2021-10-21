@@ -77,9 +77,9 @@ namespace IngameScript
                 return cycle;
             }
 
-            public StepSequence Sequence()
+            public SequenceController Sequence()
             {
-                return new StepSequence(Stepper(), _log);
+                return new SequenceController(Stepper(), _log);
             }
         }
 
@@ -135,9 +135,9 @@ namespace IngameScript
                 return cycle;
             }
 
-            public StepSequence Sequence()
+            public SequenceController Sequence()
             {
-                return new StepSequence(Stepper(), _log);
+                return new SequenceController(Stepper(), _log);
             }
         }
 
@@ -173,7 +173,7 @@ namespace IngameScript
                 return combinedStepper;
             }
 
-            public StepSequence Sequence() => new StepSequence(Stepper(), null);
+            public SequenceController Sequence() => new SequenceController(Stepper(), null);
         }
     }
 }

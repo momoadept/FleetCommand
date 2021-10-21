@@ -89,7 +89,7 @@ namespace IngameScript
                 _stepped = 0;
             }
 
-            public IStepper Clone() => new ParallelStepper(_asyncMode, _parallels.Select(x => x.Clone()).ToArray());
+            public IStepper New() => new ParallelStepper(_asyncMode, _parallels.Select(x => x.New()).ToArray());
 
             public string Trace(int depth = 0, string prefix = "")
             {

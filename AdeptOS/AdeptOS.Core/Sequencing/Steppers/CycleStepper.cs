@@ -72,7 +72,7 @@ namespace IngameScript
                 _stepped = 0;
             }
 
-            public IStepper Clone() => new CycleStepper(_body.Clone(), _while, _checkEveryStep);
+            public IStepper New() => new CycleStepper(_body.New(), _while, _checkEveryStep);
 
             public string Trace(int depth = 0, string prefix = "")
             {

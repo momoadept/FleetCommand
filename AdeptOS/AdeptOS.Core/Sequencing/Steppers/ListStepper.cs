@@ -58,18 +58,18 @@ namespace IngameScript
             public bool IsComplete() => next >= Steps.Count;
 
             public void Reset() => next = _stepped = 0;
-            public IStepper Clone() => new ListStepper(Steps.Select(x => x).ToList());
+            public IStepper New() => new ListStepper(Steps.Select(x => x).ToList());
 
 
             /*
              * >LST A
-             * [....*!]
+             * [....*]
              * |    >LST B
-             * |    [....*!]
+             * |    [....*]
              * |    |    >LST C
-             * |    |    [..*!]
+             * |    |    [..*X]
              * |    >LST B2
-             * |    [....*!]
+             * |    [....*X]
              */
             public string Trace(int depth = 0, string prefix = "")
             {

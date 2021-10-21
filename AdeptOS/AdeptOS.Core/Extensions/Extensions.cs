@@ -87,18 +87,31 @@ namespace IngameScript
         public static float AngleDeg(this IMyMotorStator rotor) => (float)(rotor.Angle * 180f / Math.PI);
 
         public static Program.IStepper ContinueWith(this Program.IStepper first, Program.IStepper next) =>
-            new Program.PairStepper(first.Clone(), next.Clone());
+            new Program.PairStepper(first, next);
+
+        public static Program.IStepper ContinueWith(this Program.IStepper first, Program.SequenceStep next) =>
+            new Program.PairStepper(first, next.GetStepper());
 
         public static Program.IStepper ContinueWith(this Program.SequenceStep first, Program.IStepper next) =>
-            new Program.PairStepper(first.GetStepper(), next.Clone());
+            new Program.PairStepper(first.GetStepper(), next);
+
+        public static Program.IStepper DoAfter(this Program.IStepper first, Program.IStepper previous) =>
+            new Program.PairStepper(previous.New(), first);
+
+        public static Program.IStepper DoAfter(this Program.IStepper first, Program.SequenceStep previous) =>
+            new Program.PairStepper(previous.GetStepper(), first);
 
         public static Program.IStepper RepeatWhile(this Program.IStepper first, Func<bool> predicate, bool checkEveryStep = false) =>
-            new Program.CycleStepper(first.Clone(), predicate, checkEveryStep);
+            new Program.CycleStepper(first, predicate, checkEveryStep);
 
         public static Program.IStepper RepeatWhile(this Program.SequenceStep first, Func<bool> predicate, bool checkEveryStep = false) =>
             new Program.CycleStepper(first.GetStepper(), predicate, checkEveryStep);
 
-        public static Program.IStepper AsSingleStep(this Program.IStepper first) => new Program.SkipStepper(first.Clone());
+        public static Program.IStepper AsSingleStep(this Program.IStepper first) => new Program.SkipStepper(first);
+
+        public static Program.IStepper First(this Program.IStepper first, int n) => new Program.SubStepper(first, n);
+
+        public static Program.IStepper NumberOfSteps(this Program.IStepper first, int n) => new Program.SubStepper(first, n, false);
 
         public static Program.IStepper GetStepper(this Program.SequenceStep step) => new Program.UnitStepper(step);
     }

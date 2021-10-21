@@ -69,7 +69,7 @@ namespace IngameScript
                 _stepped = 0;
             }
 
-            public IStepper Clone() => new PairStepper(_a.Clone(), _b.Clone());
+            public IStepper New() => new PairStepper(_a.New(), _b.New());
 
             public string Trace(int depth = 0, string prefix = "")
             {

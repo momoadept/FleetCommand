@@ -19,8 +19,8 @@ namespace IngameScript
 
             public void Bind(IBindingContext context)
             {
-                _gameContext = context.RequireOne<IGameContext>(this);
-                _log = context.RequireOne<ILog>(this);
+                _gameContext = context.RequireOne<IGameContext>();
+                _log = context.RequireOne<ILog>();
             }
 
             public void Run()
@@ -44,9 +44,14 @@ namespace IngameScript
             public void ProcessMessage(string message)
             {
                 var protocol = message.Substring(0, 1);
-                Aos.Async
-                    .Delay()
-                    .Then(x => _handlerByProtocol[protocol].Handle(message));
+                if (_handlerByProtocol.ContainsKey(protocol))
+                    Aos.Async
+                        .Delay()
+                        .Then(x => _handlerByProtocol[protocol].Handle(message));
+                else if (protocol != "T")
+                    //Action shortcut
+                    ProcessMessage($"T|{message}|{{}}");
+                // Can run with argument "DRILL.Start" instead of "T|DRILL.Start|{}"!
             }
 
             public void DispatchMessage(Tag targetTag, string message)

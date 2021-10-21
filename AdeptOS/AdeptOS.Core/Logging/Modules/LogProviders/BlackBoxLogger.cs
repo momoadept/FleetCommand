@@ -27,7 +27,7 @@ namespace IngameScript
 
             public void Bind(IBindingContext context)
             {
-                _gameContext = context.RequireOne<IGameContext>(this);
+                _gameContext = context.RequireOne<IGameContext>();
             }
 
             public void Run()

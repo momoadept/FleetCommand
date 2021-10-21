@@ -8,6 +8,7 @@ namespace IngameScript
         public class BindingContext: IBindingContext
         {
             IEnumerable<IModule> _modules;
+            public IModule Caller;
 
             public BindingContext(IEnumerable<IModule> modules)
             {
@@ -16,35 +17,35 @@ namespace IngameScript
 
             public IEnumerable<TModule> Any<TModule>() => Get<TModule>();
 
-            public IEnumerable<TModule> RequireAny<TModule>(IModule caller)
+            public IEnumerable<TModule> RequireAny<TModule>()
             {
                 var modules = Get<TModule>();
 
                 if(!modules.Any())
-                    throw new BindingException($"Module {caller.UniqueName} needs one or more implementations of {typeof(TModule).Name} but there aren't any in this package");
+                    throw new BindingException($"Module {Caller.UniqueName} needs one or more implementations of {typeof(TModule).Name} but there aren't any in this package");
 
                 return modules;
             }
 
-            public TModule One<TModule>(IModule caller)
+            public TModule One<TModule>()
             {
                 var modules = Get<TModule>();
 
                 if (modules.Count() > 1)
-                    throw new BindingException($"Module {caller.UniqueName} needs one optional implementation of {typeof(TModule).Name} but there are {modules.Count()} in this package");
+                    throw new BindingException($"Module {Caller.UniqueName} needs one optional implementation of {typeof(TModule).Name} but there are {modules.Count()} in this package");
 
                 return modules.FirstOrDefault();
             }
 
-            public TModule RequireOne<TModule>(IModule caller)
+            public TModule RequireOne<TModule>()
             {
                 var modules = Get<TModule>();
 
                 if (!modules.Any())
-                    throw new BindingException($"Module {caller.UniqueName} needs one implementation of {typeof(TModule).Name} but there aren't any in this package");
+                    throw new BindingException($"Module {Caller.UniqueName} needs one implementation of {typeof(TModule).Name} but there aren't any in this package");
 
                 if (modules.Count() > 1)
-                    throw new BindingException($"Module {caller.UniqueName} needs one implementation of {typeof(TModule).Name} but there are {modules.Count()} in this package");
+                    throw new BindingException($"Module {Caller.UniqueName} needs one implementation of {typeof(TModule).Name} but there are {modules.Count()} in this package");
 
                 return modules.First();
             }

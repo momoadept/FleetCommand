@@ -35,8 +35,8 @@ namespace IngameScript
             private IMyShipDrill _drill;
             private IMyTextPanel _reportLcd;
 
-            private StepSequence _dig;
-            private StepSequence _reset;
+            private SequenceController _dig;
+            private SequenceController _reset;
 
             private IJob _checkCargoSpace;
             private IJob _waitForCargoSpace;
@@ -163,8 +163,8 @@ namespace IngameScript
 
             public void Bind(IBindingContext context)
             {
-                _gameContext = context.RequireOne<IGameContext>(this);
-                _log = context.RequireOne<ILog>(this);
+                _gameContext = context.RequireOne<IGameContext>();
+                _log = context.RequireOne<ILog>();
             }
 
             public void Run()
@@ -380,10 +380,10 @@ namespace IngameScript
                     enableDrill, 
                     new InterruptingStepper(extendVertical, extendRetractInfinitely));
 
-                _dig = new StepSequence(dig, _log);
+                _dig = new SequenceController(dig, _log);
 
                 //TODO: extend PairStepper to N arguments
-                _reset = new StepSequence(
+                _reset = new SequenceController(
                     new PairStepper(new PairStepper(retractVertical, retractHorizontalRewind), 
                         disableDrill), 
                     _log);

@@ -59,7 +59,7 @@ namespace IngameScript
                     _base.Reset();
             }
 
-            public IStepper Clone() => new SubStepper(_base.Clone(), _steps, _resetParent);
+            public IStepper New() => new SubStepper(_base.New(), _steps, _resetParent);
 
             public string Trace(int depth = 0, string prefix = "")
             {

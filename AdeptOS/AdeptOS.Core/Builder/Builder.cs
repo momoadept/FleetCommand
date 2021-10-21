@@ -36,7 +36,10 @@ namespace IngameScript
                 var bindingContext = new BindingContext(_modules);
 
                 foreach (var module in _modules)
+                {
+                    bindingContext.Caller = module;
                     module.Bind(bindingContext);
+                }
             }
 
             public void RestoreModules()

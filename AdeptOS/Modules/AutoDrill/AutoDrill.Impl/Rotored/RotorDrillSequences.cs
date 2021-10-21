@@ -24,11 +24,11 @@ namespace IngameScript
     {
         public class RotorDrillSequences
         {
-            public StepSequence DrillLayer;
-            public StepSequence LowerToLayer;
-            public StepSequence RewindHorizontalDrill;
-            public StepSequence RewindVerticalDrill;
-            public StepSequence RewindRotor;
+            public SequenceController DrillLayer;
+            public SequenceController LowerToLayer;
+            public SequenceController RewindHorizontalDrill;
+            public SequenceController RewindVerticalDrill;
+            public SequenceController RewindRotor;
 
             private float _baseSpeed = 0.5f;
             private float _layerHeight = 2f;
@@ -46,38 +46,6 @@ namespace IngameScript
                     rotorMax = float.Parse(terms[1]);
                 }
 
-                var lowerDrillSteps = new ExtendContractPistonArm(
-                    blocks.VerticalPistonArm.ToArray(),
-                    _baseSpeed,
-                    "V Drill",
-                    maxStep * blocks.VerticalPistonArm.Count,
-                    _layerHeight
-                );
-
-                var lowerDrillOnce = new SkipStepper(lowerDrillSteps.Stepper(), "lower drill once", 1);
-
-                var liftDrillSteps = new ExtendContractPistonArm(
-                    blocks.VerticalPistonArm.ToArray(),
-                    -_baseSpeed,
-                    "V Drill",
-                    0,
-                    _layerHeight
-                );
-
-                var extendArmStep = new ExtendContractPistonArm(
-                    blocks.HorizontalPistonArm.ToArray(),
-                    _baseSpeed,
-                    "Extend arm",
-                    maxStep * blocks.HorizontalPistonArm.Count,
-                    _baseStep);
-
-                var contractArmStep = new ExtendContractPistonArm(
-                    blocks.HorizontalPistonArm.ToArray(),
-                    -_baseSpeed,
-                    "Contract arm",
-                    0,
-                    _baseStep);
-
                 Func<float> rotationSpeed = () =>
                 {
                     var metersPerM = _baseSpeed * 60;
@@ -87,6 +55,36 @@ namespace IngameScript
                     var rpm = metersPerM / circ;
                     return (float)rpm;
                 };
+
+                var lowerDrill = new ExtendContractPistonArm(
+                    blocks.VerticalPistonArm.ToArray(),
+                    _baseSpeed,
+                    "V Drill",
+                    maxStep * blocks.VerticalPistonArm.Count,
+                    _layerHeight
+                ).Stepper();
+
+                var liftDrill = new ExtendContractPistonArm(
+                    blocks.VerticalPistonArm.ToArray(),
+                    -_baseSpeed,
+                    "V Drill",
+                    0,
+                    _layerHeight
+                ).Stepper();
+
+                var extendArm = new ExtendContractPistonArm(
+                    blocks.HorizontalPistonArm.ToArray(),
+                    _baseSpeed,
+                    "Extend arm",
+                    maxStep * blocks.HorizontalPistonArm.Count,
+                    _baseStep).Stepper();
+
+                var contractArm = new ExtendContractPistonArm(
+                    blocks.HorizontalPistonArm.ToArray(),
+                    -_baseSpeed*3,
+                    "Contract arm",
+                    0,
+                    _baseStep*2).Stepper();
 
                 var rotor = new RotateRotorSequence(
                     blocks.Rotor,
@@ -98,44 +96,23 @@ namespace IngameScript
 
                 var rewindRotor = rotor.RewindStepper();
 
-                var rotorSteps = rotor.Stepper();
+                var rotateRotor = rotor.Stepper();
 
-                var digForths = extendArmStep.Stepper();
-                var digBacks = contractArmStep.Stepper();
+                var lowerDrillOnce = lowerDrill.First(1);
 
-                var resetExtender = new SequenceStep()
-                {
-                    StepTag = "reset ex",
-                    PromiseGenerator = () =>
-                    {
-                        digForths.Reset();
-                        rotorSteps.Reset();
-                        return Void.Promise();
-                    }
-                };
+                var traceableExtendArm = extendArm.New();
 
-                var resetContractor = new SequenceStep()
-                {
-                    StepTag = "reset ct",
-                    PromiseGenerator = () =>
-                    {
-                        digBacks.Reset();
-                        rotorSteps.Reset();
-                        return Void.Promise();
-                    }
-                };
+                var drillLayer = rotateRotor.New()
+                    .ContinueWith(rewindRotor.New())
+                    .ContinueWith(traceableExtendArm.NumberOfSteps(1))
+                    .RepeatWhile(() => !traceableExtendArm.IsComplete())
+                    .ContinueWith(rotateRotor.New()) // Last full rotation
+                    .DoAfter((Action)(() => traceableExtendArm.Reset()))
+                    .DoAfter((Action)(() => blocks.Drill.Enabled = true));
 
-                var digForth = new PairStepper(new PairStepper(digForths, new UnitStepper(resetExtender)), new SkipStepper(rotorSteps, "rotate rotor", 1));
-                var digBack = new PairStepper(new PairStepper(digBacks, new UnitStepper(resetContractor)), new SkipStepper(rotorSteps, "rotate rotor", 1));
-
-                var digBackAndForth = new PairStepper(digForth, digBack);
-                var digCycle = new CycleStepper(digBackAndForth, () => !blocks.Rotor.AngleDeg().AlmostEquals(rotorMax));
-
-                DrillLayer = new StepSequence(digCycle);
-                LowerToLayer = new StepSequence(lowerDrillSteps.Stepper());
-                RewindHorizontalDrill = new StepSequence(contractArmStep.Stepper());
-                RewindVerticalDrill = new StepSequence(liftDrillSteps.Stepper());
-                RewindRotor = new StepSequence(rewindRotor);
+                var moveToNextLayer = contractArm.New()
+                    .ContinueWith(rewindRotor.New())
+                    .ContinueWith(lowerDrillOnce.New());
             }
         }
     }

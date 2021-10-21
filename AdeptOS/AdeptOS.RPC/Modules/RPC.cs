@@ -31,11 +31,11 @@ namespace IngameScript
 
             public void Bind(IBindingContext context)
             {
-                var messageHub = context.RequireOne<IMessageHub>(this);
+                var messageHub = context.RequireOne<IMessageHub>();
                 messageHub.RegisterHandler("R", this);
-                _implementationsByName = context.RequireAny<IRemoteImpl>(this)
+                _implementationsByName = context.RequireAny<IRemoteImpl>()
                     .ToDictionary(it => it.UniqueName);
-                _sender = context.RequireOne<IMessageSender>(this);
+                _sender = context.RequireOne<IMessageSender>();
             }
 
             public void Run()

@@ -35,7 +35,7 @@ namespace IngameScript
             private bool _done;
             private int _stepped = 0;
 
-            private StepSequence _internalSequence;
+            private SequenceController _internalSequence;
 
             public SkipStepper(IStepper @base, string tag = "multiple steps", int steps = 0, bool once = true)
             {
@@ -43,7 +43,7 @@ namespace IngameScript
                 _tag = tag;
                 _steps = steps;
                 _once = once;
-                _internalSequence = new StepSequence(@base, null, false);
+                _internalSequence = new SequenceController(@base, null, false);
             }
 
             public SequenceStep Next()
@@ -88,7 +88,7 @@ namespace IngameScript
                 _stepped = 0;
             }
 
-            public IStepper Clone() => new SkipStepper(_base.Clone(), _tag, _steps, _once);
+            public IStepper New() => new SkipStepper(_base.New(), _tag, _steps, _once);
 
             public string Trace(int depth = 0, string prefix = "")
             {

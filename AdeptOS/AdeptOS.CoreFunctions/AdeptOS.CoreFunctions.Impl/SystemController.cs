@@ -45,7 +45,7 @@ namespace IngameScript
 
             public void Bind(IBindingContext context)
             {
-                _systems = new Systems(context.RequireOne<IGameContext>(this), context.RequireOne<IMessageSender>(this), context.RequireOne<ILog>(this));
+                _systems = new Systems(context.RequireOne<IGameContext>(), context.RequireOne<IMessageSender>(), context.RequireOne<ILog>());
             }
 
             public void Run()

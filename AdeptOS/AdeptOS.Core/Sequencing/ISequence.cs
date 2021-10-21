@@ -21,7 +21,7 @@ namespace IngameScript
 {
     partial class Program
     {
-        public interface ISequence
+        public interface ISequenceController
         {
             /// <summary>
             /// Queue a next step. Method call always adds a step to queue even if a step is already in progress.

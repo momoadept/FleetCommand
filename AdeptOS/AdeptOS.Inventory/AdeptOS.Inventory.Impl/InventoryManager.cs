@@ -58,8 +58,8 @@ namespace IngameScript
 
             public void Bind(IBindingContext context)
             {
-                _log = context.RequireOne<ILog>(this);
-                _gameContext = context.RequireOne<IGameContext>(this);
+                _log = context.RequireOne<ILog>();
+                _gameContext = context.RequireOne<IGameContext>();
             }
 
             public void Restore(InventoryManagerState state)

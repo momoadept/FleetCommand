@@ -73,7 +73,7 @@ namespace IngameScript
                 _done = false;
             }
 
-            public IStepper Clone() => new ConcatStepper(_parts.Select(x => x.Clone()).ToArray());
+            public IStepper New() => new ConcatStepper(_parts.Select(x => x.New()).ToArray());
 
             public string Trace(int depth = 0, string prefix = "")
             {

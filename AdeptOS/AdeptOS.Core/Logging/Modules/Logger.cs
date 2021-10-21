@@ -19,7 +19,7 @@ namespace IngameScript
 
             public void Bind(IBindingContext context)
             {
-                _providers = context.RequireAny<ILogProvider>(this);
+                _providers = context.RequireAny<ILogProvider>();
             }
 
             public void Run()

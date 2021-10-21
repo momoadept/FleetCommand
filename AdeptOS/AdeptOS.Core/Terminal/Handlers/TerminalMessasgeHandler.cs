@@ -20,8 +20,8 @@ namespace IngameScript
             {
                 var controllables = context.Any<IControllable>() ;
                 _controllersByName = controllables.ToDictionary(it => it.UniqueName);
-                _log = context.RequireOne<ILog>(this);
-                _sender = context.RequireOne<IMessageSender>(this);
+                _log = context.RequireOne<ILog>();
+                _sender = context.RequireOne<IMessageSender>();
             }
 
             public void Run()
