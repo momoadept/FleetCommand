@@ -38,31 +38,43 @@ namespace IngameScript
             public virtual string Report()
             {
                 var s = new StringBuilder();
+                s.AppendLine("Auto drill");
+                s.AppendLine(stateMachine.Current.ToString());
+                s.AppendLine("Saved State: ").AppendLine(Context.State.Stringify());
+                s.AppendLine();
                 s.AppendLine(Context.Blocks.Rotor.Angle.ToString());
                 s.AppendLine(Context.Blocks.Rotor.AngleDeg().ToString());
                 s.AppendLine(Context.Blocks.Rotor.LowerLimitDeg.ToString());
                 s.AppendLine(Context.Blocks.Rotor.UpperLimitDeg.ToString());
                 s.AppendLine(Context.Blocks.Rotor.TargetVelocityRPM.ToString());
-                s.AppendLine(stateMachine.Current.ToString());
-                s.AppendLine($"Layers: {Context.State.CurrentLayer}");
-                s.AppendLine("[DrillLayer]");
-                s.AppendLine(Context.Sequences.DrillLayer.GetReport());
-                s.AppendLine("[LowerToLayer]");
-                s.AppendLine(Context.Sequences.LowerToLayer.GetReport());
-                s.AppendLine("[RewindHorizontalDrill]");
-                s.AppendLine(Context.Sequences.RewindHorizontalDrill.GetReport());
-                s.AppendLine("[RewindRotor]");
-                s.AppendLine(Context.Sequences.RewindRotor.GetReport());
-                s.AppendLine("[RewindVerticalDrill]");
-                s.AppendLine(Context.Sequences.RewindVerticalDrill.GetReport());
 
                 return s.ToString();
             }
 
-            public abstract IPromise<Void> Drill();
-            public abstract IPromise<Void> Pause();
-            public abstract IPromise<Void> Resume();
-            public abstract IPromise<Void> Reset();
+            public virtual IPromise<Void> Drill()
+            {
+                return Void.Promise();
+            }
+
+            public virtual IPromise<Void> Pause()
+            {
+                return Void.Promise();
+            }
+
+            public virtual IPromise<Void> Resume()
+            {
+                return Void.Promise();
+            }
+
+            public virtual IPromise<Void> Reset()
+            {
+                return Void.Promise();
+            }
+
+            public virtual IPromise<Void> SkipToLayer(int layer)
+            {
+                return Void.Promise();
+            }
         }
     }
 }

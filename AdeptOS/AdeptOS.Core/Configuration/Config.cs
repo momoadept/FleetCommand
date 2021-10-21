@@ -6,6 +6,8 @@
         {
             public PriorityConfiguration Priorities = new PriorityConfiguration();
             public SchedulerPerformanceConfiguration SchedulerPerformance = new SchedulerPerformanceConfiguration();
+
+            public bool IsDev = true;
         }
     }
 }

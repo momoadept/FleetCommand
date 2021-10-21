@@ -22,7 +22,7 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class RotorDrill : IModule, IAutoDrill
+        public class RotorDrill : IModule, IRotorDrill
         {
             public string UniqueName { get; }
             public string Alias { get; }
@@ -33,8 +33,7 @@ namespace IngameScript
 
             IGameContext _context;
             ILog _log;
-
-            IJob _debug;
+            ILcdTracer _lcd;
 
             RotorDrillStateMachine _stateMachine;
 
@@ -42,6 +41,7 @@ namespace IngameScript
             {
                 _context = context.RequireOne<IGameContext>();
                 _log = context.RequireOne<ILog>();
+                _lcd = context.One<ILcdTracer>();
             }
 
             public void Run()
@@ -71,12 +71,11 @@ namespace IngameScript
                 },
                     _log);
 
-                if (_debug == null)
-                    _debug = Aos.Async.CreateJob(Debug);
-                _debug.Start();
+                _lcd.SetTrace(new Tag("AD_SG"), TraceGeneral);
+                _lcd.SetTrace(new Tag("AD_SC"), TraceCurrent);
             }
 
-            private void Debug()
+            private string TraceGeneral()
             {
                 var report = _stateMachine?.Actions.Report();
 
@@ -85,10 +84,33 @@ namespace IngameScript
                     report = "Couldn't start drilling";
                 }
 
-                if (_blocks.ReportLcd != null)
-                    _blocks.ReportLcd.ContentType = ContentType.TEXT_AND_IMAGE;
+                return report;
+            }
 
-                _blocks.ReportLcd?.WriteText(report);
+            private string TraceCurrent()
+            {
+                if (_stateMachine == null)
+                    return ":(";
+
+                switch (_stateMachine.Current)
+                {
+                    case RotorDrillStage.StartingPosition:
+                        return "Waiting for input. Target layer = " + _state.CurrentLayer;
+                    case RotorDrillStage.Drilling:
+                        return _sequences.DrillLayer.GetReport();
+                    case RotorDrillStage.FinishedLayer:
+                        return _sequences.LowerToLayer.GetReport();
+                    case RotorDrillStage.Rewinding:
+                        return _sequences.RewindRotor.GetReport();
+                    case RotorDrillStage.MovingToLayer:
+                        return _sequences.LowerToLayer.GetReport();
+                    case RotorDrillStage.Error:
+                        return "ERROR";
+                    case RotorDrillStage.FinishedAll:
+                        return "Done drilling. Waiting for input";
+                }
+
+                return ":(";
             }
 
             public void OnSaving()
@@ -122,6 +144,12 @@ namespace IngameScript
                 else 
                     Run();
 
+                return Void.Promise();
+            }
+
+            public IPromise<Void> SkipToLayer(int layer)
+            {
+                _stateMachine?.Actions.SkipToLayer(layer);
                 return Void.Promise();
             }
 

@@ -66,7 +66,7 @@ namespace IngameScript
 
                 var liftDrill = new ExtendContractPistonArm(
                     blocks.VerticalPistonArm.ToArray(),
-                    -_baseSpeed,
+                    -_baseSpeed*3,
                     "V Drill",
                     0,
                     _layerHeight
@@ -98,8 +98,6 @@ namespace IngameScript
 
                 var rotateRotor = rotor.Stepper();
 
-                var lowerDrillOnce = lowerDrill.First(1);
-
                 var traceableExtendArm = extendArm.New();
 
                 var drillLayer = rotateRotor.New()
@@ -108,11 +106,18 @@ namespace IngameScript
                     .RepeatWhile(() => !traceableExtendArm.IsComplete())
                     .ContinueWith(rotateRotor.New()) // Last full rotation
                     .DoAfter((Action)(() => traceableExtendArm.Reset()))
-                    .DoAfter((Action)(() => blocks.Drill.Enabled = true));
+                    .DoAfter((Action)(() => blocks.Drill.Enabled = true))
+                    .ContinueWith(rewindRotor.New());
 
-                var moveToNextLayer = contractArm.New()
-                    .ContinueWith(rewindRotor.New())
-                    .ContinueWith(lowerDrillOnce.New());
+                var lowerToLayer = lowerDrill.New();
+                var rewindVertical = liftDrill.New();
+                var rewindHorizontal = contractArm.New();
+
+                DrillLayer = new SequenceController(drillLayer);
+                LowerToLayer = new SequenceController(lowerToLayer);
+                RewindHorizontalDrill = new SequenceController(rewindHorizontal);
+                RewindVerticalDrill = new SequenceController(rewindVertical);
+                RewindRotor = new SequenceController(rewindRotor);
             }
         }
     }

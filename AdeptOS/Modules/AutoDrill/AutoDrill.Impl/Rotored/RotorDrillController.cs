@@ -22,7 +22,7 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class RotorDrillController : StorableModule<RotorDrillController>, IControllable, IAutoDrill
+        public class RotorDrillController : StorableModule<RotorDrillController>, IControllable, IRotorDrill
         {
             public RotorDrillController() : base(new List<Property<RotorDrillController>>(new []
             {
@@ -33,7 +33,8 @@ namespace IngameScript
                     .Add<Void, Void>("Drill", v => Drill())
                     .Add<Void, Void>("Pause", v => Pause())
                     .Add<Void, Void>("Reset", v => Reset())
-                    .Add<Void, Void>("Resume", v => Resume());
+                    .Add<Void, Void>("Resume", v => Resume())
+                    .Add<Primitive<int>, Void>("SkipToLayer", l => SkipToLayer(l.Value));
 
                 _impl = new RotorDrill();
             }
@@ -69,6 +70,8 @@ namespace IngameScript
             public IPromise<Void> Resume() => _impl.Resume();
 
             public IPromise<Void> Reset() => _impl.Reset();
+
+            public IPromise<Void> SkipToLayer(int layer) => _impl.SkipToLayer(layer);
         }
     }
 }

@@ -47,6 +47,12 @@ namespace IngameScript
                 return Void.Promise();
             }
 
+            public override IPromise<Void> SkipToLayer(int layer)
+            {
+                Context.State.CurrentLayer = layer;
+                return Void.Promise();
+            }
+
             public override void Enter()
             {
                 if (!Context.Blocks.Valid) return;

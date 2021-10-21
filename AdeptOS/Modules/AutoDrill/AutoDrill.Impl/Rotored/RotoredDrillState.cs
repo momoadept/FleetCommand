@@ -34,12 +34,12 @@ namespace IngameScript
             FinishedAll = 9,
         }
 
-        public interface IAutoDrillControlObject : IAutoDrill, IStateMachineControlObject<RotorDrillStage, RotorDrillContext>
+        public interface IAutoDrillControlObject : IRotorDrill, IStateMachineControlObject<RotorDrillStage, RotorDrillContext>
         {
             string Report();
         }
 
-        public class RotorDrillStateMachine : StateMachine<IAutoDrillControlObject, RotorDrillStage, IAutoDrill, RotorDrillContext>
+        public class RotorDrillStateMachine : StateMachine<IAutoDrillControlObject, RotorDrillStage, IRotorDrill, RotorDrillContext>
         {
             private ILog _log;
 

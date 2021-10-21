@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ExtendPistonSequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoDrillState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IAutoDrill.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\IRotorDrill.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotorDrillController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotateRotorSequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotorDrill.cs" />

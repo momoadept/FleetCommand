@@ -8,7 +8,7 @@
 
             Priority Priority { get; set; }
 
-            void Start();
+            IJob Start();
 
             void Stop();
         }

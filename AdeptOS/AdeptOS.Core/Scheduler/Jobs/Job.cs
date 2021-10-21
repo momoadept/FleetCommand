@@ -18,7 +18,7 @@ namespace IngameScript
                 Priority = priority;
             }
 
-            public void Start()
+            public IJob Start()
             {
                 _stopping = false;
 
@@ -27,6 +27,8 @@ namespace IngameScript
                     Running = true;
                     Work();
                 }
+
+                return this;
             }
 
             public void Stop()
