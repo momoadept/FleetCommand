@@ -17,7 +17,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sequencing\ISequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Sequence.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steps.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\ConcatStepper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\CycleStepper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\InterruptingStepper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\ListStepper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\PairStepper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\ParallelStepper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\SkipStepper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\Steps.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\SubStepper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Sequencing\Steppers\UnitStepper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Contract.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Tag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Integration\GameContext.cs" />

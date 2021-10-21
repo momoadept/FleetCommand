@@ -374,17 +374,17 @@ namespace IngameScript
                     }
                 });
 
-                var extendRetract = new CombinedStepper(extendHorizontal, retractHorizontal, _log);
+                var extendRetract = new PairStepper(extendHorizontal, retractHorizontal, _log);
                 var extendRetractInfinitely = new CycleStepper(extendRetract, () => true);
-                var dig = new CombinedStepper(
+                var dig = new PairStepper(
                     enableDrill, 
                     new InterruptingStepper(extendVertical, extendRetractInfinitely));
 
                 _dig = new StepSequence(dig, _log);
 
-                //TODO: extend CombinedStepper to N arguments
+                //TODO: extend PairStepper to N arguments
                 _reset = new StepSequence(
-                    new CombinedStepper(new CombinedStepper(retractVertical, retractHorizontalRewind), 
+                    new PairStepper(new PairStepper(retractVertical, retractHorizontalRewind), 
                         disableDrill), 
                     _log);
             }

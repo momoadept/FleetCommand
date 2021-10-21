@@ -125,10 +125,10 @@ namespace IngameScript
                     }
                 };
 
-                var digForth = new CombinedStepper(new CombinedStepper(digForths, new UnitStepper(resetExtender)), new SkipStepper(rotorSteps, "rotate rotor", 1));
-                var digBack = new CombinedStepper(new CombinedStepper(digBacks, new UnitStepper(resetContractor)), new SkipStepper(rotorSteps, "rotate rotor", 1));
+                var digForth = new PairStepper(new PairStepper(digForths, new UnitStepper(resetExtender)), new SkipStepper(rotorSteps, "rotate rotor", 1));
+                var digBack = new PairStepper(new PairStepper(digBacks, new UnitStepper(resetContractor)), new SkipStepper(rotorSteps, "rotate rotor", 1));
 
-                var digBackAndForth = new CombinedStepper(digForth, digBack);
+                var digBackAndForth = new PairStepper(digForth, digBack);
                 var digCycle = new CycleStepper(digBackAndForth, () => !blocks.Rotor.AngleDeg().AlmostEquals(rotorMax));
 
                 DrillLayer = new StepSequence(digCycle);

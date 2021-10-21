@@ -85,5 +85,21 @@ namespace IngameScript
         }
 
         public static float AngleDeg(this IMyMotorStator rotor) => (float)(rotor.Angle * 180f / Math.PI);
+
+        public static Program.IStepper ContinueWith(this Program.IStepper first, Program.IStepper next) =>
+            new Program.PairStepper(first.Clone(), next.Clone());
+
+        public static Program.IStepper ContinueWith(this Program.SequenceStep first, Program.IStepper next) =>
+            new Program.PairStepper(first.GetStepper(), next.Clone());
+
+        public static Program.IStepper RepeatWhile(this Program.IStepper first, Func<bool> predicate, bool checkEveryStep = false) =>
+            new Program.CycleStepper(first.Clone(), predicate, checkEveryStep);
+
+        public static Program.IStepper RepeatWhile(this Program.SequenceStep first, Func<bool> predicate, bool checkEveryStep = false) =>
+            new Program.CycleStepper(first.GetStepper(), predicate, checkEveryStep);
+
+        public static Program.IStepper AsSingleStep(this Program.IStepper first) => new Program.SkipStepper(first.Clone());
+
+        public static Program.IStepper GetStepper(this Program.SequenceStep step) => new Program.UnitStepper(step);
     }
 }
