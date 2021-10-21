@@ -49,10 +49,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Modules", "3. Modules", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AutoDrill", "AutoDrill", "{87F5745B-7444-4DC2-B2AB-95FEC7075407}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPackages.AosAutoRotorDrill", "..\TestPackages\TestPackages.AosAutoRotorDrill\TestPackages.AosAutoRotorDrill.csproj", "{4880F5CC-8E92-40C8-BD3E-B57CE91658C3}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		AdeptOS.RPC\AdeptOS.RPC.projitems*{232c056d-eb8a-4a00-bb28-6a029e56b083}*SharedItemsImports = 13
 		AdeptOS.Core\AdeptOS.Core.projitems*{36c187a8-c2f7-4f49-89c2-2cb3308d5543}*SharedItemsImports = 13
+		AdeptOS.Core\AdeptOS.Core.projitems*{4880f5cc-8e92-40c8-bd3e-b57ce91658c3}*SharedItemsImports = 4
+		Modules\AutoDrill\AutoDrill.Impl\AutoDrill.Impl.projitems*{4880f5cc-8e92-40c8-bd3e-b57ce91658c3}*SharedItemsImports = 4
 		AdeptOS.Core\AdeptOS.Core.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
@@ -113,6 +117,13 @@ Global
 		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Release|Any CPU.Build.0 = Debug|x64
 		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Release|x64.ActiveCfg = Debug|x64
 		{499FDB05-1955-4B9D-BC8A-B169C2053D53}.Release|x64.Build.0 = Debug|x64
+		{4880F5CC-8E92-40C8-BD3E-B57CE91658C3}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{4880F5CC-8E92-40C8-BD3E-B57CE91658C3}.Debug|x64.ActiveCfg = Debug|x64
+		{4880F5CC-8E92-40C8-BD3E-B57CE91658C3}.Debug|x64.Build.0 = Debug|x64
+		{4880F5CC-8E92-40C8-BD3E-B57CE91658C3}.Release|Any CPU.ActiveCfg = Debug|x64
+		{4880F5CC-8E92-40C8-BD3E-B57CE91658C3}.Release|Any CPU.Build.0 = Debug|x64
+		{4880F5CC-8E92-40C8-BD3E-B57CE91658C3}.Release|x64.ActiveCfg = Debug|x64
+		{4880F5CC-8E92-40C8-BD3E-B57CE91658C3}.Release|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,6 +147,7 @@ Global
 		{B3AFB483-EFB5-42C4-831E-B792BD56B258} = {6BA881F4-FC1E-4864-9F90-C532487B7883}
 		{9E9CCC72-66DB-489C-BDE5-949FCB134210} = {6BA881F4-FC1E-4864-9F90-C532487B7883}
 		{87F5745B-7444-4DC2-B2AB-95FEC7075407} = {47D12005-86EE-4D95-A146-BFD3C33D9017}
+		{4880F5CC-8E92-40C8-BD3E-B57CE91658C3} = {449C80C2-CE23-4BCA-B4B6-C840CDBE57EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BDEF870-93B7-4011-82FD-22D4B16BE55E}

@@ -78,5 +78,12 @@ namespace IngameScript
         {
             return Math.Abs(a - b) < delta;
         }
+
+        public static void ToEnum<TEnum>(this string value, ref TEnum target)
+        {
+            target = (TEnum)Enum.Parse(typeof(TEnum), value);
+        }
+
+        public static float AngleDeg(this IMyMotorStator rotor) => (float)(rotor.Angle * 180f / Math.PI);
     }
 }

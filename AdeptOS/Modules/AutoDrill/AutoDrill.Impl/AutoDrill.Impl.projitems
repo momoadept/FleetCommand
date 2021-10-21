@@ -14,5 +14,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)ExtendPistonSequence.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AutoDrillState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IAutoDrill.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotorDrillController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotateRotorSequence.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotorDrill.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotorDrillBlocks.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotorDrillContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotorDrillSequences.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\RotoredDrillState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\StateMachine\Drilling.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\StateMachine\FinishedAll.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\StateMachine\FinshedLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\StateMachine\MovingToLayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\StateMachine\Rewinding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\StateMachine\RotorDrillBaseControlObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rotored\StateMachine\StartingPosition.cs" />
   </ItemGroup>
 </Project>

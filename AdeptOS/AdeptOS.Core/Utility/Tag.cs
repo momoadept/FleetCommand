@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System;
+using Sandbox.ModAPI.Ingame;
 
 namespace IngameScript
 {
@@ -45,6 +46,34 @@ namespace IngameScript
             {
                 var matches = _tagMatcher.Matches(name).Cast<System.Text.RegularExpressions.Match>().Select(it => it.Value);
                 return new HashSet<Tag>(matches.Select(it => new Tag(it)));
+            }
+
+            public static List<TBlock> FindGroupByTag<TBlock>(Tag tag, IMyGridTerminalSystem grid, List<IMyTerminalBlock> bbuffer = null,
+                List<IMyBlockGroup> gbuffer = null)
+                where TBlock : class
+            {
+                bbuffer = bbuffer ?? new List<IMyTerminalBlock>();
+                gbuffer = gbuffer ?? new List<IMyBlockGroup>();
+
+                var result = new List<TBlock>();
+
+                grid.GetBlockGroups(gbuffer, group => group.Name.Contains(tag.Wrapped));
+                foreach (var blockGroup in gbuffer)
+                {
+                    blockGroup.GetBlocksOfType<TBlock>(bbuffer);
+                    result.AddRange(bbuffer.Cast<TBlock>());
+                }
+
+                return result;
+            }
+
+            public static List<TBlock> FindBlockByTag<TBlock>(Tag tag, IMyGridTerminalSystem grid, List<IMyTerminalBlock> bbuffer = null)
+                where TBlock : class
+            {
+                bbuffer = bbuffer ?? new List<IMyTerminalBlock>();
+
+                grid.SearchBlocksOfName(tag.Wrapped, bbuffer, x => x is TBlock);
+                return bbuffer.Cast<TBlock>().ToList();
             }
         }
     }

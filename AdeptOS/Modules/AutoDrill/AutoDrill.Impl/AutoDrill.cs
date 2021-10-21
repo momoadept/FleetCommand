@@ -165,8 +165,6 @@ namespace IngameScript
             {
                 _gameContext = context.RequireOne<IGameContext>(this);
                 _log = context.RequireOne<ILog>(this);
-                IMyMotorAdvancedRotor r;
-                
             }
 
             public void Run()
@@ -315,8 +313,8 @@ namespace IngameScript
                     _reset.Reset();
 
                 var max = _horizontalPistonArm.First().MaxLimit;
-                var baseSpeed = 1.25f;
-                var baseStep = 0.5f;
+                var baseSpeed = 0.25f;
+                var baseStep = 1f;
                 var extendVertical = new ExtendContractPistonArm(
                     _verticalPistonArm.ToArray(),
                     baseSpeed,
@@ -332,21 +330,21 @@ namespace IngameScript
                     0f,
                     max * _verticalPistonArm.Count).Stepper();
 
-                var extendHorizontal = new ExtendContractPistonArm(
+                var extendHorizontal = new SkipStepper(new ExtendContractPistonArm(
                     _horizontalPistonArm.ToArray(),
                     baseSpeed,
                     "extend drill",
                     max * _horizontalPistonArm.Count,
-                    max * _horizontalPistonArm.Count,
+                    baseStep,
                     false,
-                    _log).Stepper();
+                    _log).Stepper());
 
-                var retractHorizontal = new ExtendContractPistonArm(
+                var retractHorizontal = new SkipStepper(new ExtendContractPistonArm(
                     _horizontalPistonArm.ToArray(),
                     -baseSpeed,
                     "retract drill",
                     0f,
-                    max * _horizontalPistonArm.Count).Stepper();
+                    baseStep).Stepper());
 
                 var retractHorizontalRewind = new ExtendContractPistonArm(
                     _horizontalPistonArm.ToArray(),

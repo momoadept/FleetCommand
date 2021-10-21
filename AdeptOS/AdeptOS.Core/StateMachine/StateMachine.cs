@@ -8,8 +8,9 @@ namespace IngameScript
             where THandler: class, TActions, IStateMachineControlObject<TState, TSynchContext>
         {
             public TState CurrentState { get; private set; }
-            public TActions Actions => _controlObjects.ContainsKey(CurrentState) ? _controlObjects[CurrentState] : null;
+            public THandler Actions => _controlObjects.ContainsKey(CurrentState) ? _controlObjects[CurrentState] : null;
             public TSynchContext Context { get; }
+            public TState Current => CurrentState;
 
             Dictionary<TState, THandler> _controlObjects;
 
@@ -26,7 +27,7 @@ namespace IngameScript
                     _controlObjects[CurrentState].Enter();
             }
 
-            public void SwitchState(TState next)
+            public virtual void SwitchState(TState next)
             {
                 if (_controlObjects.ContainsKey(CurrentState))
                     _controlObjects[CurrentState].Exit();

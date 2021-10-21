@@ -6,6 +6,8 @@
         {
             void SwitchState(TState next);
             TSynchContext Context { get; }
+
+            TState Current { get; }
         }
     }
 }

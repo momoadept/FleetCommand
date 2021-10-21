@@ -67,40 +67,37 @@ namespace IngameScript
             private IStepper _a;
             private IStepper _b;
             private ILog _log;
+            private IStepper _current;
 
             public CombinedStepper(IStepper a, IStepper b, ILog log = null)
             {
                 _a = a;
                 _b = b;
                 _log = log;
+                _current = a;
             }
 
             public SequenceStep Next()
             {
-                if (_a.IsComplete())
-                    if (_b.IsComplete())
-                    {
-                        _log?.Debug("COMBINED NULL");
-                        return null;
-                    }
-                    else
-                    {
-                        _log?.Debug("COMBINED B");
-                        return _b.Next();
-                    }
-                else
+                if (!_current.IsComplete())
+                    return _current.Next();
+
+                if (_current == _a)
                 {
-                    _log?.Debug("COMBINED A");
-                    return _a.Next();
+                    _current = _b;
+                    return Next();
                 }
+
+                return null;
             }
 
-            public bool IsComplete() => _a.IsComplete() && _b.IsComplete();
+            public bool IsComplete() => _current == _b && _b.IsComplete();
 
             public void Reset()
             {
                 _a.Reset();
                 _b.Reset();
+                _current = _a;
             }
         }
 
@@ -164,12 +161,14 @@ namespace IngameScript
         {
             private IStepper _body;
             private Func<bool> _while;
+            private bool _checkEveryStep;
             private bool _first = true;
 
-            public CycleStepper(IStepper body, Func<bool> @while)
+            public CycleStepper(IStepper body, Func<bool> @while, bool checkEveryStep = false)
             {
                 _body = body;
                 _while = @while;
+                _checkEveryStep = checkEveryStep;
             }
 
             public SequenceStep Next()
@@ -192,7 +191,7 @@ namespace IngameScript
                 return _body.Next();
             }
 
-            public bool IsComplete() => (_first && !_while()) || (_body.IsComplete() && !_while());
+            public bool IsComplete() => ((_first || _checkEveryStep) && !_while()) || (_body.IsComplete() && !_while());
 
             public void Reset()
             {
@@ -266,15 +265,17 @@ namespace IngameScript
             private IStepper _base;
             private readonly string _tag;
             private int _steps;
+            private bool _once;
             private bool _done;
 
             private StepSequence _internalSequence;
 
-            public SkipStepper(IStepper @base, string tag = "multiple steps", int steps = 0)
+            public SkipStepper(IStepper @base, string tag = "multiple steps", int steps = 0, bool once = true)
             {
                 _base = @base;
                 _tag = tag;
                 _steps = steps;
+                _once = once;
                 _internalSequence = new StepSequence(@base, null, false);
             }
 
@@ -299,7 +300,7 @@ namespace IngameScript
                         });
                         steps.Finally(() =>
                         {
-                            _done = _internalSequence.IsComplete() || _internalSequence.GetException() != null;
+                            _done = _once || (_internalSequence.IsComplete() && _internalSequence.GetException() != null);
                             promise.Resolve(new Void());
                         });
 
@@ -314,7 +315,7 @@ namespace IngameScript
             public void Reset()
             {
                 _done = false;
-                _internalSequence.Reset();
+                _internalSequence?.Reset();
             }
         }
     }

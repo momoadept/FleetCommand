@@ -166,8 +166,8 @@ namespace IngameScript
             {
                 var N = _pistons.Length;
                 var baseSteppers = _pistons.Select(x => _speed > 0 
-                    ? new ExtendPiston(x, _speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / N, _log).Stepper()
-                    : new ContractPiston(x, -_speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / N, _log).Stepper());
+                    ? new ExtendPiston(x, _speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / (_asyncMode ? N : 1), _log).Stepper()
+                    : new ContractPiston(x, -_speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / (_asyncMode ? N : 1), _log).Stepper());
 
                 var combinedStepper = new ParallelStepper(_asyncMode, baseSteppers.ToArray());
                 return combinedStepper;
