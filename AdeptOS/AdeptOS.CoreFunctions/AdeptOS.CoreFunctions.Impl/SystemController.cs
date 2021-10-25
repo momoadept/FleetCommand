@@ -43,15 +43,9 @@ namespace IngameScript
                         arg => GetShipMeta());
             }
 
-            public void Bind(IBindingContext context)
-            {
-                _systems = new Systems(context.RequireOne<IGameContext>(), context.RequireOne<IMessageSender>(), context.RequireOne<ILog>());
-            }
+            public void Bind(IBindingContext context) => _systems = new Systems(context.RequireOne<IGameContext>(), context.RequireOne<IMessageSender>(), context.RequireOne<ILog>());
 
-            public void Run()
-            {
-                _systems.Init();
-            }
+            public void Run() => _systems.Init();
 
             public void OnSaving()
             {
@@ -60,25 +54,13 @@ namespace IngameScript
             public IPromise<Void> ChangeShipNameAndId(string name, string id) => _systems.ChangeShipNameAndId(name, id);
             public IPromise<Void> ChangeNodeNameAndId(string name, string id) => _systems.ChangeNodeNameAndId(name, id);
             public IPromise<Pair<Primitive<string>, Primitive<string>>> GetShipMeta() => _systems.GetShipMeta();
-            public IPromise<Void> ChangeShipName(string name)
-            {
-                return Void.Promise();
-            }
+            public IPromise<Void> ChangeShipName(string name) => Void.Promise();
 
-            public IPromise<Void> AssignRandomShipId()
-            {
-                return Void.Promise();
-            }
+            public IPromise<Void> AssignRandomShipId() => Void.Promise();
 
-            public IPromise<Void> UpdatePbTag()
-            {
-                return Void.Promise();
-            }
+            public IPromise<Void> UpdatePbTag() => Void.Promise();
 
-            public IPromise<NodeMeta> GetNodeMeta()
-            {
-                return Promise<NodeMeta>.FromValue(new NodeMeta());
-            }
+            public IPromise<NodeMeta> GetNodeMeta() => Promise<NodeMeta>.FromValue(new NodeMeta());
         }
     }
 }

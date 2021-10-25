@@ -27,8 +27,8 @@ namespace IngameScript
         /// </summary>
         public class UnitStepper : IStepper
         {
-            private bool _done = false;
-            private SequenceStep _step;
+            bool _done;
+            SequenceStep _step;
 
             public UnitStepper(SequenceStep step)
             {

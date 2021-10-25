@@ -52,6 +52,9 @@
   <Import Project="..\AdeptOS.Navigation\AdeptOS.Navigation.Contract\AdeptOS.Navigation.Contract.projitems" Label="Shared" />
   <Import Project="..\AdeptOS.Navigation\AdeptOS.Navigation.Impl\AdeptOS.Navigation.Impl.projitems" Label="Shared" />
   <Import Project="..\AdeptOS.LCDs\AdeptOS.LCDs.LcdTracer\AdeptOS.LCDs.LcdTracer.projitems" Label="Shared" />
+  <Import Project="..\AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems" Label="Shared" />
+  <Import Project="..\AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.projitems" Label="Shared" />
+  <Import Project="..\Modules\AutoDrill\AutoDrill.Impl\AutoDrill.Impl.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild" />
   <ItemGroup>

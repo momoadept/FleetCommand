@@ -30,9 +30,9 @@ namespace IngameScript
             public IMyTextPanel ReportLcd;
             public IMyMotorStator Rotor;
             public bool Valid => HorizontalPistonArm.Any() && VerticalPistonArm.Any() && Drill.Any() && Rotor != null;
-            private IMyGridTerminalSystem _grid;
-            private List<IMyTerminalBlock> _bbuffer;
-            private List<IMyBlockGroup> _gbuffer;
+            IMyGridTerminalSystem _grid;
+            List<IMyTerminalBlock> _bbuffer;
+            List<IMyBlockGroup> _gbuffer;
 
             public RotorDrillBlocks(IMyGridTerminalSystem grid, List<IMyTerminalBlock> bbuffer = null, List<IMyBlockGroup> gbuffer = null)
             {

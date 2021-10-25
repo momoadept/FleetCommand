@@ -19,7 +19,7 @@ namespace IngameScript
                 SetupCoreModules();
             }
 
-            private void SetupCoreModules()
+            void SetupCoreModules()
             {
                 _modules.Add(_gameContext as IModule);
                 _modules.Add((_log = new Logger(LogSeverity.Debug)) as IModule);

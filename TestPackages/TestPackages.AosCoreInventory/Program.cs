@@ -21,7 +21,8 @@ namespace IngameScript
     partial class Program : MyGridProgram
     {
         #region mdk preserve
-        private NConf Pckg = new NConf
+
+        NConf Pckg = new NConf
         {
             IsMainNode = true,
             NodeAlias = "AdeptOS Inventory Manager",
@@ -38,7 +39,7 @@ namespace IngameScript
 
         #endregion
 
-        private AdeptOSNode node = new AdeptOSNode();
+        AdeptOSNode node = new AdeptOSNode();
 
         public Program()
         {

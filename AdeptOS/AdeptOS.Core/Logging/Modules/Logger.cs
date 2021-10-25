@@ -17,10 +17,7 @@ namespace IngameScript
             public string UniqueName => "LogHub";
             public string Alias => "LogHub";
 
-            public void Bind(IBindingContext context)
-            {
-                _providers = context.RequireAny<ILogProvider>();
-            }
+            public void Bind(IBindingContext context) => _providers = context.RequireAny<ILogProvider>();
 
             public void Run()
             {

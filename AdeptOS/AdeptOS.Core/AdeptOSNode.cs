@@ -99,10 +99,7 @@ namespace IngameScript
                 _gameContext.Echo(snapshot);
             }
 
-            void ExecuteCommand(string argument)
-            {
-                _messageHub.ProcessMessage(argument);
-            }
+            void ExecuteCommand(string argument) => _messageHub.ProcessMessage(argument);
         }
     }
 }

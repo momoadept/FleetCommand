@@ -28,14 +28,14 @@ namespace IngameScript
         /// </summary>
         public class SkipStepper : IStepper
         {
-            private IStepper _base;
-            private readonly string _tag;
-            private int _steps;
-            private bool _once;
-            private bool _done;
-            private int _stepped = 0;
+            IStepper _base;
+            readonly string _tag;
+            int _steps;
+            bool _once;
+            bool _done;
+            int _stepped;
 
-            private SequenceController _internalSequence;
+            SequenceController _internalSequence;
 
             public SkipStepper(IStepper @base, string tag = "multiple steps", int steps = 0, bool once = true)
             {
@@ -43,7 +43,7 @@ namespace IngameScript
                 _tag = tag;
                 _steps = steps;
                 _once = once;
-                _internalSequence = new SequenceController(@base, null, false);
+                _internalSequence = new SequenceController(@base, false);
             }
 
             public SequenceStep Next()

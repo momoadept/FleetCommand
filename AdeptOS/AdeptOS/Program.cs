@@ -21,7 +21,7 @@ namespace IngameScript
 
         #endregion
 
-        private AdeptOSNode node = new AdeptOSNode(); 
+        AdeptOSNode node = new AdeptOSNode(); 
 
         public Program()
         {
@@ -29,14 +29,8 @@ namespace IngameScript
             node.Start(new GameContext(this, x => Storage = x), Pckg);
         }
 
-        public void Save()
-        {
-            node.Save();
-        }
+        public void Save() => node.Save();
 
-        public void Main(string argument, UpdateType updateSource)
-        {
-            node.Tick(argument, updateSource);
-        }
+        public void Main(string argument, UpdateType updateSource) => node.Tick(argument, updateSource);
     }
 }

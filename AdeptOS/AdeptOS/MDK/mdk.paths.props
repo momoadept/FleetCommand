@@ -67,8 +67,8 @@
       <HintPath>$(MDKInstallPath)\MDKUtilities.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="Systems.Collections.Immutable">
-      <HintPath>$(MDKGameBinPath)\Systems.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>$(MDKGameBinPath)\System.Collections.Immutable.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Analyzer Include="$(MDKInstallPath)\Analyzers\MDKAnalyzer.dll" />

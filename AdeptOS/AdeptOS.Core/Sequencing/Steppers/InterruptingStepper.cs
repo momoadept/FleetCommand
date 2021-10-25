@@ -28,10 +28,10 @@ namespace IngameScript
         /// </summary>
         public class InterruptingStepper : IStepper
         {
-            private IStepper _main;
-            private IStepper _interruptor;
-            private bool _interruptNow = true;
-            private int _stepped = 0;
+            IStepper _main;
+            IStepper _interruptor;
+            bool _interruptNow = true;
+            int _stepped;
 
             public InterruptingStepper(IStepper main, IStepper interruptor)
             {

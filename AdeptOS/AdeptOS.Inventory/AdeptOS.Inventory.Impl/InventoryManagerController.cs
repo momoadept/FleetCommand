@@ -29,8 +29,8 @@ namespace IngameScript
 
             public override string Alias => "Inventory Manager";
 
-            private InventoryManagerState _state = new InventoryManagerState();
-            private InventoryManager _impl;
+            InventoryManagerState _state = new InventoryManagerState();
+            InventoryManager _impl;
 
             public override void Bind(IBindingContext context)
             {
@@ -58,21 +58,12 @@ namespace IngameScript
             }
 
             //T|INV.ForceUpdatePolicies|{}
-            public IPromise<Void> ForceUpdatePolicies()
-            {
-                return _impl.ForceUpdatePolicies();
-            }
+            public IPromise<Void> ForceUpdatePolicies() => _impl.ForceUpdatePolicies();
 
             //T|INV.SetState|{SomeString:{test},SomeBool:{true}}
-            public IPromise<Void> SetState(InventoryManagerState value)
-            {
-                return _impl.SetState(value);
-            }
+            public IPromise<Void> SetState(InventoryManagerState value) => _impl.SetState(value);
 
-            public override void OnSaving()
-            {
-                _state = _impl.GetState();
-            }
+            public override void OnSaving() => _state = _impl.GetState();
         }
     }
 }

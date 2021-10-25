@@ -28,24 +28,21 @@ namespace IngameScript
             public string UniqueName => "LcdTracer";
             public string Alias => "Lcd Tracer";
 
-            private int _cacheSize;
+            int _cacheSize;
 
-            private Dictionary<string, IList<IMyTextPanel>> _lcdsByUnwrappedTag =
+            Dictionary<string, IList<IMyTextPanel>> _lcdsByUnwrappedTag =
                 new Dictionary<string, IList<IMyTextPanel>>();
 
-            private Dictionary<string, Func<string>> _traceSourcesByUnwrappedTag =
+            Dictionary<string, Func<string>> _traceSourcesByUnwrappedTag =
                 new Dictionary<string, Func<string>>();
 
-            private Dictionary<string, Queue<string>> _traceCacheByUnwrappedTag =
+            Dictionary<string, Queue<string>> _traceCacheByUnwrappedTag =
                 new Dictionary<string, Queue<string>>();
 
-            private IGameContext _context;
-            private ILog _log;
+            IGameContext _context;
+            ILog _log;
 
-            private IJob _blockDetector;
-            private IJob _traceUpdater;
-            private IJob _cacheClearer;
-            private List<IMyTerminalBlock> bbuffer = new List<IMyTerminalBlock>();
+            List<IMyTerminalBlock> bbuffer = new List<IMyTerminalBlock>();
 
             public LcdTracer(int cacheSize = 10)
             {
@@ -63,9 +60,9 @@ namespace IngameScript
             {
                 var isDev = Aos.Seettings.IsDev;
 
-                _blockDetector = Aos.Async.CreateJob(DetectBlocks, Priority.Unimportant).Start();
-                _traceUpdater = Aos.Async.CreateJob(Trace, isDev ? Priority.Critical : Priority.Routine).Start();
-                _cacheClearer = Aos.Async.CreateJob(ClearCache, Priority.Unimportant).Start();
+                Aos.Async.CreateJob(DetectBlocks, Priority.Unimportant).Start();
+                Aos.Async.CreateJob(Trace, isDev ? Priority.Critical : Priority.Routine).Start();
+                Aos.Async.CreateJob(ClearCache, Priority.Unimportant).Start();
 
                 _log.Info("Lcd Tracer started");
             }
@@ -104,7 +101,7 @@ namespace IngameScript
                 return Void.Promise();
             }
 
-            private void Trace()
+            void Trace()
             {
                 foreach (var traceSource in _traceSourcesByUnwrappedTag)
                 {
@@ -117,7 +114,7 @@ namespace IngameScript
                 }
             }
 
-            private void DetectBlocks()
+            void DetectBlocks()
             {
                 _context.Grid.GetBlocksOfType<IMyTextPanel>(bbuffer);
                 _lcdsByUnwrappedTag.Clear();
@@ -140,7 +137,7 @@ namespace IngameScript
                 }
             }
 
-            private void ClearCache()
+            void ClearCache()
             {
                 foreach (var cache in _traceCacheByUnwrappedTag.Values)
                 {

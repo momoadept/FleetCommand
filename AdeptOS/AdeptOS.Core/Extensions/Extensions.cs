@@ -74,15 +74,9 @@ namespace IngameScript
             return s;
         }
 
-        public static bool AlmostEquals(this float a, float b, float delta = 0.01f)
-        {
-            return Math.Abs(a - b) < delta;
-        }
+        public static bool AlmostEquals(this float a, float b, float delta = 0.01f) => Math.Abs(a - b) < delta;
 
-        public static void ToEnum<TEnum>(this string value, ref TEnum target)
-        {
-            target = (TEnum)Enum.Parse(typeof(TEnum), value);
-        }
+        public static void ToEnum<TEnum>(this string value, ref TEnum target) => target = (TEnum)Enum.Parse(typeof(TEnum), value);
 
         public static float AngleDeg(this IMyMotorStator rotor) => (float)(rotor.Angle * 180f / Math.PI);
 

@@ -28,8 +28,7 @@ namespace IngameScript
         public class ListStepper : IStepper
         {
             protected IList<SequenceStep> Steps;
-            protected int next = 0;
-            private int _stepped = 0;
+            protected int next;
 
             public ListStepper(IList<SequenceStep> steps)
             {
@@ -48,7 +47,6 @@ namespace IngameScript
 
                 if (next < Steps.Count)
                 {
-                    _stepped++;
                     return Steps[next];
                 }
 
@@ -57,7 +55,7 @@ namespace IngameScript
 
             public bool IsComplete() => next >= Steps.Count;
 
-            public void Reset() => next = _stepped = 0;
+            public void Reset() => next = 0;
             public IStepper New() => new ListStepper(Steps.Select(x => x).ToList());
 
 

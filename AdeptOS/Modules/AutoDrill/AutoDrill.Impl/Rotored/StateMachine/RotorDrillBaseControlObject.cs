@@ -27,10 +27,7 @@ namespace IngameScript
             protected IStateMachineController<RotorDrillStage, RotorDrillContext> stateMachine;
             protected RotorDrillContext Context => stateMachine.Context;
 
-            public void RegisterStateMachine(IStateMachineController<RotorDrillStage, RotorDrillContext> stateMachine)
-            {
-                this.stateMachine = stateMachine;
-            }
+            public void RegisterStateMachine(IStateMachineController<RotorDrillStage, RotorDrillContext> stateMachine) => this.stateMachine = stateMachine;
 
             public abstract void Enter();
             public abstract void Exit();
@@ -51,30 +48,15 @@ namespace IngameScript
                 return s.ToString();
             }
 
-            public virtual IPromise<Void> Drill()
-            {
-                return Void.Promise();
-            }
+            public virtual IPromise<Void> Drill() => Void.Promise();
 
-            public virtual IPromise<Void> Pause()
-            {
-                return Void.Promise();
-            }
+            public virtual IPromise<Void> Pause() => Void.Promise();
 
-            public virtual IPromise<Void> Resume()
-            {
-                return Void.Promise();
-            }
+            public virtual IPromise<Void> Resume() => Void.Promise();
 
-            public virtual IPromise<Void> Reset()
-            {
-                return Void.Promise();
-            }
+            public virtual IPromise<Void> Reset() => Void.Promise();
 
-            public virtual IPromise<Void> SkipToLayer(int layer)
-            {
-                return Void.Promise();
-            }
+            public virtual IPromise<Void> SkipToLayer(int layer) => Void.Promise();
         }
     }
 }

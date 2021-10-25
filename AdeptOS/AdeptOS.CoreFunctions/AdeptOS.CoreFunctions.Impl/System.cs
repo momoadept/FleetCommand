@@ -91,15 +91,13 @@ namespace IngameScript
                 return Void.Promise();
             }
 
-            public IPromise<Pair<Primitive<string>, Primitive<string>>> GetShipMeta()
-            {
-                return Promise<Pair<Primitive<string>, Primitive<string>>>.FromValue(
+            public IPromise<Pair<Primitive<string>, Primitive<string>>> GetShipMeta() =>
+                Promise<Pair<Primitive<string>, Primitive<string>>>.FromValue(
                     new Pair<Primitive<string>, Primitive<string>>
                     {
                         First = Aos.Node.ShipAlias.AsPrimitive(),
                         Second = Aos.Node.ShipId.AsPrimitive()
                     });
-            }
         }
     }
 }

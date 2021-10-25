@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <MDKVersion>1.2.17</MDKVersion>
+    <MDKVersion>1.4.12</MDKVersion>
     <MDKMinify>
-      <Enabled>yes</Enabled>
+      <Level>StripComments</Level>
     </MDKMinify>
     <MDKTrimTypes>
-      <Enabled>no</Enabled>
+      <Enabled>yes</Enabled>
     </MDKTrimTypes>
     <MDKIgnore>
       <Folder>mdk</Folder>

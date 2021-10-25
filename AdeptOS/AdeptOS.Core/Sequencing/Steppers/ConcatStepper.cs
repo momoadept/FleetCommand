@@ -27,10 +27,10 @@ namespace IngameScript
         /// </summary>
         public class ConcatStepper : IStepper
         {
-            private IStepper[] _parts;
-            private int _current = 0;
-            private int _stepped = 0;
-            private bool _done;
+            IStepper[] _parts;
+            int _current;
+            int _stepped;
+            bool _done;
 
             public ConcatStepper(params IStepper[] parts)
             {

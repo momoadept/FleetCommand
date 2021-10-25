@@ -50,10 +50,7 @@ namespace IngameScript
             {
             }
 
-            public override IPromise<Void> Drill()
-            {
-                return Void.Promise();
-            }
+            public override IPromise<Void> Drill() => Void.Promise();
 
             public override IPromise<Void> Pause()
             {
@@ -75,10 +72,7 @@ namespace IngameScript
                 return Void.Promise();
             }
 
-            public override IPromise<Void> Reset()
-            {
-                return Void.Promise();
-            }
+            public override IPromise<Void> Reset() => Void.Promise();
         }
     }
 }

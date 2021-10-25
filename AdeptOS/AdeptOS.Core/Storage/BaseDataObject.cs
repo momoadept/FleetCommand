@@ -13,15 +13,9 @@ namespace IngameScript
                 _parser = new ObjectParser<TType>(mapping);
             }
 
-            public string Stringify()
-            {
-                return _parser.Stringify(this as TType);
-            }
+            public string Stringify() => _parser.Stringify(this as TType);
 
-            public void Restore(string value)
-            {
-                _parser.Parse(this as TType, value);
-            }
+            public void Restore(string value) => _parser.Parse(this as TType, value);
 
             public static TType FromString(string value)
             {

@@ -4,13 +4,10 @@
     {
         public abstract class BaseHandler<TState, TContext>: IStateMachineControlObject<TState, TContext>
         {
-            protected IStateMachineController<TState, TContext> _stateMachine;
-            protected TContext _context => _stateMachine.Context;
+            protected IStateMachineController<TState, TContext> StateMachine;
+            protected TContext Context => StateMachine.Context;
 
-            public void RegisterStateMachine(IStateMachineController<TState, TContext> stateMachine)
-            {
-                _stateMachine = stateMachine;
-            }
+            public void RegisterStateMachine(IStateMachineController<TState, TContext> stateMachine) => StateMachine = stateMachine;
 
             public abstract void Enter();
 

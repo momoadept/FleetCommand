@@ -17,6 +17,7 @@ using VRage.Game.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame.Utilities;
 using VRage.Game.ObjectBuilders.Definitions;
 using VRageMath;
+// ReSharper disable UnusedMember.Global
 
 namespace IngameScript
 {
@@ -40,7 +41,7 @@ namespace IngameScript
 
         #endregion
 
-        private AdeptOSNode node = new AdeptOSNode();
+        AdeptOSNode node = new AdeptOSNode();
 
         public Program()
         {

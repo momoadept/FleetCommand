@@ -63,10 +63,7 @@ namespace IngameScript
                 ActionName = path[1];
             }
 
-            void ParseReturnedResult(string[] messageParts)
-            {
-                Data = string.Join("", messageParts.Skip(3));
-            }
+            void ParseReturnedResult(string[] messageParts) => Data = string.Join("", messageParts.Skip(3));
         }
     }
 }

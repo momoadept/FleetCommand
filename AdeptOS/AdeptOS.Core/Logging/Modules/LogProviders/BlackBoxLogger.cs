@@ -25,10 +25,7 @@ namespace IngameScript
                 _level = level;
             }
 
-            public void Bind(IBindingContext context)
-            {
-                _gameContext = context.RequireOne<IGameContext>();
-            }
+            public void Bind(IBindingContext context) => _gameContext = context.RequireOne<IGameContext>();
 
             public void Run()
             {

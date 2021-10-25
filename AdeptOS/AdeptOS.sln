@@ -55,6 +55,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdeptOS.LCDs", "AdeptOS.LCD
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AdeptOS.LCDs.LcdTracer", "AdeptOS.LCDs\AdeptOS.LCDs.LcdTracer\AdeptOS.LCDs.LcdTracer.shproj", "{B0E1A961-9379-4484-9C9E-DF79342DE027}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6AF389B3-0D17-4CF9-A72E-F707E8C94E2A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		AdeptOS.RPC\AdeptOS.RPC.projitems*{232c056d-eb8a-4a00-bb28-6a029e56b083}*SharedItemsImports = 13
@@ -73,10 +78,13 @@ Global
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Impl\AdeptOS.CoreFunctions.Impl.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.CoreFunctions\AdeptOS.CoreFunctions.Remote\AdeptOS.CoreFunctions.Remote.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.Core\AdeptOS.Core.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
+		AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
+		AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.LCDs\AdeptOS.LCDs.LcdTracer\AdeptOS.LCDs.LcdTracer.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.Navigation\AdeptOS.Navigation.Contract\AdeptOS.Navigation.Contract.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.Navigation\AdeptOS.Navigation.Impl\AdeptOS.Navigation.Impl.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.RPC\AdeptOS.RPC.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
+		Modules\AutoDrill\AutoDrill.Impl\AutoDrill.Impl.projitems*{91fcd95e-9ef8-475a-88c0-8ad92f4bcd25}*SharedItemsImports = 4
 		AdeptOS.Navigation\AdeptOS.Navigation.Impl\AdeptOS.Navigation.Impl.projitems*{9e9ccc72-66db-489c-bde5-949fcb134210}*SharedItemsImports = 13
 		AdeptOS.LCDs\AdeptOS.LCDs.LcdTracer\AdeptOS.LCDs.LcdTracer.projitems*{b0e1a961-9379-4484-9c9e-df79342de027}*SharedItemsImports = 13
 		AdeptOS.Navigation\AdeptOS.Navigation.Contract\AdeptOS.Navigation.Contract.projitems*{b3afb483-efb5-42c4-831e-b792bd56b258}*SharedItemsImports = 13

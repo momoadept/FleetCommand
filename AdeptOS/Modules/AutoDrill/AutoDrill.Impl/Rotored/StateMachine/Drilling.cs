@@ -25,7 +25,7 @@ namespace IngameScript
     {
         public class Drilling : RotorDrillBaseControlObject
         {
-            private IJob _checkCargoSpaceJob;
+            IJob _checkCargoSpaceJob;
 
             public override void Enter()
             {
@@ -45,15 +45,15 @@ namespace IngameScript
                 _checkCargoSpaceJob.Start();
             }
 
-            private void CheckCargoSpace()
+            void CheckCargoSpace()
             {
                 var drill = Context.Blocks.Drill;
                 var inv = drill.First().GetInventory();
-                if ((float)inv.CurrentVolume.ToIntSafe() / (float)inv.MaxVolume.ToIntSafe() > 0.5)
+                if ((float)inv.CurrentVolume.ToIntSafe() / inv.MaxVolume.ToIntSafe() > 0.5)
                 {
                     Context.Sequences.DrillLayer.Pause();
                     _checkCargoSpaceJob.Stop();
-                    Aos.Async.When(() => (float)inv.CurrentVolume.ToIntSafe() / (float)inv.MaxVolume.ToIntSafe() < 0.1 || !Context.Sequences.DrillLayer.IsPaused())
+                    Aos.Async.When(() => (float)inv.CurrentVolume.ToIntSafe() / inv.MaxVolume.ToIntSafe() < 0.1 || !Context.Sequences.DrillLayer.IsPaused())
                         .Then(v =>
                         {
                             Context.Sequences.DrillLayer.Resume();
@@ -68,10 +68,7 @@ namespace IngameScript
                 Context.Sequences.DrillLayer.Reset();
             }
 
-            public override IPromise<Void> Drill()
-            {
-                return Void.Promise();
-            }
+            public override IPromise<Void> Drill() => Void.Promise();
 
             public override IPromise<Void> Pause()
             {

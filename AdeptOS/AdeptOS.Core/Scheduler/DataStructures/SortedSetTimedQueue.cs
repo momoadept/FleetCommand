@@ -25,10 +25,7 @@ namespace IngameScript
                 _values[time].Add(value);
             }
 
-            public bool AnyLessThan(DateTime time)
-            {
-                return _keys.GetViewBetween(_minTime, time).Any();
-            }
+            public bool AnyLessThan(DateTime time) => _keys.GetViewBetween(_minTime, time).Any();
 
             public IEnumerable<TValue> PopLessThan(DateTime time)
             {

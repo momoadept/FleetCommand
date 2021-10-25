@@ -6,14 +6,14 @@ namespace IngameScript
     {
         public class SchedulerStats
         {
-            int _totalSteps = 0;
-            int _totalAllowedSteps = 0;
-            public int Ticks { get; private set; } = 0;
-            int _actions = 0;
+            int _totalSteps;
+            int _totalAllowedSteps;
+            public int Ticks { get; private set; }
+            int _actions;
             DateTime _timeStart = DateTime.Now;
             IGameContext _context;
-            private float _maxLoad = 0;
-            private float _maxLoadSteps = 0;
+            float _maxLoad;
+            float _maxLoadSteps;
 
             public SchedulerStats(IGameContext context)
             {

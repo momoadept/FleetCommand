@@ -54,7 +54,7 @@ namespace IngameScript
             class ReaderContext
             {
                 public string Data;
-                public int Index = 0;
+                public int Index;
                 public Dictionary<string, string> KeysToValues = new Dictionary<string, string>();
                 public string CurrentKey;
             }
@@ -63,36 +63,33 @@ namespace IngameScript
             {
                 public abstract void Next();
 
-                protected string Data => _stateMachine.Context.Data;
-                protected int i => _stateMachine.Context.Index;
-                protected void Inc() => _stateMachine.Context.Index++;
+                protected string Data => StateMachine.Context.Data;
+                protected int I => StateMachine.Context.Index;
+                protected void Inc() => StateMachine.Context.Index++;
             }
 
             class KeyReader : ReaderHandler
             {
                 StringBuilder _key = new StringBuilder();
 
-                public override void Enter()
-                {
-                    _key.Clear();
-                }
+                public override void Enter() => _key.Clear();
 
                 public override void Next()
                 {
-                    if (i >= Data.Length)
+                    if (I >= Data.Length)
                     {
-                        _stateMachine.SwitchState(ReaderState.Finished);
+                        StateMachine.SwitchState(ReaderState.Finished);
                         return;
                     }
 
-                    if (Data[i] == ':' || Data[i] == ' ')
+                    if (Data[I] == ':' || Data[I] == ' ')
                     {
-                        _stateMachine.Context.CurrentKey = _key.ToString();
-                        _stateMachine.SwitchState(ReaderState.KeySeparator);
+                        StateMachine.Context.CurrentKey = _key.ToString();
+                        StateMachine.SwitchState(ReaderState.KeySeparator);
                         return;
                     }
 
-                    _key.Append(Data[i]);
+                    _key.Append(Data[I]);
                     Inc();
                 }
 
@@ -109,10 +106,10 @@ namespace IngameScript
 
                 public override void Next()
                 {
-                    if (Data[i] == ':' || Data[i] == ' ')
+                    if (Data[I] == ':' || Data[I] == ' ')
                         Inc();
                     else
-                        _stateMachine.SwitchState(ReaderState.Value);
+                        StateMachine.SwitchState(ReaderState.Value);
                 }
 
                 public override void Exit()
@@ -123,7 +120,7 @@ namespace IngameScript
             class ValueReader : ReaderHandler
             {
                 StringBuilder _value = new StringBuilder();
-                int _bracketBalance = 0;
+                int _bracketBalance;
 
                 public override void Enter()
                 {
@@ -133,23 +130,23 @@ namespace IngameScript
 
                 public override void Next()
                 {
-                    if (Data[i] == '{')
+                    if (Data[I] == '{')
                         _bracketBalance++;
 
-                    if (Data[i] == '}')
+                    if (Data[I] == '}')
                         _bracketBalance--;
 
-                    _value.Append(Data[i]);
+                    _value.Append(Data[I]);
                     Inc();
 
                     if (_bracketBalance == 0)
                     {
-                        _stateMachine.Context.KeysToValues.Add(
-                            _stateMachine.Context.CurrentKey,
+                        StateMachine.Context.KeysToValues.Add(
+                            StateMachine.Context.CurrentKey,
                             _value.ToString(1, _value.Length - 2)
                         );
 
-                        _stateMachine.SwitchState(ReaderState.EntrySeparator);
+                        StateMachine.SwitchState(ReaderState.EntrySeparator);
                     }
                 }
 
@@ -166,17 +163,17 @@ namespace IngameScript
 
                 public override void Next()
                 {
-                    if (i >= Data.Length)
+                    if (I >= Data.Length)
                     {
-                        _stateMachine.SwitchState(ReaderState.Finished);
+                        StateMachine.SwitchState(ReaderState.Finished);
                         return;
                     }
 
-                    if (Data[i] == ',' || Data[i] == ' ')
+                    if (Data[I] == ',' || Data[I] == ' ')
                         Inc();
                     else
                     {
-                        _stateMachine.SwitchState(ReaderState.Key);
+                        StateMachine.SwitchState(ReaderState.Key);
                     }
                 }
 

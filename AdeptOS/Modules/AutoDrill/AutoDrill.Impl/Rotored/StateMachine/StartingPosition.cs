@@ -30,15 +30,9 @@ namespace IngameScript
                 return Void.Promise();
             }
 
-            public override IPromise<Void> Pause()
-            {
-                return Void.Promise();
-            }
+            public override IPromise<Void> Pause() => Void.Promise();
 
-            public override IPromise<Void> Resume()
-            {
-                return Void.Promise();
-            }
+            public override IPromise<Void> Resume() => Void.Promise();
 
             public override IPromise<Void> Reset()
             {

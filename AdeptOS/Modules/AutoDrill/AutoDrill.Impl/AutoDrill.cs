@@ -25,23 +25,23 @@ namespace IngameScript
     {
         public class AutoDrill: IAutoDrill, IModule
         {
-            private AutoDrillState _state;
-            private IGameContext _gameContext;
-            private ILog _log;
+            AutoDrillState _state;
+            IGameContext _gameContext;
+            ILog _log;
 
 
-            private List<IMyPistonBase> _horizontalPistonArm = new List<IMyPistonBase>();
-            private List<IMyPistonBase> _verticalPistonArm = new List<IMyPistonBase>();
-            private IMyShipDrill _drill;
-            private IMyTextPanel _reportLcd;
+            List<IMyPistonBase> _horizontalPistonArm = new List<IMyPistonBase>();
+            List<IMyPistonBase> _verticalPistonArm = new List<IMyPistonBase>();
+            IMyShipDrill _drill;
+            IMyTextPanel _reportLcd;
 
-            private SequenceController _dig;
-            private SequenceController _reset;
+            SequenceController _dig;
+            SequenceController _reset;
 
-            private IJob _checkCargoSpace;
-            private IJob _waitForCargoSpace;
+            IJob _checkCargoSpace;
+            IJob _waitForCargoSpace;
 
-            private bool valid;
+            bool valid;
 
             public IPromise<Void> Drill()
             {
@@ -65,10 +65,7 @@ namespace IngameScript
                         _dig.Reset();
                         _state.Stage = DrillingStage.Rewinding;
                         _reset.StepAll()
-                            .Then(x =>
-                            {
-                                _state.Stage = DrillingStage.StartingPosition;
-                            });
+                            .Then(x => _state.Stage = DrillingStage.StartingPosition);
                         break;
                     case DrillingStage.Rewinding:
                         break;
@@ -125,10 +122,7 @@ namespace IngameScript
                 return Void.Promise();
             }
 
-            public IPromise<Void> Resume()
-            {
-                return Drill();
-            }
+            public IPromise<Void> Resume() => Drill();
 
             public IPromise<Void> Reset()
             {
@@ -225,13 +219,13 @@ namespace IngameScript
 
             public AutoDrillState GetState() => _state;
 
-            private void CheckGrid()
+            void CheckGrid()
             {
                 DetectBlocks();
                 BuildSequences();
             }
 
-            private void ContinueWithCargoSpace()
+            void ContinueWithCargoSpace()
             {
                 var inv = _drill.GetInventory();
                 if (_state.Stage != DrillingStage.WaitingForCargoSpace)
@@ -247,7 +241,7 @@ namespace IngameScript
                 }
             }
 
-            private void CheckCargoSpace()
+            void CheckCargoSpace()
             {
                 var inv = _drill.GetInventory();
                 if ((float)inv.CurrentVolume.ToIntSafe() / (float)inv.MaxVolume.ToIntSafe() > 0.5)
@@ -262,7 +256,7 @@ namespace IngameScript
                 }
             }
 
-            private void Report()
+            void Report()
             {
                 if (_reportLcd == null)
                     return;
@@ -280,7 +274,7 @@ namespace IngameScript
                 _reportLcd.WriteText("\n", true);
             }
 
-            private void DetectBlocks()
+            void DetectBlocks()
             {
                 var verticalTag = new Tag("AD_V"); // [AD_V] huipizda
                 var horizontalTag = new Tag("AD_H");
@@ -304,7 +298,7 @@ namespace IngameScript
                 }
             }
 
-            private void BuildSequences()
+            void BuildSequences()
             {
                 if (_dig != null)
                     _dig.Reset();
@@ -380,19 +374,18 @@ namespace IngameScript
                     enableDrill, 
                     new InterruptingStepper(extendVertical, extendRetractInfinitely));
 
-                _dig = new SequenceController(dig, _log);
+                _dig = new SequenceController(dig);
 
                 //TODO: extend PairStepper to N arguments
                 _reset = new SequenceController(
                     new PairStepper(new PairStepper(retractVertical, retractHorizontalRewind), 
-                        disableDrill), 
-                    _log);
+                        disableDrill));
             }
 
-            private List<IMyBlockGroup> gbuffer = new List<IMyBlockGroup>();
-            private List<IMyTerminalBlock> bbuffer = new List<IMyTerminalBlock>();
+            List<IMyBlockGroup> gbuffer = new List<IMyBlockGroup>();
+            List<IMyTerminalBlock> bbuffer = new List<IMyTerminalBlock>();
 
-            private List<TBlock> FindGroupByTag<TBlock>(Tag tag)
+            List<TBlock> FindGroupByTag<TBlock>(Tag tag)
             where TBlock: class
             {
                 gbuffer.Clear();
@@ -410,7 +403,7 @@ namespace IngameScript
                 return result;
             }
 
-            private List<TBlock> FindBlockByTag<TBlock>(Tag tag)
+            List<TBlock> FindBlockByTag<TBlock>(Tag tag)
                 where TBlock : class
             {
                     bbuffer.Clear();

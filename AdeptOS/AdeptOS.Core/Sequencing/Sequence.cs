@@ -26,7 +26,7 @@ namespace IngameScript
         public class SequenceStoppedException : Exception
         {
             public SequenceStoppedException()
-            :base("Sequence terminated before promise could resolve")
+            :base("Sequence manually closed")
             {
                 
             }
@@ -35,40 +35,32 @@ namespace IngameScript
         public class SequenceController: ISequenceController
         {
             protected IStepper Stepper;
-            private ILog _log;
 
-            private Promise<Void> _currentlyRunning;
-            private string _currentlyRunningTag;
+            Promise<Void> _currentlyRunning;
 
-            private bool _isPaused;
+            bool _isPaused;
 
-            private bool _isResetting;
+            bool _isResetting;
 
-            private bool _isComplete;
+            bool _isComplete;
 
-            private bool _isWorking;
+            bool _isWorking;
 
-            private bool _isStarted;
+            bool _isStarted;
 
-            private Exception _terminatedWith;
+            Exception _terminatedWith;
 
-            private bool _continueOnError;
+            bool _continueOnError;
 
-            private Queue<Func<bool, IPromise<Void>>> _pending = new Queue<Func<bool, IPromise<Void>>>();
+            Queue<Func<bool, IPromise<Void>>> _pending = new Queue<Func<bool, IPromise<Void>>>();
 
-            private int counter = 0;
-
-            public SequenceController(IStepper stepper, ILog _log = null, bool continueOnError = false)
+            public SequenceController(IStepper stepper, bool continueOnError = false)
             {
                 Stepper = stepper;
-                this._log = _log;
                 _continueOnError = continueOnError;
             }
 
-            public SequenceController Extend(Func<IStepper, IStepper> extend) => new SequenceController(extend(Stepper), _log, _continueOnError);
-
-            private void Work()
-            {
+            void Work() =>
                 Aos.Async.Delay(0, Priority.Critical).Then(x =>
                 {
                     if (!CanStepNow())
@@ -80,9 +72,8 @@ namespace IngameScript
                         _pending.Dequeue()(false);
                     }
                 });
-            }
 
-            private IPromise<Void> AddPendingStep()
+            IPromise<Void> AddPendingStep()
             {
                 var result = new Promise<Void>();
 
@@ -102,7 +93,6 @@ namespace IngameScript
                         result.Resolve(new Void());
                         return Void.Promise();
                     }
-                    _log?.Debug($"{++counter} {step.StepTag}");
 
                     _isWorking = true;
 
@@ -117,24 +107,16 @@ namespace IngameScript
                         {
                             _isWorking = false;
                             _currentlyRunning = null;
-                            _currentlyRunningTag = null;
                         });
 
                     _currentlyRunning = promise as Promise<Void>;
-                    _currentlyRunningTag = step.StepTag;
 
                     if (Stepper.IsComplete())
                         promise
-                            .Then(x =>
-                            {
-                                _isComplete = true;
-                            });
+                            .Then(x => _isComplete = true);
 
                     promise
-                        .Then(x =>
-                        {
-                            result.Resolve(x);
-                        });
+                        .Then(x => result.Resolve(x));
 
                     return promise;
                 });
@@ -187,17 +169,14 @@ namespace IngameScript
                 var result = new Promise<Void>();
 
                 Action doWork = null;
-                doWork = () =>
-                {
-                    StepOnce()
-                        .Then(x => Aos.Async.Delay(0, Priority.Critical).Then(y =>
-                        {
-                            if (_isComplete)
-                                result.Resolve(new Void());
-                            else
-                                doWork();
-                        }));
-                };
+                doWork = () => StepOnce()
+                    .Then(x => Aos.Async.Delay(0, Priority.Critical).Then(y =>
+                    {
+                        if (_isComplete)
+                            result.Resolve(new Void());
+                        else
+                            doWork();
+                    }));
 
                 doWork();
                 return result;
@@ -228,7 +207,6 @@ namespace IngameScript
                 _isResetting = true;
                 _isStarted = false;
                 Stepper?.Reset();
-                _currentlyRunningTag = null;
                 _isPaused = false;
                 if (_currentlyRunning != null && !_currentlyRunning.Completed)
                 {
@@ -250,10 +228,7 @@ namespace IngameScript
                 _terminatedWith = null;
             }
 
-            public void Interrupt()
-            {
-                ClosePending();
-            }
+            public void Interrupt() => ClosePending();
 
             public string GetReport()
             {
@@ -276,12 +251,9 @@ namespace IngameScript
                 return s.ToString();
             }
 
-            public Exception GetException()
-            {
-                return _terminatedWith;
-            }
+            public Exception GetException() => _terminatedWith;
 
-            private void ClosePending()
+            void ClosePending()
             {
                 while (_pending.Any())
                 {

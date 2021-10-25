@@ -41,7 +41,7 @@ namespace IngameScript
 
         public class RotorDrillStateMachine : StateMachine<IAutoDrillControlObject, RotorDrillStage, IRotorDrill, RotorDrillContext>
         {
-            private ILog _log;
+            ILog _log;
 
             public RotorDrillStateMachine(Dictionary<RotorDrillStage, IAutoDrillControlObject> controlObjects, RotorDrillStage initialState, RotorDrillContext context, ILog log) : base(controlObjects, initialState, context)
             {
@@ -60,8 +60,8 @@ namespace IngameScript
         public class RotorDrillState : BaseDataObject<RotorDrillState>
         {
             public RotorDrillStage Stage = RotorDrillStage.Rewinding;
-            public int CurrentLayer = 0;
-            public bool Paused = false;
+            public int CurrentLayer;
+            public bool Paused;
 
             public RotorDrillState() 
                 : base(new List<Property<RotorDrillState>>()

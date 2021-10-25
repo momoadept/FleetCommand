@@ -8,7 +8,7 @@ namespace IngameScript
     {
         public class Scheduler: IAsync
         {
-            private readonly IGameContext _context;
+            readonly IGameContext _context;
             Dictionary<Priority, ITimedQueue<Action>> _queue = new Dictionary<Priority, ITimedQueue<Action>>();
              SchedulerStats _stats;
             string _performanceReport = "Waiting for performance snapshot...";
@@ -70,10 +70,7 @@ namespace IngameScript
                     );
             }
 
-            public IJob CreateJob(Action job, Priority priority = Priority.Routine)
-            {
-                return new Job(job, priority);
-            }
+            public IJob CreateJob(Action job, Priority priority = Priority.Routine) => new Job(job, priority);
 
             // Execution and Balancing
 

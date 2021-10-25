@@ -20,10 +20,7 @@ namespace IngameScript
 
             public string Stringify() => Unwrapped;
 
-            public void Restore(string value)
-            {
-                Unwrapped = value.StripCurlyBraces().StripSquareBraces();
-            }
+            public void Restore(string value) => Unwrapped = value.StripCurlyBraces().StripSquareBraces();
 
             public bool InName(string name) => name.Contains(Wrapped);
 

@@ -28,10 +28,10 @@ namespace IngameScript
         /// </summary>
         public class ParallelStepper : IStepper
         {
-            private bool _asyncMode;
-            private IStepper[] _parallels;
-            private int _current = 0;
-            private int _stepped = 0;
+            bool _asyncMode;
+            IStepper[] _parallels;
+            int _current;
+            int _stepped;
 
             public ParallelStepper(bool asyncMode, params IStepper[] parallels)
             {

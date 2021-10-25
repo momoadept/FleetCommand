@@ -28,11 +28,11 @@ namespace IngameScript
         /// </summary>
         public class CycleStepper : IStepper
         {
-            private IStepper _body;
-            private Func<bool> _while;
-            private bool _checkEveryStep;
-            private bool _first = true;
-            private int _stepped = 0;
+            IStepper _body;
+            Func<bool> _while;
+            bool _checkEveryStep;
+            bool _first = true;
+            int _stepped;
 
             public CycleStepper(IStepper body, Func<bool> @while, bool checkEveryStep = false)
             {

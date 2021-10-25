@@ -38,10 +38,7 @@ namespace IngameScript
                 NoArgument = noArgument;
             }
 
-            public IPromise<TResult> Do(TArgument arg)
-            {
-                return DoStringed(arg.Stringify());
-            }
+            public IPromise<TResult> Do(TArgument arg) => DoStringed(arg.Stringify());
 
             public IPromise<object> Do(object arg)
             {
@@ -51,16 +48,14 @@ namespace IngameScript
                 return DoStringed((string) arg);
             }
 
-            IPromise<TResult> DoStringed(string arg)
-            {
-                return _rpc.Call(new RpcRoute(_targetTag, _controllerName, Name), arg)
+            IPromise<TResult> DoStringed(string arg) =>
+                _rpc.Call(new RpcRoute(_targetTag, _controllerName, Name), arg)
                     .Next(resultString =>
                     {
                         var result = new TResult();
                         result.Restore(resultString);
                         return Promise<TResult>.FromValue(result);
                     });
-            }
         }
     }
 }

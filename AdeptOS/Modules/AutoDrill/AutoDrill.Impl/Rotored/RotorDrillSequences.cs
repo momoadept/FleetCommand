@@ -30,9 +30,9 @@ namespace IngameScript
             public SequenceController RewindVerticalDrill;
             public SequenceController RewindRotor;
 
-            private float _baseSpeed = 0.5f;
-            private float _layerHeight = 2f;
-            private float _baseStep = 3f;
+            float _baseSpeed = 0.5f;
+            float _layerHeight = 2f;
+            float _baseStep = 3f;
 
             public void Build(RotorDrillBlocks blocks)
             {
@@ -90,7 +90,6 @@ namespace IngameScript
                     blocks.Rotor,
                     5,
                     rotationSpeed,
-                    1,
                     rotorMin,
                     rotorMax);
 

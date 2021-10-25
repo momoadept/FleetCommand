@@ -29,10 +29,10 @@ namespace IngameScript
         /// </summary>
         public class SubStepper : IStepper
         {
-            private IStepper _base;
-            private int _steps;
-            private int _stepped;
-            private bool _resetParent;
+            IStepper _base;
+            int _steps;
+            int _stepped;
+            bool _resetParent;
 
             public SubStepper(IStepper @base, int steps, bool resetParent = true)
             {

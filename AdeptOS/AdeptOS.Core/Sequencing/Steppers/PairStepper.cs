@@ -28,11 +28,10 @@ namespace IngameScript
         /// </summary>
         public class PairStepper : IStepper
         {
-            private IStepper _a;
-            private IStepper _b;
-            private ILog _log;
-            private IStepper _current;
-            private int _stepped;
+            IStepper _a;
+            IStepper _b;
+            IStepper _current;
+            int _stepped;
 
             public PairStepper(IStepper a, IStepper b)
             {

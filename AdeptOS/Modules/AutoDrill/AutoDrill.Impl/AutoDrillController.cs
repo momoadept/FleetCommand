@@ -42,13 +42,10 @@ namespace IngameScript
             public override string UniqueName => "DRILL";
             public override string Alias => "Auto Drill";
 
-            private AutoDrill _impl;
-            private AutoDrillState _state = new AutoDrillState();
+            AutoDrill _impl;
+            AutoDrillState _state = new AutoDrillState();
 
-            public override void Bind(IBindingContext context)
-            {
-                _impl.Bind(context);
-            }
+            public override void Bind(IBindingContext context) => _impl.Bind(context);
 
             public override void Run()
             {
@@ -56,10 +53,7 @@ namespace IngameScript
                 _impl.Run();
             }
 
-            public override void OnSaving()
-            {
-                _state = _impl.GetState();
-            }
+            public override void OnSaving() => _state = _impl.GetState();
 
             //T|DRILL.Start|{}
             public IPromise<Void> Drill() => _impl.Drill();

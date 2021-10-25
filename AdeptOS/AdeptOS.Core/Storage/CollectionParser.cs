@@ -8,10 +8,7 @@ namespace IngameScript
     {
         public static class CollectionParser
         {
-            public static IEnumerable<string> Parse(string values)
-            {
-                return new CollectionReader().Restore(values);
-            }
+            public static IEnumerable<string> Parse(string values) => new CollectionReader().Restore(values);
 
             public static string Stringify(IEnumerable source)
             {

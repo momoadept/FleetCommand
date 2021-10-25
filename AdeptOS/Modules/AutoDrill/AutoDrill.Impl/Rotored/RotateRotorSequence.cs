@@ -24,14 +24,14 @@ namespace IngameScript
     {
         public class RotateRotorSequence
         {
-            private IMyMotorStator _rotor;
-            private float _stepDeg;
-            private Func<float> _speed;
+            IMyMotorStator _rotor;
+            float _stepDeg;
+            Func<float> _speed;
 
-            private float _startDeg;
-            private float _stopDeg;
+            float _startDeg;
+            float _stopDeg;
 
-            public RotateRotorSequence(IMyMotorStator rotor, float stepDeg, Func<float> speed, int direction, float startDeg, float stopDeg)
+            public RotateRotorSequence(IMyMotorStator rotor, float stepDeg, Func<float> speed, float startDeg, float stopDeg)
             {
                 _rotor = rotor;
                 _stepDeg = stepDeg;
@@ -40,7 +40,7 @@ namespace IngameScript
                 _stopDeg = stopDeg;
             }
 
-            private IPromise<Void> Step()
+            IPromise<Void> Step()
             {
                 float targetLimit;
 
@@ -64,14 +64,11 @@ namespace IngameScript
 
                 return Aos.Async
                     .When(() => _rotor.AngleDeg().AlmostEquals(targetLimit))
-                    .Then(x =>
-                    {
-                        _rotor.RotorLock = true;
-                    })
+                    .Then(x => _rotor.RotorLock = true)
                     .Next(x => Void.Promise());
             }
 
-            private IPromise<Void> Rewind()
+            IPromise<Void> Rewind()
             {
                 var direction = _startDeg - _rotor.AngleDeg();
 
@@ -91,10 +88,7 @@ namespace IngameScript
 
                 return Aos.Async
                     .When(() => _rotor.AngleDeg().AlmostEquals(_startDeg))
-                    .Then(x =>
-                    {
-                        _rotor.RotorLock = true;
-                    })
+                    .Then(x => _rotor.RotorLock = true)
                     .Next(x => Void.Promise());
             }
 
@@ -109,14 +103,12 @@ namespace IngameScript
                 return new CycleStepper(unit, () => !_rotor.AngleDeg().AlmostEquals(_stopDeg));
             }
 
-            public IStepper RewindStepper()
-            {
-                return new UnitStepper(new SequenceStep()
+            public IStepper RewindStepper() =>
+                new UnitStepper(new SequenceStep()
                 {
                     StepTag = "Rotate rotor",
                     PromiseGenerator = Rewind,
                 });
-            }
         }
     }
 }

@@ -78,7 +78,7 @@ namespace IngameScript
                 _lcd?.SetTrace(new Tag("AD_SC"), TraceCurrent);
             }
 
-            private string TraceGeneral()
+            string TraceGeneral()
             {
                 var report = _stateMachine?.Actions.Report();
 
@@ -90,7 +90,7 @@ namespace IngameScript
                 return report;
             }
 
-            private string TraceCurrent()
+            string TraceCurrent()
             {
                 if (_stateMachine == null)
                     return ":(";
@@ -156,10 +156,7 @@ namespace IngameScript
                 return Void.Promise();
             }
 
-            public void SetState(RotorDrillState state)
-            {
-                _state = state;
-            }
+            public void SetState(RotorDrillState state) => _state = state;
 
             public RotorDrillState GetState() => _state;
         }

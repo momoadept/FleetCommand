@@ -28,13 +28,13 @@ namespace IngameScript
             public string Alias => "InventoryManagerImplementation";
 
 
-            private InventoryManagerState _state;
-            private InvMgrSettings _settings;
-            private ILog _log;
-            private IGameContext _gameContext;
-            private List<IMyTerminalBlock> _observingBlocks = new List<IMyTerminalBlock>();
-            private List<IMyTerminalBlock> _summaryTargets = new List<IMyTerminalBlock>();
-            private List<InvDeclaration> _declarations = new List<InvDeclaration>();
+            InventoryManagerState _state;
+            InvMgrSettings _settings;
+            ILog _log;
+            IGameContext _gameContext;
+            List<IMyTerminalBlock> _observingBlocks = new List<IMyTerminalBlock>();
+            List<IMyTerminalBlock> _summaryTargets = new List<IMyTerminalBlock>();
+            List<InvDeclaration> _declarations = new List<InvDeclaration>();
 
             public InventoryManager(InvMgrSettings settings = null)
             {
@@ -43,10 +43,7 @@ namespace IngameScript
 
             // Contract
 
-            public IPromise<Void> ForceUpdatePolicies()
-            {
-                return Void.Promise();
-            }
+            public IPromise<Void> ForceUpdatePolicies() => Void.Promise();
 
             public IPromise<Void> SetState(InventoryManagerState value)
             {
@@ -68,10 +65,7 @@ namespace IngameScript
                 _log.Debug("Inventory Manager Restored");
             }
 
-            public InventoryManagerState GetState()
-            {
-                return _state;
-            }
+            public InventoryManagerState GetState() => _state;
 
             public void Run()
             {
@@ -83,14 +77,11 @@ namespace IngameScript
                 Aos.Async.CreateJob(ReportInventory).Start();
             }
 
-            public void OnSaving()
-            {
-                _log.Debug("Inventory Manager Saving");
-            }
+            public void OnSaving() => _log.Debug("Inventory Manager Saving");
 
             // Jobs
-            
-            private void ScanInventoryBlocks()
+
+            void ScanInventoryBlocks()
             {
                 _log.Debug("Scan blocks...");
                 _observingBlocks.Clear();
@@ -102,7 +93,7 @@ namespace IngameScript
                 _log.Debug("Discovered lcds:", _summaryTargets.Count.ToString());
             }
 
-            private void UpdateDeclarations()
+            void UpdateDeclarations()
             {
                 //_log.Debug("Update declarations...");
                 _declarations.Clear();
@@ -121,7 +112,7 @@ namespace IngameScript
                 }
             }
 
-            private void ReportInventory()
+            void ReportInventory()
             {
                 //_log.Debug("Report inventory...");
                 var report = new Dictionary<string, InvDeclarationRecord>();
@@ -157,7 +148,7 @@ namespace IngameScript
 
             // Internal
 
-            private InvDeclaration DeclareInventory(IMyTerminalBlock block, IMyInventory inventory)
+            InvDeclaration DeclareInventory(IMyTerminalBlock block, IMyInventory inventory)
             {
                 var result = new InvDeclaration(inventory)
                 {
@@ -167,7 +158,7 @@ namespace IngameScript
                 return result;
             }
 
-            private Dictionary<string, InvDeclarationRecord> DeclareHave(IMyInventory inventory)
+            Dictionary<string, InvDeclarationRecord> DeclareHave(IMyInventory inventory)
             {
                 var itemCount = inventory.ItemCount;
                 var result = new Dictionary<string, InvDeclarationRecord>();

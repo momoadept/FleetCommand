@@ -43,10 +43,7 @@ namespace IngameScript
             {
             }
 
-            public override IPromise<Void> Drill()
-            {
-                return Void.Promise();
-            }
+            public override IPromise<Void> Drill() => Void.Promise();
 
             public override IPromise<Void> Pause()
             {

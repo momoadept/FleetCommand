@@ -25,12 +25,12 @@ namespace IngameScript
     {
         public class ExtendPiston
         {
-            private IMyPistonBase _piston;
-            private float _speed;
-            private float _distanceEnd;
-            private float _pistonStep;
-            private ILog _log;
-            private string _prefix;
+            IMyPistonBase _piston;
+            float _speed;
+            float _distanceEnd;
+            float _pistonStep;
+            ILog _log;
+            string _prefix;
 
             public ExtendPiston(IMyPistonBase piston, float speed, string prefix, float distanceEnd = 10f, float step = 1f, ILog log = null)
             {
@@ -42,7 +42,7 @@ namespace IngameScript
                 _log = log;
             }
 
-            private IPromise<Void> Step()
+            IPromise<Void> Step()
             {
                 _log?.Debug("STEPPER---- extend piston step: ", _prefix);
                 _piston.MaxLimit = _piston.CurrentPosition + _pistonStep;
@@ -56,7 +56,7 @@ namespace IngameScript
                     .Next(x => Void.Promise());
             }
 
-            private bool IsFullyExtended()
+            bool IsFullyExtended()
             {
                 var isExtended = _piston.CurrentPosition >= _distanceEnd ||
                        _piston.CurrentPosition.AlmostEquals(_piston.HighestPosition);
@@ -77,32 +77,27 @@ namespace IngameScript
                 return cycle;
             }
 
-            public SequenceController Sequence()
-            {
-                return new SequenceController(Stepper(), _log);
-            }
+            public SequenceController Sequence() => new SequenceController(Stepper());
         }
 
         public class ContractPiston
         {
-            private IMyPistonBase _piston;
-            private float _speed;
-            private float _distanceEnd;
-            private float _pistonStep;
-            private ILog _log;
-            private string _prefix;
+            IMyPistonBase _piston;
+            float _speed;
+            float _distanceEnd;
+            float _pistonStep;
+            string _prefix;
 
-            public ContractPiston(IMyPistonBase piston, float speed, string prefix, float distanceEnd = 0f, float step = 1f, ILog log = null)
+            public ContractPiston(IMyPistonBase piston, float speed, string prefix, float distanceEnd = 0f, float step = 1f)
             {
                 _piston = piston;
                 _speed = speed;
                 _prefix = prefix;
                 _distanceEnd = distanceEnd;
                 _pistonStep = step;
-                _log = log;
             }
 
-            private IPromise<Void> Step()
+            IPromise<Void> Step()
             {
                 _piston.MinLimit = _piston.CurrentPosition - _pistonStep;
                 _piston.MinLimit = Math.Max(_piston.MinLimit, _distanceEnd);
@@ -115,7 +110,7 @@ namespace IngameScript
                     .Next(x => Void.Promise());
             }
 
-            private bool IsFullyRetracted()
+            bool IsFullyRetracted()
             {
                 var isExtended = _piston.CurrentPosition <= _distanceEnd ||
                        _piston.CurrentPosition.AlmostEquals(_piston.LowestPosition);
@@ -135,21 +130,18 @@ namespace IngameScript
                 return cycle;
             }
 
-            public SequenceController Sequence()
-            {
-                return new SequenceController(Stepper(), _log);
-            }
+            public SequenceController Sequence() => new SequenceController(Stepper());
         }
 
         public class ExtendContractPistonArm
         {
-            private IMyPistonBase[] _pistons;
-            private float _speed;
-            private string _prefix;
-            private float _distanceEnd;
-            private float _step;
-            private bool _asyncMode;
-            private ILog _log;
+            IMyPistonBase[] _pistons;
+            float _speed;
+            string _prefix;
+            float _distanceEnd;
+            float _step;
+            bool _asyncMode;
+            ILog _log;
 
             public ExtendContractPistonArm(IMyPistonBase[] pistons, float speed, string prefix, float distanceEnd = 10f, float step = 1f, bool asyncMode = false, ILog log = null)
             {
@@ -167,13 +159,13 @@ namespace IngameScript
                 var N = _pistons.Length;
                 var baseSteppers = _pistons.Select(x => _speed > 0 
                     ? new ExtendPiston(x, _speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / (_asyncMode ? N : 1), _log).Stepper()
-                    : new ContractPiston(x, -_speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / (_asyncMode ? N : 1), _log).Stepper());
+                    : new ContractPiston(x, -_speed / (_asyncMode ? N : 1), _prefix, _distanceEnd / N, _step / (_asyncMode ? N : 1)).Stepper());
 
                 var combinedStepper = new ParallelStepper(_asyncMode, baseSteppers.ToArray());
                 return combinedStepper;
             }
 
-            public SequenceController Sequence() => new SequenceController(Stepper(), null);
+            public SequenceController Sequence() => new SequenceController(Stepper());
         }
     }
 }

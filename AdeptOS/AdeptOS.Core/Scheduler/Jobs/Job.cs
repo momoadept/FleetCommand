@@ -31,10 +31,7 @@ namespace IngameScript
                 return this;
             }
 
-            public void Stop()
-            {
-                _stopping = true;
-            }
+            public void Stop() => _stopping = true;
 
             public void Work()
             {
