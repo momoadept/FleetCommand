@@ -374,7 +374,7 @@ namespace IngameScript
                     }
                 });
 
-                var extendRetract = new PairStepper(extendHorizontal, retractHorizontal, _log);
+                var extendRetract = new PairStepper(extendHorizontal, retractHorizontal);
                 var extendRetractInfinitely = new CycleStepper(extendRetract, () => true);
                 var dig = new PairStepper(
                     enableDrill, 

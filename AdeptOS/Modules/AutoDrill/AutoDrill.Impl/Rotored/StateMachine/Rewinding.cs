@@ -40,7 +40,7 @@ namespace IngameScript
                         Context.Sequences.RewindRotor.StepAll())
                     .Then(v =>
                     {
-                        Context.Blocks.Drill.Enabled = false;
+                        Context.Blocks.SetDrills(false);
                         Context.Blocks.Rotor.RotorLock = true;
                         stateMachine.SwitchState(RotorDrillStage.StartingPosition);
                     });
@@ -60,6 +60,8 @@ namespace IngameScript
                 Context.Sequences.RewindVerticalDrill.Pause();
                 Context.Sequences.RewindHorizontalDrill.Pause();
                 Context.Sequences.RewindRotor.Pause();
+                Context.State.Paused = true;
+                Context.Blocks.SetDrills(false);
                 return Void.Promise();
             }
 
@@ -68,6 +70,8 @@ namespace IngameScript
                 Context.Sequences.RewindVerticalDrill.Resume();
                 Context.Sequences.RewindHorizontalDrill.Resume();
                 Context.Sequences.RewindRotor.Resume();
+                Context.State.Paused = false;
+                Context.Blocks.SetDrills(true);
                 return Void.Promise();
             }
 

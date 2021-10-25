@@ -19,7 +19,9 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class Void: IStringifiable
+        #region mdk preserve
+        public class Void : IStringifiable
+            #endregion
         {
             public string Stringify() => "{}";
 

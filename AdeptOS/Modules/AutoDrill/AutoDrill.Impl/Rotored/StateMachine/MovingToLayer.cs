@@ -27,7 +27,7 @@ namespace IngameScript
             public override void Enter()
             {
                 Context.Blocks.Rotor.RotorLock = true;
-                Context.Blocks.Drill.Enabled = true;
+                Context.Blocks.SetDrills(true);
                 var lower = Context.Sequences.LowerToLayer;
                 if (Context.State.CurrentLayer == 0)
                 {

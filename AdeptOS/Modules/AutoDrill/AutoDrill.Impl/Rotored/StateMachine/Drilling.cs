@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using VRage;
@@ -28,7 +29,7 @@ namespace IngameScript
 
             public override void Enter()
             {
-                Context.Blocks.Drill.Enabled = true;
+                Context.Blocks.SetDrills(true);
                 var drillLayer = Context.Sequences.DrillLayer;
                 if (drillLayer.IsComplete() || drillLayer.IsStarted())
                     drillLayer.Reset();
@@ -47,7 +48,7 @@ namespace IngameScript
             private void CheckCargoSpace()
             {
                 var drill = Context.Blocks.Drill;
-                var inv = drill.GetInventory();
+                var inv = drill.First().GetInventory();
                 if ((float)inv.CurrentVolume.ToIntSafe() / (float)inv.MaxVolume.ToIntSafe() > 0.5)
                 {
                     Context.Sequences.DrillLayer.Pause();
@@ -75,12 +76,16 @@ namespace IngameScript
             public override IPromise<Void> Pause()
             {
                 Context.Sequences.DrillLayer.Pause();
+                Context.State.Paused = true;
+                Context.Blocks.SetDrills(false);
                 return Void.Promise();
             }
 
             public override IPromise<Void> Resume()
             {
                 Context.Sequences.DrillLayer.Resume();
+                Context.State.Paused = false;
+                Context.Blocks.SetDrills(true);
                 return Void.Promise();
             }
 

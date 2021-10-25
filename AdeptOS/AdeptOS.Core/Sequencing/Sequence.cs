@@ -158,6 +158,8 @@ namespace IngameScript
                     var next = StepOnce();
 
                     promises.Add(next);
+
+                    next.Then(x => Work());
                 }
 
                 Promise<Void>.Synch(promises.ToArray())
@@ -179,8 +181,26 @@ namespace IngameScript
                     return Void.Promise();
                 }
 
-                return StepOnce()
-                    .Next(x => Aos.Async.Delay().Next(y => StepAll()));
+                //return StepOnce()
+                //    .Next(x => Aos.Async.Delay().Next(y => StepAll()));
+
+                var result = new Promise<Void>();
+
+                Action doWork = null;
+                doWork = () =>
+                {
+                    StepOnce()
+                        .Then(x => Aos.Async.Delay(0, Priority.Critical).Then(y =>
+                        {
+                            if (_isComplete)
+                                result.Resolve(new Void());
+                            else
+                                doWork();
+                        }));
+                };
+
+                doWork();
+                return result;
             }
 
             public bool IsComplete() => _isComplete;
@@ -239,16 +259,18 @@ namespace IngameScript
             {
                 var s = new StringBuilder();
                 s.AppendLine("Sequence " + Name);
-                s.AppendLine("____________________");
+                s.AppendLine();
 
                 s.Append("STARTED:").Append(IsStarted() ? "[X] " : "[]");
-                s.Append("WORKING:").Append(IsPaused() ? "[X] " : "[]");
+                s.Append("PAUSED: ").Append(IsPaused() ? "[X] " : "[]");
+                s.Append("WORKING:").Append(_isWorking ? "[X] " : "[]");
                 s.Append("HAS WORK:").Append(HasWork() ? $"[{_pending.Count}] " : "[]");
-                s.Append("COMPLETE:").Append(IsComplete() ? "[X] " : "[]");
-                s.Append("RESETTING:").Append(_isResetting ? "[X] " : "[]");
-                s.Append("ERROR").Append(_terminatedWith != null ? $"[{_terminatedWith.Message}] " : "[]");
+                s.Append("COMPLETE: ").Append(IsComplete() ? "[X] " : "[]");
+                s.Append("RESETTING: ").Append(_isResetting ? "[X] " : "[]");
+                s.Append("ERROR: ").Append(_terminatedWith != null ? $"[{_terminatedWith.Message}] " : "[]");
 
-                s.AppendLine("____________________");
+                s.AppendLine();
+                s.AppendLine();
 
                 s.Append(Stepper.Trace());
                 return s.ToString();

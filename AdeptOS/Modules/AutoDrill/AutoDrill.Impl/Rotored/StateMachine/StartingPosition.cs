@@ -57,7 +57,7 @@ namespace IngameScript
             {
                 if (!Context.Blocks.Valid) return;
 
-                Context.Blocks.Drill.Enabled = false;
+                Context.Blocks.SetDrills(false);
                 Context.Blocks.Rotor.RotorLock = true;
             }
 

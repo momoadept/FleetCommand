@@ -51,12 +51,14 @@ namespace IngameScript
             public override IPromise<Void> Pause()
             {
                 Context.Sequences.LowerToLayer.Pause();
+                Context.State.Paused = true;
                 return Void.Promise();
             }
 
             public override IPromise<Void> Resume()
             {
                 Context.Sequences.LowerToLayer.Resume();
+                Context.State.Paused = false;
                 return Void.Promise();
             }
 

@@ -65,6 +65,7 @@ Global
 		AdeptOS.Core\AdeptOS.Core.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.Inventory\AdeptOS.Inventory.Contract\AdeptOS.Inventory.Contract.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
+		AdeptOS.LCDs\AdeptOS.LCDs.LcdTracer\AdeptOS.LCDs.LcdTracer.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		Modules\AutoDrill\AutoDrill.Impl\AutoDrill.Impl.projitems*{499fdb05-1955-4b9d-bc8a-b169c2053d53}*SharedItemsImports = 4
 		AdeptOS.Inventory\AdeptOS.Inventory.Impl\AdeptOS.Inventory.Impl.projitems*{7c31ebc7-c7e8-4f4a-8c54-a74397058ec3}*SharedItemsImports = 13
 		Modules\AutoDrill\AutoDrill.Impl\AutoDrill.Impl.projitems*{89a4a4ed-e0cf-45a5-811c-b3438f0c5c1b}*SharedItemsImports = 13

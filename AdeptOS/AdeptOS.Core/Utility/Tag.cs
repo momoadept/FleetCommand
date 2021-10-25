@@ -40,12 +40,18 @@ namespace IngameScript
             public override bool Equals(object obj) => GetHashCode() == obj?.GetHashCode();
 
             static string Wrap(string tag) => tag.Trim().StartsWith("[") ? tag.Trim() : $"[{tag.Trim()}]";
-            static System.Text.RegularExpressions.Regex _tagMatcher = new System.Text.RegularExpressions.Regex(" /\\[([^]]+)\\]/;");
+            static System.Text.RegularExpressions.Regex _tagMatcher = new System.Text.RegularExpressions.Regex(" /\\[([^]]+)\\]/");
 
             public static HashSet<Tag> FromName(string name)
             {
-                var matches = _tagMatcher.Matches(name).Cast<System.Text.RegularExpressions.Match>().Select(it => it.Value);
-                return new HashSet<Tag>(matches.Select(it => new Tag(it)));
+                var matches = _tagMatcher.Matches(name);
+                var result = new List<System.Text.RegularExpressions.Match>();
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    result.Add(matches[i]);
+                }
+
+                return new HashSet<Tag>(result.Select(it => new Tag(it.Value)));
             }
 
             public static List<TBlock> FindGroupByTag<TBlock>(Tag tag, IMyGridTerminalSystem grid, List<IMyTerminalBlock> bbuffer = null,

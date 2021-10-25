@@ -56,7 +56,7 @@ namespace IngameScript
                 var s = new StringBuilder();
                 var tab = Tracer.Tab(depth);
 
-                s.Append(tab).Append(name).Append(" ").Append(_done ? "X" : "O");
+                s.Append(tab).Append(name).Append(" ").AppendLine(_done ? "X" : "O");
 
                 return s.ToString();
             }

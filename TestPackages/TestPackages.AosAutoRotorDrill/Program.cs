@@ -34,6 +34,7 @@ namespace IngameScript
             {
                 new BlackBoxLogger(LogSeverity.Debug),
                 new RotorDrillController(),
+                new LcdTracer(),
             }
         };
 

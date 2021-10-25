@@ -86,7 +86,7 @@ namespace IngameScript
                 }
                 catch (Exception e)
                 {
-                    _gameContext.Echo("FUCK at Tick phase");
+                    _gameContext.Echo("Unhandled exception in AOS runtime");
                     _gameContext.Echo(e.ToString());
                     _log.Fatal(e.ToString());
                     //throw;

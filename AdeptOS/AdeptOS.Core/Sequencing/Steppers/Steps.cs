@@ -29,7 +29,7 @@ namespace IngameScript
                 var s = new StringBuilder();
                 for (int i = 0; i < d; i++)
                 {
-                    s.Append("|    ");
+                    s.Append("|   >");
                 }
 
                 return s.ToString();
@@ -42,10 +42,12 @@ namespace IngameScript
 
                 var s = new StringBuilder("[");
 
-                for (int i = 0; i < max; i++)
-                {
-                    s.Append(i == current ? ";" : ".");
-                }
+                //for (int i = 0; i < max; i++)
+                //{
+                //    s.Append(i == current - 1 ? ";" : ".");
+                //}
+
+                s.Append($"{current}/{max}]");
 
                 if (error)
                     s.Append("E");

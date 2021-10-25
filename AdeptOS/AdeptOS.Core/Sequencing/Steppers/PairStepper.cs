@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using EmptyKeys.UserInterface.Generated;
 using VRage;
 using VRage.Collections;
 using VRage.Game;
@@ -33,11 +34,10 @@ namespace IngameScript
             private IStepper _current;
             private int _stepped;
 
-            public PairStepper(IStepper a, IStepper b, ILog log = null)
+            public PairStepper(IStepper a, IStepper b)
             {
                 _a = a;
                 _b = b;
-                _log = log;
                 _current = a;
             }
 
@@ -71,6 +71,8 @@ namespace IngameScript
 
             public IStepper New() => new PairStepper(_a.New(), _b.New());
 
+            public IStepper AsConcat() => new ConcatStepper(_a.New(), _b.New());
+
             public string Trace(int depth = 0, string prefix = "")
             {
                 var name = $">TWO \"{Name}\"\n";
@@ -81,7 +83,7 @@ namespace IngameScript
                 s.Append(tab).Append(name);
                 s.Append(tab).Append(Tracer.Steps(_stepped - 1, IsComplete())).AppendLine(_current == _a ? "(A)" : "(B)");
                 s.Append(_a.Trace(depth + 1));
-                s.AppendLine();
+                //s.AppendLine();
                 s.Append(_b.Trace(depth + 1));
 
                 return s.ToString();

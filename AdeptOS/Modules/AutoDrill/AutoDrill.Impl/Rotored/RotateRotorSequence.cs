@@ -77,12 +77,12 @@ namespace IngameScript
 
                 if (direction < 0)
                 {
-                    _rotor.TargetVelocityRPM = -_speed()*5;
+                    _rotor.TargetVelocityRPM = -_speed()*10;
                     _rotor.LowerLimitDeg = _startDeg;
                 }
                 else
                 {
-                    _rotor.TargetVelocityRPM = _speed()*5;
+                    _rotor.TargetVelocityRPM = _speed()*10;
                     _rotor.UpperLimitDeg = _startDeg;
                 }
 

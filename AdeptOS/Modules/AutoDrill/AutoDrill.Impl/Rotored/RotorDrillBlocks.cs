@@ -26,10 +26,10 @@ namespace IngameScript
         {
             public List<IMyPistonBase> HorizontalPistonArm = new List<IMyPistonBase>();
             public List<IMyPistonBase> VerticalPistonArm = new List<IMyPistonBase>();
-            public IMyShipDrill Drill;
+            public List<IMyShipDrill> Drill = new List<IMyShipDrill>();
             public IMyTextPanel ReportLcd;
             public IMyMotorStator Rotor;
-            public bool Valid => HorizontalPistonArm.Any() && VerticalPistonArm.Any() && Drill != null && Rotor != null;
+            public bool Valid => HorizontalPistonArm.Any() && VerticalPistonArm.Any() && Drill.Any() && Rotor != null;
             private IMyGridTerminalSystem _grid;
             private List<IMyTerminalBlock> _bbuffer;
             private List<IMyBlockGroup> _gbuffer;
@@ -39,6 +39,12 @@ namespace IngameScript
                 _grid = grid;
                 _bbuffer = bbuffer;
                 _gbuffer = gbuffer;
+            }
+
+            public void SetDrills(bool enabled)
+            {
+                    foreach (var drill in Drill)
+                        drill.Enabled = enabled;
             }
 
             public bool Refresh()
@@ -54,8 +60,8 @@ namespace IngameScript
                 var lcdTag = new Tag("RD_S");
 
                 HorizontalPistonArm = Tag.FindGroupByTag<IMyPistonBase>(horizontalTag, _grid, _bbuffer, _gbuffer);
-                VerticalPistonArm = Tag.FindGroupByTag<IMyPistonBase>(verticalTag, _grid, _bbuffer);
-                Drill = Tag.FindBlockByTag<IMyShipDrill>(drillTag, _grid, _bbuffer).FirstOrDefault();
+                VerticalPistonArm = Tag.FindGroupByTag<IMyPistonBase>(verticalTag, _grid, _bbuffer, _gbuffer);
+                Drill = Tag.FindGroupByTag<IMyShipDrill>(drillTag, _grid, _bbuffer, _gbuffer);
                 Rotor = Tag.FindBlockByTag<IMyMotorStator>(rotorTag, _grid, _bbuffer).FirstOrDefault();
                 ReportLcd = Tag.FindBlockByTag<IMyTextPanel>(lcdTag, _grid, _bbuffer).FirstOrDefault();
                 return HorizontalPistonArm.Any() && VerticalPistonArm.Any() && Drill != null && Rotor != null;

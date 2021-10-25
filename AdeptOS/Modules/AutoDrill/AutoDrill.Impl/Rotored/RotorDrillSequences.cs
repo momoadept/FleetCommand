@@ -32,7 +32,7 @@ namespace IngameScript
 
             private float _baseSpeed = 0.5f;
             private float _layerHeight = 2f;
-            private float _baseStep = 1f;
+            private float _baseStep = 3f;
 
             public void Build(RotorDrillBlocks blocks)
             {
@@ -49,7 +49,7 @@ namespace IngameScript
                 Func<float> rotationSpeed = () =>
                 {
                     var metersPerM = _baseSpeed * 60;
-                    var radius = (blocks.Drill.GetPosition() - blocks.Rotor.GetPosition()).Length();
+                    var radius = (blocks.Drill.First().GetPosition() - blocks.Rotor.GetPosition()).Length();
                     var circ = 2 * Math.PI * radius;
 
                     var rpm = metersPerM / circ;
@@ -106,7 +106,8 @@ namespace IngameScript
                     .RepeatWhile(() => !traceableExtendArm.IsComplete())
                     .ContinueWith(rotateRotor.New()) // Last full rotation
                     .DoAfter((Action)(() => traceableExtendArm.Reset()))
-                    .DoAfter((Action)(() => blocks.Drill.Enabled = true))
+                    .DoAfter((Action)(() => blocks.SetDrills(true)))
+                    .ContinueWith(contractArm.New())
                     .ContinueWith(rewindRotor.New());
 
                 var lowerToLayer = lowerDrill.New();

@@ -8,6 +8,7 @@ namespace IngameScript
     {
         public class Scheduler: IAsync
         {
+            private readonly IGameContext _context;
             Dictionary<Priority, ITimedQueue<Action>> _queue = new Dictionary<Priority, ITimedQueue<Action>>();
              SchedulerStats _stats;
             string _performanceReport = "Waiting for performance snapshot...";
@@ -15,6 +16,7 @@ namespace IngameScript
 
             public Scheduler(IGameContext context)
             {
+                _context = context;
                 _stats = new SchedulerStats(context);
 
                 _queue.Add(Priority.Critical, new SortedSetTimedQueue<Action>());
@@ -103,6 +105,9 @@ namespace IngameScript
                 {
                     _stats.IncActions();
                     action();
+
+                    if ((float)_context.CurrentSteps / _context.MaxSteps >= 0.05)
+                        throw new Exception("5% complexity exceeded");
                 }
             }
 

@@ -123,16 +123,18 @@ namespace IngameScript
                 _lcdsByUnwrappedTag.Clear();
                 foreach (var block in bbuffer)
                 {
-                    var tags = Tag.FromName(block.CustomName);
-                    var tag = tags.FirstOrDefault(x => _traceSourcesByUnwrappedTag.ContainsKey(x.Unwrapped));
+                    
+                    var tags = _traceSourcesByUnwrappedTag.Keys.Where(k => block.CustomName.Contains(k)).Select(x => new Tag(x));
+                    var tag = tags.FirstOrDefault(x => _traceSourcesByUnwrappedTag.Keys.Any( k => x.Unwrapped.Equals(k)));
+                    
                     if (tag != null)
                     {
-                        if(!_lcdsByUnwrappedTag.ContainsKey(tag.Unwrapped))
+                        if (!_lcdsByUnwrappedTag.ContainsKey(tag.Unwrapped))
                             _lcdsByUnwrappedTag.Add(tag.Unwrapped, new List<IMyTextPanel>());
 
                         var panel = block as IMyTextPanel;
                         panel.ContentType = ContentType.TEXT_AND_IMAGE;
-                        panel.WriteText("Trace LCD " + tag.Wrapped);
+                        //panel.WriteText("Trace LCD " + tag.Wrapped);
                         _lcdsByUnwrappedTag[tag.Unwrapped].Add(panel);
                     }
                 }

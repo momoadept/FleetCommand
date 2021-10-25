@@ -50,6 +50,7 @@ namespace IngameScript
                 if (!(_blocks.Refresh()))
                 {
                     _log.Error("Not all blocks found for auto drill");
+                    return;
                 }
 
                 _sequences = new RotorDrillSequences();
@@ -71,8 +72,10 @@ namespace IngameScript
                 },
                     _log);
 
-                _lcd.SetTrace(new Tag("AD_SG"), TraceGeneral);
-                _lcd.SetTrace(new Tag("AD_SC"), TraceCurrent);
+                _log.Info(_lcd?.ToString());
+
+                _lcd?.SetTrace(new Tag("AD_SG"), TraceGeneral);
+                _lcd?.SetTrace(new Tag("AD_SC"), TraceCurrent);
             }
 
             private string TraceGeneral()
