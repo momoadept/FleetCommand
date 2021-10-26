@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Sandbox.Game.AI;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System;
@@ -13,9 +14,15 @@ namespace IngameScript
             public string Unwrapped { get; private set; }
             public string Wrapped => Wrap(Unwrapped);
 
-            public Tag(string tag)
+            public bool Configurable { get; private set; }
+            System.Text.RegularExpressions.Regex _configMatcher;
+
+            public Tag(string tag, bool configurable = false)
             {
+                Configurable = configurable;
                 Unwrapped = tag.StripSquareBraces().Trim();
+                if (Configurable)
+                    _configMatcher = new System.Text.RegularExpressions.Regex(_matchTagStartingWithPattern.Replace("$", Unwrapped));
             }
 
             public string Stringify() => Unwrapped;
@@ -32,12 +39,15 @@ namespace IngameScript
                 return $"{Wrapped}{name}";
             }
 
+            public string GetOptions(string name) => Configurable ? _configMatcher.Match(name).Value.StripSquareBraces().Replace(Unwrapped, "") : "";
+
             public override int GetHashCode() => Unwrapped.GetHashCode();
 
             public override bool Equals(object obj) => GetHashCode() == obj?.GetHashCode();
 
             static string Wrap(string tag) => tag.Trim().StartsWith("[") ? tag.Trim() : $"[{tag.Trim()}]";
-            static System.Text.RegularExpressions.Regex _tagMatcher = new System.Text.RegularExpressions.Regex(" /\\[([^]]+)\\]/");
+            static System.Text.RegularExpressions.Regex _tagMatcher = new System.Text.RegularExpressions.Regex("\\[([^]]+)\\]");
+            static string _matchTagStartingWithPattern = "\\[($\\]|$[^\\w\\]\\[][^\\[\\]]*)\\]?";
 
             public static HashSet<Tag> FromName(string name)
             {
@@ -48,8 +58,31 @@ namespace IngameScript
                     result.Add(matches[i]);
                 }
 
-                return new HashSet<Tag>(result.Select(it => new Tag(it.Value)));
+                var processed = result.Select(x => x.Value)
+                    .Select(x =>
+                    {
+                        var separator = x.FirstOrDefault(ch => !char.IsLetterOrDigit(ch) && !"[]_-+".Contains(ch));
+
+                        if (separator == default(char))
+                            return x;
+
+                        var index = x.IndexOf(separator);
+                        return x.Substring(0, index);
+                    });
+
+                return new HashSet<Tag>(processed.Select(it => new Tag(it)));
             }
+
+            public bool NameMatches(string name) => Configurable ? _configMatcher.Match(name).Success : name.Contains(Wrapped);
+
+            public static List<TBlock> FindAllByTag<TBlock>(Tag tag, IMyGridTerminalSystem grid,
+                List<IMyTerminalBlock> bbuffer = null,
+                List<IMyBlockGroup> gbuffer = null)
+                where TBlock : class =>
+                FindGroupByTag<TBlock>(tag, grid, bbuffer, gbuffer)
+                    .Concat(FindBlockByTag<TBlock>(tag, grid, bbuffer))
+                    .Distinct()
+                    .ToList();
 
             public static List<TBlock> FindGroupByTag<TBlock>(Tag tag, IMyGridTerminalSystem grid, List<IMyTerminalBlock> bbuffer = null,
                 List<IMyBlockGroup> gbuffer = null)
@@ -60,7 +93,7 @@ namespace IngameScript
 
                 var result = new List<TBlock>();
 
-                grid.GetBlockGroups(gbuffer, group => group.Name.Contains(tag.Wrapped));
+                grid.GetBlockGroups(gbuffer, group => tag.NameMatches(group.Name));
                 foreach (var blockGroup in gbuffer)
                 {
                     blockGroup.GetBlocksOfType<TBlock>(bbuffer);
@@ -75,7 +108,7 @@ namespace IngameScript
             {
                 bbuffer = bbuffer ?? new List<IMyTerminalBlock>();
 
-                grid.SearchBlocksOfName(tag.Wrapped, bbuffer, x => x is TBlock);
+                grid.GetBlocksOfType<TBlock>(bbuffer, x => tag.NameMatches(x.CustomName));
                 return bbuffer.Cast<TBlock>().ToList();
             }
         }

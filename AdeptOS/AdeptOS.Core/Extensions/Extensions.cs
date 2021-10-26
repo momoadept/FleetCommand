@@ -29,7 +29,7 @@ namespace IngameScript
         public static Program.Primitive<double> AsPrimitive(this double src) => new Program.Primitive<double>(src);
         public static Program.Primitive<float> AsPrimitive(this float src) => new Program.Primitive<float>(src);
 
-        static System.Text.RegularExpressions.Regex _nameMatcher = new System.Text.RegularExpressions.Regex(" /(\\([^)]+\\))/;");
+        static System.Text.RegularExpressions.Regex _nameMatcher        = new System.Text.RegularExpressions.Regex(" (\\([^)]+\\))");
         public static void UpdateName(this IMyProgrammableBlock target, string name)
         {
             var builder = new StringBuilder(target.CustomName);

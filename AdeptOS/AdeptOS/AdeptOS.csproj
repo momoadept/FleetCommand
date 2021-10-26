@@ -43,6 +43,7 @@
     <Compile Include="Readme.cs" />
     <AdditionalFiles Include="thumb.png" />
     <AdditionalFiles Include="MDK\whitelist.cache" />
+    <Compile Include="TestModule.cs" />
   </ItemGroup>
   <Import Project="..\AdeptOS.Core\AdeptOS.Core.projitems" Label="Shared" />
   <Import Project="..\AdeptOS.RPC\AdeptOS.RPC.projitems" Label="Shared" />

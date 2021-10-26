@@ -48,6 +48,9 @@ namespace IngameScript
             void CheckCargoSpace()
             {
                 var drill = Context.Blocks.Drill;
+                if (drill == null || !drill.Any())
+                    return;
+
                 var inv = drill.First().GetInventory();
                 if ((float)inv.CurrentVolume.ToIntSafe() / inv.MaxVolume.ToIntSafe() > 0.5)
                 {

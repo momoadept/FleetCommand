@@ -64,7 +64,7 @@ namespace IngameScript
                 Drill = Tag.FindGroupByTag<IMyShipDrill>(drillTag, _grid, _bbuffer, _gbuffer);
                 Rotor = Tag.FindBlockByTag<IMyMotorStator>(rotorTag, _grid, _bbuffer).FirstOrDefault();
                 ReportLcd = Tag.FindBlockByTag<IMyTextPanel>(lcdTag, _grid, _bbuffer).FirstOrDefault();
-                return HorizontalPistonArm.Any() && VerticalPistonArm.Any() && Drill != null && Rotor != null;
+                return HorizontalPistonArm.Any() && VerticalPistonArm.Any() && Drill.Any() && Rotor != null;
             }
         }
     }

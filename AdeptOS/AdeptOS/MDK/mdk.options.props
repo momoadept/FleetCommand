@@ -3,7 +3,7 @@
   <PropertyGroup>
     <MDKVersion>1.4.12</MDKVersion>
     <MDKMinify>
-      <Level>StripComments</Level>
+      <Level>Lite</Level>
     </MDKMinify>
     <MDKTrimTypes>
       <Enabled>yes</Enabled>

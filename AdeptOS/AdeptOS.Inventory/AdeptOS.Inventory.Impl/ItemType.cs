@@ -24,8 +24,8 @@ namespace IngameScript
     {
         public class ItemType
         {
-            public string Type { get; }
-            public string Subtype { get; }
+            public string Type { get; private set; }
+            public string Subtype { get; private set; }
 
             public ItemType(string qualifier)
             {
@@ -33,24 +33,40 @@ namespace IngameScript
                 if (terms.Length < 1)
                     throw new Exception("Invalid item type qualifier " + qualifier);
 
-                var type = terms.Length > 1 ? terms[0] : null;
-                var subtype = terms.Last();
-
-                Type = type == null ? null : Types.FirstOrDefault(t => t.ToUpper().Contains(type.ToUpper()));
-                Subtype = Subtypes.FirstOrDefault(t => t.ToUpper().Contains(subtype.ToUpper()));
-
-                if (Type == null && NotUniqueTypes.Contains(Subtype))
+                if (terms.Length >= 2)
                 {
-                    Type = "Ingot";
+                    SetTypeSubtype(terms[1], terms[0]);
+                    return;
                 }
+
+                var term = terms[0];
+
+                var typeMatch = Types.FirstOrDefault(x => x.ToUpper().Contains(term.ToUpper()));
+                var subtypeMatch = Subtypes.FirstOrDefault(x => x.ToUpper().Contains(term.ToUpper()));
+
+                if (subtypeMatch != null)
+                    Subtype = subtypeMatch;
+                else
+                    Type = typeMatch;
+
+                if (Type == null && AmbiguosTypes.Contains(Subtype))
+                    Type = "Ingot";
+
+                if (Type == null && Subtype == null)
+                    throw new Exception("Invalid item type qualifier " + qualifier);
             }
 
             public ItemType(string subtype, string type)
             {
+                SetTypeSubtype(subtype, type);
+            }
+
+            void SetTypeSubtype(string subtype, string type)
+            {
                 Type = type == null ? null : Types.FirstOrDefault(t => t.ToUpper().Contains(type.ToUpper()));
                 Subtype = Subtypes.FirstOrDefault(t => t.ToUpper().Contains(subtype.ToUpper()));
 
-                if (Type == null && NotUniqueTypes.Contains(Subtype))
+                if (Type == null && AmbiguosTypes.Contains(Subtype))
                 {
                     Type = "Ingot";
                 }
@@ -61,25 +77,37 @@ namespace IngameScript
                 Type = Types.FirstOrDefault(t => item.Type.ToString().ToUpper().Contains(t.ToUpper()));
                 Subtype = Subtypes.FirstOrDefault(t => item.Type.ToString().ToUpper().Contains(t.ToUpper()));
 
-                if (Type == null && NotUniqueTypes.Contains(Subtype))
+                if (Type == null && AmbiguosTypes.Contains(Subtype))
                 {
                     Type = "Ingot";
+                }
+
+                if (!AmbiguosTypes.Contains(Subtype) && Subtype != null)
+                {
+                    Type = null;
                 }
             }
 
             public override string ToString()
             {
-                if (Type == null && NotUniqueTypes.Contains(Subtype))
+                if (Type == null && AmbiguosTypes.Contains(Subtype))
                 {
                     return $"Ingot.{Subtype}";
+                }
+
+                if (!AmbiguosTypes.Contains(Subtype) && Subtype != null)
+                {
+                    return $".{Subtype}";
                 }
 
                 return $"{Type}.{Subtype}";
             }
 
+            public override bool Equals(object obj) => ToString().Equals(obj.ToString());
+
             public string ToDisplayString()
             {
-                if (NotUniqueTypes.Contains(Subtype))
+                if (AmbiguosTypes.Contains(Subtype))
                 {
                     return $"{Subtype} ({Type ?? "Ingot"})";
                 }
@@ -99,7 +127,34 @@ namespace IngameScript
                 "GasContainerObject",
             };
 
-            public static string[] NotUniqueTypes = new[]
+            // TODO: Add all
+            public static string[] AllowedTypes = new[]
+            {
+                "Component",
+                "Ingot",
+                "Ore",
+            };
+
+            public static string[] Components = new[]
+            {
+                "BulletproofGlass", "Canvas", "Computer", "Construction", "Detector", "Display", "Explosives",
+                "Girder", "GravityGenerator", "InteriorPlate", "LargeTube", "Medical", "MetalGrid", "Motor",
+                "PowerCell", "RadioCommunication", "Reactor", "SmallTube", "SolarCell", "SteelPlate",
+                "Superconductor", "Thrust", "ZoneChip",
+            };
+
+            public static string[] Ingots = new[]
+            {
+                "Cobalt", "Gold", "Iron", "Magnesium", "Nickel", "Platinum", "Silicon", "Silver", "Uranium", "Stone"
+            };
+
+            public static string[] Ores = new[]
+            {
+                "Cobalt", "Gold", "Stone", "Iron", "Magnesium", "Nickel", "Scrap", "Platinum", "Silicon", "Silver",
+                "Uranium", "Ice", "Organic", "Stone",
+            };
+
+            public static string[] AmbiguosTypes = new[]
             {
                 "Cobalt",
                 "Gold",
@@ -110,49 +165,11 @@ namespace IngameScript
                 "Silicon",
                 "Silver",
                 "Uranium",
+                "Stone"
             };
 
             public static string[] Subtypes = new[]
             {
-                "BulletproofGlass",
-                "Canvas",
-                "Computer",
-                "Construction",
-                "Detector",
-                "Display",
-                "Explosives",
-                "Girder",
-                "GravityGenerator",
-                "InteriorPlate",
-                "LargeTube",
-                "Medical",
-                "MetalGrid",
-                "Motor",
-                "PowerCell",
-                "RadioCommunication",
-                "Reactor",
-                "SmallTube",
-                "SolarCell",
-                "SteelPlate",
-                "Superconductor",
-                "Thrust",
-                "ZoneChip",
-                "Hydrogen",
-                "Oxygen",
-                "Cobalt",
-                "Gold",
-                "Stone",
-                "Iron",
-                "Magnesium",
-                "Nickel",
-                "Scrap",
-                "Platinum",
-                "Silicon",
-                "Silver",
-                "Uranium",
-                "Ice",
-                "Organic",
-                "Stone",
                 "ClangCola",
                 "CosmicCoffee",
                 "Medkit",
@@ -191,7 +208,7 @@ namespace IngameScript
                 "SemiAutoPistolMagazine",
                 "ElitePistolMagazine",
                 "FullAutoPistolMagazine",
-            };
+            }.Concat(Ingots).Concat(Components).Concat(Ores).Distinct().ToArray();
         }
     }
 }

@@ -9,11 +9,13 @@
     <Import_RootNamespace>AdeptOS.Inventory.Impl</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BlockInvDef.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InvDeclaration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InventoryManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InventoryManagerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InventoryManagerState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InvMgrSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InvMover.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ItemType.cs" />
   </ItemGroup>
 </Project>

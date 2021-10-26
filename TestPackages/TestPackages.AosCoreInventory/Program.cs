@@ -33,7 +33,6 @@ namespace IngameScript
             {
                 new BlackBoxLogger(LogSeverity.Debug),
                 new InventoryManagerController(),
-                new AutoDrillController(),
             }
         };
 

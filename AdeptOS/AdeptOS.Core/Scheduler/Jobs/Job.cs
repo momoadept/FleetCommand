@@ -37,7 +37,17 @@ namespace IngameScript
             {
                 if (!_stopping)
                 {
-                    _action();
+                    try
+                    {
+                        _action();
+                    }
+                    catch (Exception e)
+                    {
+                        Running = false;
+                        _stopping = false;
+                        throw new Exception("Job stopped due to unhandled exception", e);
+                    }
+                    
                     Aos.Async
                         .Delay(Aos.Seettings.Priorities.JobCheckInterval(Priority))
                         .Then(delay => Work());

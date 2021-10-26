@@ -74,7 +74,10 @@ namespace IngameScript
 
                 Aos.Async.CreateJob(ScanInventoryBlocks, Priority.Unimportant).Start();
                 Aos.Async.CreateJob(UpdateDeclarations).Start();
-                Aos.Async.CreateJob(ReportInventory).Start();
+                //Aos.Async.CreateJob(ReportInventory).Start();
+
+                //ScanInventoryBlocks();
+                //UpdateDeclarations();
             }
 
             public void OnSaving() => _log.Debug("Inventory Manager Saving");
@@ -99,17 +102,12 @@ namespace IngameScript
                 _declarations.Clear();
                 foreach (var block in _observingBlocks)
                 {
-                    if (block.InventoryCount == 1)
-                        _declarations.Add(DeclareInventory(block, block.GetInventory()));
-                    else
-                    {
-                        for (int i = 0; i < block.InventoryCount; i++)
-                        {
-                            var inventory = block.GetInventory(i);
-                            _declarations.Add(DeclareInventory(block, inventory));
-                        }
-                    }
+                    var invDefinition = BlockInvDef.Parse(block);
+                    var declarations = invDefinition.Select(x => x.Declare(_log, block.CustomName));
+                    _declarations.AddRange(declarations);
                 }
+
+                new InvMover(_declarations, _log).Iterate();
             }
 
             void ReportInventory()
@@ -123,7 +121,7 @@ namespace IngameScript
                     {
                         if (!report.ContainsKey(item.Key))
                         {
-                            report.Add(item.Key, new InvDeclarationRecord(item.Value.ItemType, 0, 0, null));
+                            report.Add(item.Key, new InvDeclarationRecord(item.Value.ItemType, 0, 0, null, null));
                         }
 
                         report[item.Key].Amount += item.Value.Amount;
@@ -144,39 +142,6 @@ namespace IngameScript
                             $"{entry.ItemType.ToDisplayString().FillWhitespace(_settings.SummaryTypeWidth)}{entry.Amount}\n", true);
                     }
                 }
-            }
-
-            // Internal
-
-            InvDeclaration DeclareInventory(IMyTerminalBlock block, IMyInventory inventory)
-            {
-                var result = new InvDeclaration(inventory)
-                {
-                    Have = DeclareHave(inventory)
-                };
-
-                return result;
-            }
-
-            Dictionary<string, InvDeclarationRecord> DeclareHave(IMyInventory inventory)
-            {
-                var itemCount = inventory.ItemCount;
-                var result = new Dictionary<string, InvDeclarationRecord>();
-                for (int i = 0; i < itemCount; i++)
-                {
-                    var item = inventory.GetItemAt(i);
-                    if (item == null)
-                        continue;
-
-                    var itemType = new ItemType(item.Value);
-
-                    if (!result.ContainsKey(itemType.ToString()))
-                        result.Add(itemType.ToString(), new InvDeclarationRecord(itemType, 0, 0, inventory));
-
-                    result[itemType.ToString()].Amount += item.Value.Amount;
-                }
-
-                return result;
             }
         }
     }
