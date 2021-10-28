@@ -1,30 +1,15 @@
-# FleetCommand
+# AdeptOS
 
-This is my scripting repo for space engineers. The fun stuff is AdeptOS, which is the framework I designed for scripting. Features include:
-- Modular architercure with basic dependency injection (core)
-  - Keep your reusable code in isolated modules and pack them together in one script according to your needs
-  - Link your modules via interfaces and DI
-- Asynchronous runtime (core)
-  - This is like Promises in JS
-  - A lot of cool magic for async scheduling with as good of a syntax that I could implement
-  - With performance in mind!
-- Persistance (core)
-  - Basic state management
-  - String serialization for custom types and collections
-- Command syntax (core)
-  - Call any function on your modules from any triggers (PB argument, timer, button) using a simple syntax
-  - Pass arguments
-- Sequencing (core)
-  - Manage complex sequences of async actions
-  - Do step by step, stop at any time, handle exceptions
-  - Combine simple sequences to create more complex ones
-  - Built on top of Promises
-- Logging (core)
-  - You can log stuff, that's it
-  - But you can also build your own loggers
-- Remote procedure call (optional)
-  - Seamlessly divide your script across multiple programmable blocks to bypass code size limit and/or better manage performance
-  - Asynchronously executed functions with returned results, and a caller still sees only a plain interface
-  - Make all PBs on your ship a part of a single distributed system with a required degree of redundancy
+Hello Engineer, and welcome to AdeptOS repo. It is a scripting framework for a game Space Engineers by Keen Software. You may want to go to [Wiki](https://github.com/momoadept/FleetCommand/wiki/1.-Overview) to read about it.
 
-Full guide coming soon
+## State of affairs
+Current version is v0.1.1-pre-alpha. We have the framework but not much else. Breaking changes expected soon.
+
+## Plans for the nearest future
+- Tutorials on the features
+- Modules for building player-accessible menus
+- Modules for ship bureaucracy (assigning ship and PB names, tags, etc)
+- Modules for ship movement (remote control, precision movement, docking)
+- Modules for inventory management
+- Optimizations for Async scheduling
+- Optimizations for Sequencing
