@@ -16,7 +16,6 @@ namespace IngameScript
             Modules = new List<IModule>()
             {
                 new BlackBoxLogger(),
-                new TestModule(),
             }
         };
 

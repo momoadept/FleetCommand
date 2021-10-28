@@ -170,11 +170,12 @@ namespace IngameScript
                     AddQuote(result, entry, blockName);
 
                 var managedItemTypes = Entries
-                    .SelectMany(x => x.Type == InvDefType.Item ?new [] {x.ItemType.ToString() }: GetCategorySource(x) )
-                    .ToImmutableHashSet();
+                    .SelectMany(x => x.Type == InvDefType.Item ? new [] {x.ItemType.ToString() }: GetCategorySource(x) )
+                    .Select(x => new ItemType(x).ToString())
+                    .ToList();
 
-                //_log.Debug("Looking for items not in list");
-                //_log.Debug(managedItemTypes.ToArray());
+                _log.Debug("-----Managed types for", blockName);
+                _log.Debug(managedItemTypes.ToArray());
                 for (int i = 0; i < Inventory.ItemCount; i++)
                 {
                     var item = Inventory.GetItemAt(i);

@@ -33,6 +33,9 @@ namespace IngameScript
             List<InvDeclarationRecord> _allHave;
             List<InvAcceptRecord> _allAccept;
 
+            int _ops = 0;
+            int limit = 0;
+
             List<MyInventoryItem> _itemBuffer = new List<MyInventoryItem>();
 
             public InvMover(List<InvDeclaration> declarations, ILog log)
@@ -58,14 +61,56 @@ namespace IngameScript
 
             public void Iterate()
             {
+                
+                //_log.Debug("-----Have:");
+                //foreach (var has in _allHave)
+                //{
+                //    _log.Debug(has.BlockName, has.Importance.ToString(), has.ItemType.ToString(), has.Amount.ToString());
+                //}
+
+                //_log.Debug("-----Accept bills:");
+                //foreach (var accept in _allAccept)
+                //{
+                //    _log.Debug(accept.BlockName, accept.Importance.ToString(), accept.ItemType.ToString());
+                //}
+
+                //_log.Debug("-----Need bills:");
+                //foreach (var want in _allNeeded)
+                //{
+                //    _log.Debug(want.BlockName, want.Importance.ToString(), want.ItemType.ToString(), want.Amount.SerializeString());
+                //}
+
+                //_log.Debug("-----Discard bills:");
+                //foreach (var unwant in _allToDiscard)
+                //{
+                //    _log.Debug(unwant.BlockName, unwant.Importance.ToString(), unwant.ItemType.ToString(), unwant.Amount.SerializeString());
+                //}
+
+                _ops = 0;
+
                 foreach (var neededBill in _allNeeded)
+                {
+                    if (_ops > limit)
+                        break;
+
                     FulfillNeeded(neededBill);
+                }
 
                 foreach (var discardBill in _allToDiscard)
+                {
+                    if (_ops > limit)
+                        break;
+
                     FulfillNotWanted(discardBill);
+                }
 
                 foreach (var acceptBill in _allAccept)
+                {
+                    if (_ops > limit)
+                        break;
+
                     FulfillAccept(acceptBill);
+                }
             }
 
             void FulfillAccept(InvAcceptRecord accept)
@@ -73,26 +118,33 @@ namespace IngameScript
                 _log.Debug("Trying to fill ACCEPT ", accept.ItemType.ToDisplayString(), accept.BlockName);
 
                 var applicableStocks = _allHave
-                    .Where(x => new Tag("I", true).NameMatches(x.BlockName))
+                    .Where(x => x.BlockName.Contains("[I"))
                     .Where(x => x.Importance < accept.Importance)
                     .Where(x => x.ItemType.Equals(accept.ItemType));
 
+
                 foreach (var stock in applicableStocks)
                 {
+
+                    //throw new Exception("Accept cycle");
+                    if (_ops > limit)
+                        break;
                     if (accept.Declarer.IsFull)
                     {
-                        _log.Debug("Skipping pulling accepted items since inventory is full");
+                        //_log.Debug("Skipping pulling accepted items since inventory is full");
                         break;
                     }
 
-                    _log.Debug("Found ", stock.Amount.ToString(), "in", stock.BlockName);
+                    //throw new Exception("Accept pulling");
+                    //_log.Debug("Found ", stock.Amount.ToString(), "in", stock.BlockName);
                     Pull(stock, accept);
+                    _ops++;
                 }
             }
 
             void FulfillNeeded(InvDeclarationRecord needed)
             {
-                //_log.Debug("Trying to fill quote ", needed.ItemType.ToDisplayString(), needed.Amount.ToString(), needed.BlockName);
+                _log.Debug("Trying to fill quote ", needed.ItemType.ToDisplayString(), needed.Amount.ToString(), needed.BlockName);
 
                 // check Unwanted
                 //_log.Debug("Looking for unwanted inventory to pull...");
@@ -100,6 +152,8 @@ namespace IngameScript
 
                 foreach (var discard in applicableDiscarded)
                 {
+                    if (_ops > limit)
+                        break;
                     if (needed.Amount <= 0)
                         break;
 
@@ -111,6 +165,7 @@ namespace IngameScript
 
                     //_log.Debug("Found ", discard.Amount.ToString(), "in", discard.BlockName);
                     Pull(discard, needed);
+                    _ops++;
                 }
 
                 if (needed.Amount <= 0)
@@ -119,12 +174,14 @@ namespace IngameScript
                 // check Lower priorities
                 //_log.Debug("Looking for lower importance inventory to pull...");
                 var applicableStocks = _allHave
-                    .Where(x => new Tag("I", true).NameMatches(x.BlockName))
+                    .Where(x => x.BlockName.Contains("[I"))
                     .Where(x => x.Importance < needed.Importance)
                     .Where(x => x.ItemType.Equals(needed.ItemType));
 
                 foreach (var stock in applicableStocks)
                 {
+                    if (_ops > limit)
+                        break;
                     if (needed.Amount <= 0)
                         break;
 
@@ -136,12 +193,13 @@ namespace IngameScript
 
                     //_log.Debug("Found ", stock.Amount.ToString(), "in", stock.BlockName);
                     Pull(stock, needed);
+                    _ops++;
                 }
             }
 
             void FulfillNotWanted(InvDeclarationRecord notWanted)
             {
-                //_log.Debug("Trying to discard extra ", notWanted.ItemType.ToDisplayString(), notWanted.Amount.ToString(), notWanted.BlockName);
+                _log.Debug("Trying to discard extra ", notWanted.ItemType.ToDisplayString(), notWanted.Amount.ToString(), notWanted.BlockName);
 
                 // check accepters
                 //_log.Debug("Looking for accepting inventory to push...");
@@ -150,11 +208,14 @@ namespace IngameScript
 
                 foreach (var declaration in applicableStocks)
                 {
+                    if (_ops > limit)
+                        break;
                     if (notWanted.Amount <=0)
                         break;
 
                     //_log.Debug("Pushing to ", declaration.BlockName);
                     Push(notWanted, declaration);
+                    _ops++;
                 }
             }
 
@@ -162,39 +223,46 @@ namespace IngameScript
             {
                 if (from.BlockName == to.BlockName)
                     return;
-                var ammount = @from.Amount > to.Amount ? to.Amount : @from.Amount;
-                @from.Declarer.GetItems(_itemBuffer, x => new ItemType(x).Equals(to.ItemType));
+                var leftTotransfer = @from.Amount > to.Amount ? to.Amount : @from.Amount;
+                @from.Declarer.GetItems(_itemBuffer);
 
-                foreach (var item in _itemBuffer)
+                foreach (var item in _itemBuffer.Where(x => new ItemType(x).Equals(to.ItemType)))
                 {
                     //_log.Debug("Looking at ", item.Type.SubtypeId, item.Amount.SerializeString());
-                    if (ammount <= 0)
+                    if (leftTotransfer <= 0)
                         break;
 
-                    var thisTransfer = ammount > item.Amount ? item.Amount : ammount;
+                    var thisTransfer = leftTotransfer > item.Amount ? item.Amount : leftTotransfer;
                     //_log.Debug("Trying to transfer ", thisTransfer.SerializeString());
 
-                    while (!to.Declarer.CanItemsBeAdded(thisTransfer, item.Type) || thisTransfer.RawValue == 0)
-                        thisTransfer.RawValue /= 2;
+                    //while (thisTransfer.RawValue > 0 && !to.Declarer.CanItemsBeAdded(thisTransfer, item.Type))
+                    //    thisTransfer.RawValue /= 2;
 
                     _log.Debug("Transferring ", thisTransfer.SerializeString(), item.Type.ToString());
                     _log.Debug(from.BlockName, "->", to.BlockName);
-                    _log.Debug(to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer).ToString());
+                    //if (thisTransfer > 0)
+                    //    _log.Debug(to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer).ToString());
 
-                    ammount -= thisTransfer;
-                    @from.Amount -= thisTransfer;
-                    to.Amount -= thisTransfer;
+                    if (to.Declarer.CanItemsBeAdded(thisTransfer, item.Type))
+                    {
+                        to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer);
+                        leftTotransfer -= thisTransfer;
+                        @from.Amount -= thisTransfer;
+                        to.Amount -= thisTransfer;
+                    }
                 }
             }
 
             void Pull(InvDeclarationRecord from, InvAcceptRecord to)
             {
+                //var s = $"PULL {from.BlockName} -> {to.BlockName} {from.ItemType}";
+                //throw new Exception(s);
                 if (from.BlockName == to.BlockName)
                     return;
                 var ammount = from.Amount;
-                from.Declarer.GetItems(_itemBuffer, x => new ItemType(x).Equals(to.ItemType));
+                from.Declarer.GetItems(_itemBuffer);
 
-                foreach (var item in _itemBuffer)
+                foreach (var item in _itemBuffer.Where(x => new ItemType(x).Equals(to.ItemType)))
                 {
                     //_log.Debug("Looking at ", item.Type.SubtypeId, item.Amount.SerializeString());
                     if (ammount <= 0 || to.Declarer.IsFull)
@@ -203,15 +271,20 @@ namespace IngameScript
                     var thisTransfer = ammount > item.Amount ? item.Amount : ammount;
                     //_log.Debug("Trying to transfer ", thisTransfer.SerializeString());
 
-                    while (!to.Declarer.CanItemsBeAdded(thisTransfer, item.Type) || thisTransfer.RawValue == 0)
-                        thisTransfer.RawValue /= 2;
+                    //while (!to.Declarer.CanItemsBeAdded(thisTransfer, item.Type) && thisTransfer.RawValue > 0)
+                    //    thisTransfer.RawValue /= 2;
 
                     _log.Debug("Transferring ", thisTransfer.SerializeString(), item.Type.ToString());
                     _log.Debug(from.BlockName, "->", to.BlockName);
-                    _log.Debug(to.Declarer.TransferItemFrom(from.Declarer, item, thisTransfer).ToString());
+                    //if (thisTransfer > 0)
+                    //    _log.Debug(to.Declarer.TransferItemFrom(from.Declarer, item, thisTransfer).ToString());
 
-                    ammount -= thisTransfer;
-                    from.Amount-= thisTransfer;
+                    if (to.Declarer.CanItemsBeAdded(thisTransfer, item.Type))
+                    {
+                        to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer);
+                        ammount -= thisTransfer;
+                        from.Amount -= thisTransfer;
+                    }
                 }
             }
 
@@ -219,26 +292,32 @@ namespace IngameScript
             {
                 if (from.BlockName == to.BlockName)
                     return;
-                var ammount = from.Amount;
-                from.Declarer.GetItems(_itemBuffer, x => new ItemType(x).Equals(from.ItemType));
+                var leftTotransfer = from.Amount;
+                from.Declarer.GetItems(_itemBuffer);
 
-                foreach (var item in _itemBuffer)
+                foreach (var item in _itemBuffer.Where(x => new ItemType(x).Equals(from.ItemType)))
                 {
-                    if (ammount <= 0)
+                    _log.Debug("Looking to push ", item.Type.ToString());
+                    if (leftTotransfer <= 0)
                         break;
 
-                    var thisTransfer = ammount > item.Amount ? item.Amount : ammount;
+                    var thisTransfer = leftTotransfer > item.Amount ? item.Amount : leftTotransfer;
                     //_log.Debug("Trying to transfer ", thisTransfer.SerializeString());
 
-                    while (!to.Declarer.CanItemsBeAdded(thisTransfer, item.Type) || thisTransfer.RawValue == 0)
-                        thisTransfer.RawValue /= 2;
+                    //while (!to.Declarer.CanItemsBeAdded(thisTransfer, item.Type) && thisTransfer.RawValue > 0)
+                    //    thisTransfer.RawValue /= 2;
 
                     _log.Debug("Transferring ", thisTransfer.SerializeString(), item.Type.ToString());
                     _log.Debug(from.BlockName,"->",to.BlockName);
-                    _log.Debug(to.Declarer.TransferItemFrom(from.Declarer, item, thisTransfer).ToString());
+                    //if (thisTransfer > 0)
+                    //    _log.Debug(to.Declarer.TransferItemFrom(from.Declarer, item, thisTransfer).ToString());
 
-                    ammount -= thisTransfer;
-                    from.Amount -= thisTransfer;
+                    if (to.Declarer.CanItemsBeAdded(thisTransfer, item.Type))
+                    {
+                        to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer);
+                        leftTotransfer -= thisTransfer;
+                        from.Amount -= thisTransfer;
+                    }
                 }
             }
         }

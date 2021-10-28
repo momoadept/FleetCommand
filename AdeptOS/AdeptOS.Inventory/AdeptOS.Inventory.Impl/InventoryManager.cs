@@ -73,7 +73,11 @@ namespace IngameScript
                 _log.Debug("My state is", _state.Stringify());
 
                 Aos.Async.CreateJob(ScanInventoryBlocks, Priority.Unimportant).Start();
-                Aos.Async.CreateJob(UpdateDeclarations).Start();
+                Aos.Async.Delay(100).Then(x =>
+                {
+                    Aos.Async.CreateJob(UpdateDeclarations).Start();
+                });
+
                 //Aos.Async.CreateJob(ReportInventory).Start();
 
                 //ScanInventoryBlocks();
