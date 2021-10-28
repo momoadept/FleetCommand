@@ -153,7 +153,7 @@ namespace IngameScript
                     return new List<InfDevItem>();
 
                 var decTerms = s.Split(',');
-                int importance = 0;
+                int importance;
                 int? ammount = null;
                 int amoutBuffer;
                 ItemType itemType;

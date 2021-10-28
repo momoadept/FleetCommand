@@ -22,22 +22,9 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class InventoryManagerState: BaseDataObject<InventoryManagerState>
+        public class InventoryManagerState : Void
         {
-            public string SomeString;
 
-            public bool SomeBool;
-
-            public InventoryManagerState()
-                : base(new List<Property<InventoryManagerState>>(new []{
-                    new Property<InventoryManagerState>("SomeString", state => state.SomeString,
-                        (state, s) => state.SomeString = s),
-                    new Property<InventoryManagerState>("SomeBoolean", state => state.SomeBool,
-                        (state, s) => state.SomeBool = bool.Parse(s)),
-                }))
-            {
-
-            }
         }
     }
 }

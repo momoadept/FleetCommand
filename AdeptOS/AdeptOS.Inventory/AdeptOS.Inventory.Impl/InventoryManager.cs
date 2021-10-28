@@ -79,7 +79,7 @@ namespace IngameScript
 
             public void Run()
             {
-                _log.Debug("Inventory Manager Started");
+                _log.Info("Inventory Manager Started");
                 _log.Debug("My state is", _state.Stringify());
 
                 Aos.Async.CreateJob(ScanInventoryBlocks, Priority.Unimportant).Start();

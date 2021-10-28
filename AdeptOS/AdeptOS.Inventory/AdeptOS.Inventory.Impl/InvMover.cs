@@ -110,7 +110,7 @@ namespace IngameScript
                             break;
 
                         case BlockInvType.Quotas:
-                            if (!inventory.QuoteByItemType.ContainsKey(itemType.ToString()))
+                            if (!inventory.QuoteByItemType.ContainsKey(itemType.ToString())) // We don't care about this item and can get rid of it
                             {
                                 UnloadItemToHigherImportance(-1, item, itemType, inventory,
                                     ref transfers, item.Amount);
@@ -118,11 +118,17 @@ namespace IngameScript
                             }
 
                             var quote = inventory.QuoteByItemType[itemType.ToString()];
-                            if (quote.Amount == null)
+                            var transfersBefore = transfers;
+                            UnloadItemToHigherImportance(quote.Importance, item, itemType, inventory,
+                                ref transfers, item.Amount);
+                            if (transfersBefore != transfers) // Higher priority container took away our stuff :(
+                                break;
+
+                            if (quote.Amount == null) // Hoard as much as we can
                                 break;
 
                             var extra = item.Amount - quote.Amount.Value;
-                            if (extra > 0)
+                            if (extra > 0) // Discard extra
                                 UnloadItemToHigherImportance(-1, item, itemType, inventory,
                                     ref transfers, extra);
                             break;
