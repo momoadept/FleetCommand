@@ -29,21 +29,26 @@ namespace IngameScript
 
 
             InventoryManagerState _state;
-            InvMgrSettings _settings;
+            InvManagerConfig _settings;
             ILog _log;
             IGameContext _gameContext;
             List<IMyTerminalBlock> _observingBlocks = new List<IMyTerminalBlock>();
             List<IMyTerminalBlock> _summaryTargets = new List<IMyTerminalBlock>();
-            List<InvDeclaration> _declarations = new List<InvDeclaration>();
+            InvCache _invCache = new InvCache();
+            InvMover _mover;
 
-            public InventoryManager(InvMgrSettings settings = null)
+            public InventoryManager(InvManagerConfig settings = null)
             {
-                _settings = settings ?? new InvMgrSettings();
+                _settings = settings;
             }
 
             // Contract
 
-            public IPromise<Void> ForceUpdatePolicies() => Void.Promise();
+            public IPromise<Void> ForceUpdatePolicies()
+            {
+                ScanInventoryBlocks();
+                return Void.Promise();
+            }
 
             public IPromise<Void> SetState(InventoryManagerState value)
             {
@@ -57,6 +62,11 @@ namespace IngameScript
             {
                 _log = context.RequireOne<ILog>();
                 _gameContext = context.RequireOne<IGameContext>();
+
+                if (_settings == null)
+                    _settings = new InvManagerConfig(_gameContext.Me.CustomData);
+
+                _mover = new InvMover(_log, _settings);
             }
 
             public void Restore(InventoryManagerState state)
@@ -73,18 +83,10 @@ namespace IngameScript
                 _log.Debug("My state is", _state.Stringify());
 
                 Aos.Async.CreateJob(ScanInventoryBlocks, Priority.Unimportant).Start();
-                Aos.Async.Delay(100).Then(x =>
-                {
-                    Aos.Async.CreateJob(UpdateDeclarations).Start();
-                });
-
-                //Aos.Async.CreateJob(ReportInventory).Start();
-
-                //ScanInventoryBlocks();
-                //UpdateDeclarations();
+                Aos.Async.CreateJob(MoveInventory).Start();
             }
 
-            public void OnSaving() => _log.Debug("Inventory Manager Saving");
+            public void OnSaving() {}
 
             // Jobs
 
@@ -93,60 +95,25 @@ namespace IngameScript
                 _log.Debug("Scan blocks...");
                 _observingBlocks.Clear();
                 _summaryTargets.Clear();
-                _gameContext.Grid.GetBlocksOfType<IMyTerminalBlock>(_observingBlocks, block => block.HasInventory);
-                _gameContext.Grid.SearchBlocksOfName(_settings.InvSummaryLcdTag.Wrapped, _summaryTargets);
+                _gameContext.Grid.GetBlocksOfType<IMyTerminalBlock>(_observingBlocks, ShouldObserveBlock);
+                _gameContext.Grid.SearchBlocksOfName(_settings.SummaryLcdTag.Wrapped, _summaryTargets);
 
                 _log.Debug("Discovered inventories:", _observingBlocks.Count.ToString());
                 _log.Debug("Discovered lcds:", _summaryTargets.Count.ToString());
+
+                _invCache.RefreshList(_observingBlocks, _settings);
+                _mover?.RefreshCache(_invCache);
             }
 
-            void UpdateDeclarations()
+            void MoveInventory()
             {
-                //_log.Debug("Update declarations...");
-                _declarations.Clear();
-                foreach (var block in _observingBlocks)
+                for (int i = 0; i < _settings.StepsPerTick; i++)
                 {
-                    var invDefinition = BlockInvDef.Parse(block);
-                    var declarations = invDefinition.Select(x => x.Declare(_log, block.CustomName));
-                    _declarations.AddRange(declarations);
-                }
-
-                new InvMover(_declarations, _log).Iterate();
-            }
-
-            void ReportInventory()
-            {
-                //_log.Debug("Report inventory...");
-                var report = new Dictionary<string, InvDeclarationRecord>();
-
-                foreach (var invDeclaration in _declarations)
-                {
-                    foreach (var item in invDeclaration.Have)
-                    {
-                        if (!report.ContainsKey(item.Key))
-                        {
-                            report.Add(item.Key, new InvDeclarationRecord(item.Value.ItemType, 0, 0, null, null));
-                        }
-
-                        report[item.Key].Amount += item.Value.Amount;
-                    }
-                }
-
-                var sortedReport = report.Select(it => it.Value).OrderBy(it => it.ItemType.ToString()).ToList();
-
-                foreach (var target in _summaryTargets.Where(it => it is IMyTextPanel))
-                {
-                    var surface = (IMyTextPanel)target;
-                    surface.ContentType = ContentType.TEXT_AND_IMAGE;
-                    surface.WriteText($"Inventory {Aos.Node.NodeId} ({Aos.Node.ShipAlias})\n");
-
-                    foreach (var entry in sortedReport)
-                    {
-                        surface.WriteText(
-                            $"{entry.ItemType.ToDisplayString().FillWhitespace(_settings.SummaryTypeWidth)}{entry.Amount}\n", true);
-                    }
+                    _mover.MoveNext();
                 }
             }
+
+            bool ShouldObserveBlock(IMyTerminalBlock block) => block.HasInventory && (_settings.IgnoreUntagged || _settings.Tag.NameMatches(block.CustomName));
         }
     }
 }

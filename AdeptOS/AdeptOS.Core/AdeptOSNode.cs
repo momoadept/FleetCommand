@@ -2,6 +2,7 @@
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.GUI.TextPanel;
 using VRage.Game.ModAPI.Ingame;
+using VRage.Game.ModAPI.Ingame.Utilities;
 
 namespace IngameScript
 {
@@ -13,6 +14,7 @@ namespace IngameScript
             public static Config Seettings = new Config();
             public static NConf Node;
             public static DateTime Now;
+            public static MyIni Ini = new MyIni();
         }
 
         public class AdeptOSNode

@@ -24,301 +24,157 @@ namespace IngameScript
     {
         public class InvMover
         {
+            InvCache _cache;
+            Queue<BlockInvDef> _tasks = new Queue<BlockInvDef>();
+            bool _inventorySorted = false;
             ILog _log;
-
-            List<InvDeclaration> _declarations;
-
-            List<InvDeclarationRecord> _allNeeded;
-            List<InvDeclarationRecord> _allToDiscard;
-            List<InvDeclarationRecord> _allHave;
-            List<InvAcceptRecord> _allAccept;
-
-            int _ops = 0;
-            int limit = 0;
-
             List<MyInventoryItem> _itemBuffer = new List<MyInventoryItem>();
+            InvManagerConfig _settings;
 
-            public InvMover(List<InvDeclaration> declarations, ILog log)
+            public InvMover(ILog log, InvManagerConfig settings)
             {
-                _declarations = declarations;
                 _log = log;
-                _allNeeded = declarations.SelectMany(x => x.Want.Select(y => y.Value))
-                    .OrderByDescending(x => x.Importance)
-                    .ToList();
-
-                _allToDiscard = declarations.SelectMany(x => x.DontWant.Select(y => y.Value))
-                    .OrderByDescending(x => x.Importance)
-                    .ToList();
-
-                _allHave = declarations.SelectMany(x => x.Have.Select(y => y.Value))
-                    .OrderBy(x => x.Importance)
-                    .ToList();
-
-                _allAccept = declarations.SelectMany(x => x.Accept.Select(y => y.Value))
-                    .OrderByDescending(x => x.Importance)
-                    .ToList();
+                _settings = settings;
             }
 
-            public void Iterate()
+            public void MoveNext()
             {
-                
-                //_log.Debug("-----Have:");
-                //foreach (var has in _allHave)
-                //{
-                //    _log.Debug(has.BlockName, has.Importance.ToString(), has.ItemType.ToString(), has.Amount.ToString());
-                //}
-
-                //_log.Debug("-----Accept bills:");
-                //foreach (var accept in _allAccept)
-                //{
-                //    _log.Debug(accept.BlockName, accept.Importance.ToString(), accept.ItemType.ToString());
-                //}
-
-                //_log.Debug("-----Need bills:");
-                //foreach (var want in _allNeeded)
-                //{
-                //    _log.Debug(want.BlockName, want.Importance.ToString(), want.ItemType.ToString(), want.Amount.SerializeString());
-                //}
-
-                //_log.Debug("-----Discard bills:");
-                //foreach (var unwant in _allToDiscard)
-                //{
-                //    _log.Debug(unwant.BlockName, unwant.Importance.ToString(), unwant.ItemType.ToString(), unwant.Amount.SerializeString());
-                //}
-
-                _ops = 0;
-
-                foreach (var neededBill in _allNeeded)
-                {
-                    if (_ops > limit)
-                        break;
-
-                    FulfillNeeded(neededBill);
-                }
-
-                foreach (var discardBill in _allToDiscard)
-                {
-                    if (_ops > limit)
-                        break;
-
-                    FulfillNotWanted(discardBill);
-                }
-
-                foreach (var acceptBill in _allAccept)
-                {
-                    if (_ops > limit)
-                        break;
-
-                    FulfillAccept(acceptBill);
-                }
-            }
-
-            void FulfillAccept(InvAcceptRecord accept)
-            {
-                _log.Debug("Trying to fill ACCEPT ", accept.ItemType.ToDisplayString(), accept.BlockName);
-
-                var applicableStocks = _allHave
-                    .Where(x => x.BlockName.Contains("[I"))
-                    .Where(x => x.Importance < accept.Importance)
-                    .Where(x => x.ItemType.Equals(accept.ItemType));
-
-
-                foreach (var stock in applicableStocks)
-                {
-
-                    //throw new Exception("Accept cycle");
-                    if (_ops > limit)
-                        break;
-                    if (accept.Declarer.IsFull)
-                    {
-                        //_log.Debug("Skipping pulling accepted items since inventory is full");
-                        break;
-                    }
-
-                    //throw new Exception("Accept pulling");
-                    //_log.Debug("Found ", stock.Amount.ToString(), "in", stock.BlockName);
-                    Pull(stock, accept);
-                    _ops++;
-                }
-            }
-
-            void FulfillNeeded(InvDeclarationRecord needed)
-            {
-                _log.Debug("Trying to fill quote ", needed.ItemType.ToDisplayString(), needed.Amount.ToString(), needed.BlockName);
-
-                // check Unwanted
-                //_log.Debug("Looking for unwanted inventory to pull...");
-                var applicableDiscarded = _allToDiscard.Where(x => x.ItemType.Equals(needed.ItemType));
-
-                foreach (var discard in applicableDiscarded)
-                {
-                    if (_ops > limit)
-                        break;
-                    if (needed.Amount <= 0)
-                        break;
-
-                    if (needed.Declarer.IsFull)
-                    {
-                        //_log.Debug("Skipping filling quote since inventory is full");
-                        break;
-                    }
-
-                    //_log.Debug("Found ", discard.Amount.ToString(), "in", discard.BlockName);
-                    Pull(discard, needed);
-                    _ops++;
-                }
-
-                if (needed.Amount <= 0)
+                if (_cache == null)
                     return;
 
-                // check Lower priorities
-                //_log.Debug("Looking for lower importance inventory to pull...");
-                var applicableStocks = _allHave
-                    .Where(x => x.BlockName.Contains("[I"))
-                    .Where(x => x.Importance < needed.Importance)
-                    .Where(x => x.ItemType.Equals(needed.ItemType));
-
-                foreach (var stock in applicableStocks)
+                if (!_tasks.Any())
                 {
-                    if (_ops > limit)
-                        break;
-                    if (needed.Amount <= 0)
-                        break;
-
-                    if (needed.Declarer.IsFull)
-                    {
-                        //_log.Debug("Skipping filling quote since inventory is full");
-                        break;
-                    }
-
-                    //_log.Debug("Found ", stock.Amount.ToString(), "in", stock.BlockName);
-                    Pull(stock, needed);
-                    _ops++;
+                    _tasks = new Queue<BlockInvDef>(_cache.ManagedBlocks);
                 }
-            }
 
-            void FulfillNotWanted(InvDeclarationRecord notWanted)
-            {
-                _log.Debug("Trying to discard extra ", notWanted.ItemType.ToDisplayString(), notWanted.Amount.ToString(), notWanted.BlockName);
-
-                // check accepters
-                //_log.Debug("Looking for accepting inventory to push...");
-                var applicableStocks = _allAccept
-                    .Where(x => x.ItemType.Equals(notWanted.ItemType));
-
-                foreach (var declaration in applicableStocks)
+                if (!_inventorySorted)
                 {
-                    if (_ops > limit)
-                        break;
-                    if (notWanted.Amount <=0)
-                        break;
-
-                    //_log.Debug("Pushing to ", declaration.BlockName);
-                    Push(notWanted, declaration);
-                    _ops++;
-                }
-            }
-
-            void Pull(InvDeclarationRecord from, InvDeclarationRecord to)
-            {
-                if (from.BlockName == to.BlockName)
+                    _inventorySorted = true;
+                    var next = _tasks.Peek();
+                    SortInventory(next.Inventory, next.Block.CustomName);
                     return;
-                var leftTotransfer = @from.Amount > to.Amount ? to.Amount : @from.Amount;
-                @from.Declarer.GetItems(_itemBuffer);
+                }
 
-                foreach (var item in _itemBuffer.Where(x => new ItemType(x).Equals(to.ItemType)))
+                MoveInventory(_tasks.Dequeue());
+            }
+
+            public void RefreshCache(InvCache cache) => _cache = cache;
+
+            void SortInventory(IMyInventory inventory, string blockName)
+            {
+                _log.Debug("Sorting", blockName);
+                var lastFoundItemTypeIndex = new Dictionary<MyItemType, int>(inventory.ItemCount);
+                for (int i = 0; i < inventory.ItemCount; i++)
                 {
-                    //_log.Debug("Looking at ", item.Type.SubtypeId, item.Amount.SerializeString());
-                    if (leftTotransfer <= 0)
-                        break;
+                    var item = inventory.GetItemAt(i);
+                    if (item == null)
+                        continue;
 
-                    var thisTransfer = leftTotransfer > item.Amount ? item.Amount : leftTotransfer;
-                    //_log.Debug("Trying to transfer ", thisTransfer.SerializeString());
-
-                    //while (thisTransfer.RawValue > 0 && !to.Declarer.CanItemsBeAdded(thisTransfer, item.Type))
-                    //    thisTransfer.RawValue /= 2;
-
-                    _log.Debug("Transferring ", thisTransfer.SerializeString(), item.Type.ToString());
-                    _log.Debug(from.BlockName, "->", to.BlockName);
-                    //if (thisTransfer > 0)
-                    //    _log.Debug(to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer).ToString());
-
-                    if (to.Declarer.CanItemsBeAdded(thisTransfer, item.Type))
+                    if (!lastFoundItemTypeIndex.ContainsKey(item.Value.Type))
                     {
-                        to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer);
-                        leftTotransfer -= thisTransfer;
-                        @from.Amount -= thisTransfer;
-                        to.Amount -= thisTransfer;
+                        lastFoundItemTypeIndex.Add(item.Value.Type, i);
+                        continue;
+                    }
+
+                    var transferOk = inventory.TransferItemTo(inventory, i, lastFoundItemTypeIndex[item.Value.Type], true,
+                        item.Value.Amount);
+
+                    _log.Debug("Merging", item.Value.Type.ToString(), "... OK:", transferOk.ToString());
+                }
+            }
+
+            void MoveInventory(BlockInvDef inventory)
+            {
+                inventory.Inventory.GetItems(_itemBuffer);
+                var transfers = 0;
+                var current = 0;
+
+                while (transfers < _settings.TransfersPerStep)
+                {
+                    var item = _itemBuffer[current];
+                    var itemType = new ItemType(item);
+                    current++;
+
+                    switch (inventory.Type)
+                    {
+                        case BlockInvType.AcceptAll:
+                            UnloadItemToHigherImportance(inventory.GolbalImportance, item, itemType, inventory,
+                                ref transfers, item.Amount);
+                            break;
+
+                        case BlockInvType.EmptyAll:
+                        case BlockInvType.Assembler:
+                        case BlockInvType.Refinery:
+                            UnloadItemToHigherImportance(-1, item, itemType, inventory,
+                                ref transfers, item.Amount);
+                            break;
+
+                        case BlockInvType.Quotas:
+                            if (!inventory.QuoteByItemType.ContainsKey(itemType.ToString()))
+                            {
+                                UnloadItemToHigherImportance(-1, item, itemType, inventory,
+                                    ref transfers, item.Amount);
+                                break;
+                            }
+
+                            var quote = inventory.QuoteByItemType[itemType.ToString()];
+                            if (quote.Amount == null)
+                                break;
+
+                            var extra = item.Amount - quote.Amount.Value;
+                            if (extra > 0)
+                                UnloadItemToHigherImportance(-1, item, itemType, inventory,
+                                    ref transfers, extra);
+                            break;
                     }
                 }
             }
 
-            void Pull(InvDeclarationRecord from, InvAcceptRecord to)
+            void UnloadItemToHigherImportance(int minImportance, MyInventoryItem item, ItemType itemType, BlockInvDef inventory, ref int transfers, MyFixedPoint maxTransfer)
             {
-                //var s = $"PULL {from.BlockName} -> {to.BlockName} {from.ItemType}";
-                //throw new Exception(s);
-                if (from.BlockName == to.BlockName)
-                    return;
-                var ammount = from.Amount;
-                from.Declarer.GetItems(_itemBuffer);
+                var higherImportanceStorage = _cache
+                    .TargetsByItemTypeByPriority[itemType.ToString()]
+                    .Where(x => x.Key > minImportance)
+                    .SelectMany(x => x.Value.Where(block => !block.Inventory.IsFull));
 
-                foreach (var item in _itemBuffer.Where(x => new ItemType(x).Equals(to.ItemType)))
+                foreach (var candidate in higherImportanceStorage)
                 {
-                    //_log.Debug("Looking at ", item.Type.SubtypeId, item.Amount.SerializeString());
-                    if (ammount <= 0 || to.Declarer.IsFull)
-                        break;
+                    if (!inventory.Inventory.CanTransferItemTo(candidate.Inventory, item.Type))
+                        continue;
 
-                    var thisTransfer = ammount > item.Amount ? item.Amount : ammount;
-                    //_log.Debug("Trying to transfer ", thisTransfer.SerializeString());
+                    var shouldTransfer =
+                        GetPossibleTransfer(candidate, maxTransfer, item.Type);
 
-                    //while (!to.Declarer.CanItemsBeAdded(thisTransfer, item.Type) && thisTransfer.RawValue > 0)
-                    //    thisTransfer.RawValue /= 2;
+                    if (shouldTransfer == 0)
+                        continue;
 
-                    _log.Debug("Transferring ", thisTransfer.SerializeString(), item.Type.ToString());
-                    _log.Debug(from.BlockName, "->", to.BlockName);
-                    //if (thisTransfer > 0)
-                    //    _log.Debug(to.Declarer.TransferItemFrom(from.Declarer, item, thisTransfer).ToString());
-
-                    if (to.Declarer.CanItemsBeAdded(thisTransfer, item.Type))
-                    {
-                        to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer);
-                        ammount -= thisTransfer;
-                        from.Amount -= thisTransfer;
-                    }
+                    _log.Debug("Moving", shouldTransfer.SerializeString(), itemType.ToDisplayString(), "from", inventory.Block.CustomName, "to", candidate.Block.CustomName);
+                    inventory.Inventory.TransferItemTo(candidate.Inventory, item, shouldTransfer);
+                    transfers++;
+                    break;
                 }
             }
 
-            void Push(InvDeclarationRecord from, InvAcceptRecord to)
+            MyFixedPoint GetPossibleTransfer(BlockInvDef to, MyFixedPoint amount, MyItemType itemType)
             {
-                if (from.BlockName == to.BlockName)
-                    return;
-                var leftTotransfer = from.Amount;
-                from.Declarer.GetItems(_itemBuffer);
+                var transfer = amount;
+                var customItemType = new ItemType(itemType);
 
-                foreach (var item in _itemBuffer.Where(x => new ItemType(x).Equals(from.ItemType)))
+                if (to.QuoteByItemType.ContainsKey(customItemType.ToString()))
                 {
-                    _log.Debug("Looking to push ", item.Type.ToString());
-                    if (leftTotransfer <= 0)
-                        break;
-
-                    var thisTransfer = leftTotransfer > item.Amount ? item.Amount : leftTotransfer;
-                    //_log.Debug("Trying to transfer ", thisTransfer.SerializeString());
-
-                    //while (!to.Declarer.CanItemsBeAdded(thisTransfer, item.Type) && thisTransfer.RawValue > 0)
-                    //    thisTransfer.RawValue /= 2;
-
-                    _log.Debug("Transferring ", thisTransfer.SerializeString(), item.Type.ToString());
-                    _log.Debug(from.BlockName,"->",to.BlockName);
-                    //if (thisTransfer > 0)
-                    //    _log.Debug(to.Declarer.TransferItemFrom(from.Declarer, item, thisTransfer).ToString());
-
-                    if (to.Declarer.CanItemsBeAdded(thisTransfer, item.Type))
+                    // Check quote before moving
+                    var quote = to.QuoteByItemType[customItemType.ToString()];
+                    if (quote.Amount != null)
                     {
-                        to.Declarer.TransferItemFrom(@from.Declarer, item, thisTransfer);
-                        leftTotransfer -= thisTransfer;
-                        from.Amount -= thisTransfer;
+                        var alreadyHave = to.Inventory.GetItemAmount(itemType);
+                        var need = quote.Amount.Value - alreadyHave;
+                        var reallyNeed = need >= 0 ? need : 0;
+
+                        transfer = transfer > reallyNeed ? reallyNeed : transfer;
                     }
                 }
+
+                return transfer;
             }
         }
     }

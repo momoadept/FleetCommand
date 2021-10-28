@@ -88,6 +88,22 @@ namespace IngameScript
                 }
             }
 
+            public ItemType(MyItemType item)
+            {
+                Type = Types.FirstOrDefault(t => item.TypeId.ToUpper().Contains(t.ToUpper()));
+                Subtype = Subtypes.FirstOrDefault(t => item.SubtypeId.ToUpper().Contains(t.ToUpper()));
+
+                if (Type == null && AmbiguosTypes.Contains(Subtype))
+                {
+                    Type = "Ingot";
+                }
+
+                if (!AmbiguosTypes.Contains(Subtype) && Subtype != null)
+                {
+                    Type = null;
+                }
+            }
+
             public override string ToString()
             {
                 if (Type == null && AmbiguosTypes.Contains(Subtype))
@@ -209,6 +225,30 @@ namespace IngameScript
                 "ElitePistolMagazine",
                 "FullAutoPistolMagazine",
             }.Concat(Ingots).Concat(Components).Concat(Ores).Distinct().ToArray();
+
+            public static string[] GetCategorySource(string type)
+            {
+                string[] categorySource = { };
+                switch (type)
+                {
+                    case "Ore":
+                        categorySource = Ores;
+                        break;
+                    case "Ingot":
+                        categorySource = Ingots;
+                        break;
+                    case "Component":
+                        categorySource = Components;
+                        break;
+                }
+
+                return categorySource;
+            }
+
+            public static ItemType[] AllTypes = Subtypes
+                .Select(x => new ItemType(x))
+                .Concat(AmbiguosTypes.Select(x => new ItemType(x, "Ore")))
+                .ToArray();
         }
     }
 }

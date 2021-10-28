@@ -126,7 +126,7 @@ namespace IngameScript
                     var pendingRoutines = _queue[Priority.Routine].Count;
                     var pendingCritical = _queue[Priority.Critical].Count;
                     var pendingOther = _queue[Priority.Unimportant].Count;
-                    _performanceReport = $"{_stats.Snapshot()}\n{pendingRoutines} Routine tasks pending (>6 = stagnation)\n{pendingCritical} Critical\n{pendingOther} Other";
+                    _performanceReport = $"{_stats.Snapshot()}\n{pendingRoutines} Routine tasks pending\n{pendingCritical} Critical\n{pendingOther} Other";
                 }
                     
 
