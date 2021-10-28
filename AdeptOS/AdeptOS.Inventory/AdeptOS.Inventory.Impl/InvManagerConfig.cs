@@ -24,10 +24,18 @@ namespace IngameScript
     {
         public class InvManagerConfig
         {
+            /*
+             * [InventoryManager]
+             * IgnoreUntagged=true
+             * StepsPerTick=1
+             * TransfersPerStep=100
+             * Tag=I
+             * SummaryLcdTag=IOUT
+             */
             public Tag Tag = new Tag("I", true);
             public bool IgnoreUntagged = true;
             public int StepsPerTick = 1;
-            public int TransfersPerStep = 100;
+            public int TransfersPerStep = 50;
             public Tag SummaryLcdTag = new Tag("IOUT");
             public int SummaryTypeWidth = 20;
 

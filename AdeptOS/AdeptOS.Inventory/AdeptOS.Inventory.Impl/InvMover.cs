@@ -56,6 +56,7 @@ namespace IngameScript
                 }
 
                 MoveInventory(_tasks.Dequeue());
+                _inventorySorted = false;
             }
 
             public void RefreshCache(InvCache cache) => _cache = cache;
@@ -85,11 +86,13 @@ namespace IngameScript
 
             void MoveInventory(BlockInvDef inventory)
             {
+                _log.Debug("========Working on", inventory.Block.CustomName);
+                _itemBuffer.Clear();
                 inventory.Inventory.GetItems(_itemBuffer);
                 var transfers = 0;
                 var current = 0;
 
-                while (transfers < _settings.TransfersPerStep)
+                while (transfers < _settings.TransfersPerStep && current < _itemBuffer.Count)
                 {
                     var item = _itemBuffer[current];
                     var itemType = new ItemType(item);
@@ -128,6 +131,8 @@ namespace IngameScript
                                 break;
 
                             var extra = item.Amount - quote.Amount.Value;
+                            _log.Debug("Need to get rid of", extra.SerializeString(), quote.ItemType.ToDisplayString());
+
                             if (extra > 0) // Discard extra
                                 UnloadItemToHigherImportance(-1, item, itemType, inventory,
                                     ref transfers, extra);
@@ -143,8 +148,13 @@ namespace IngameScript
                     .Where(x => x.Key > minImportance)
                     .SelectMany(x => x.Value.Where(block => !block.Inventory.IsFull));
 
+                //_log.Debug("C ", itemType);
+
                 foreach (var candidate in higherImportanceStorage)
                 {
+                    if (candidate.Inventory.IsFull)
+                        continue;
+
                     if (!inventory.Inventory.CanTransferItemTo(candidate.Inventory, item.Type))
                         continue;
 
@@ -170,7 +180,7 @@ namespace IngameScript
                 {
                     // Check quote before moving
                     var quote = to.QuoteByItemType[customItemType.ToString()];
-                    if (quote.Amount != null)
+                    if (quote.Amount != null && quote.Amount != 0)
                     {
                         var alreadyHave = to.Inventory.GetItemAmount(itemType);
                         var need = quote.Amount.Value - alreadyHave;

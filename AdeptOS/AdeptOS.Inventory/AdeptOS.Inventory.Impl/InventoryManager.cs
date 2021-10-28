@@ -34,7 +34,7 @@ namespace IngameScript
             IGameContext _gameContext;
             List<IMyTerminalBlock> _observingBlocks = new List<IMyTerminalBlock>();
             List<IMyTerminalBlock> _summaryTargets = new List<IMyTerminalBlock>();
-            InvCache _invCache = new InvCache();
+            InvCache _invCache;
             InvMover _mover;
 
             public InventoryManager(InvManagerConfig settings = null)
@@ -67,6 +67,7 @@ namespace IngameScript
                     _settings = new InvManagerConfig(_gameContext.Me.CustomData);
 
                 _mover = new InvMover(_log, _settings);
+                _invCache = new InvCache(_log);
             }
 
             public void Restore(InventoryManagerState state)
@@ -102,6 +103,16 @@ namespace IngameScript
                 _log.Debug("Discovered lcds:", _summaryTargets.Count.ToString());
 
                 _invCache.RefreshList(_observingBlocks, _settings);
+
+                foreach (var block in _invCache.ManagedBlocks)
+                {
+                    _log.Debug(block.Block.CustomName, block.Type.ToString(), block.GolbalImportance.ToString());
+                    if (block.Entries != null)
+                        foreach (var entry in block.Entries)
+                        {
+                            _log.Debug(entry.Importance.ToString(), entry.ItemType.ToDisplayString(), entry.Amount.ToString());
+                        }
+                }
                 _mover?.RefreshCache(_invCache);
             }
 

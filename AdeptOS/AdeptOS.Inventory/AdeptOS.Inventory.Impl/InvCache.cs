@@ -15,6 +15,7 @@ using VRage.Game.Components;
 using VRage.Game.GUI.TextPanel;
 using VRage.Game.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame.Utilities;
+using VRage.Game.ObjectBuilders.Components.BankingAndCurrency;
 using VRage.Game.ObjectBuilders.Definitions;
 using VRageMath;
 
@@ -26,6 +27,13 @@ namespace IngameScript
         {
             public Dictionary<string, Dictionary<int, List<BlockInvDef>>> TargetsByItemTypeByPriority = new Dictionary<string, Dictionary<int, List<BlockInvDef>>>();
             public List<BlockInvDef> ManagedBlocks = new List<BlockInvDef>();
+
+            ILog _log;
+
+            public InvCache(ILog log)
+            {
+                _log = log;
+            }
 
             public void RefreshList(List<IMyTerminalBlock> blocks, InvManagerConfig settings)
             {
@@ -59,6 +67,21 @@ namespace IngameScript
                             break;
                     }
                 }
+
+                //foreach (var byPrio in TargetsByItemTypeByPriority)
+                //{
+                //    _log.Debug("----------------", byPrio.Key);
+
+                //    foreach (var pair in byPrio.Value)
+                //    {
+                //        _log.Debug("=====", pair.Key.ToString());
+
+                //        foreach (var def in pair.Value)
+                //        {
+                //            _log.Debug(def.Block.CustomName);
+                //        }
+                //    }
+                //}
             }
 
             void DefineAcceptAllInventory(BlockInvDef inv)

@@ -42,7 +42,7 @@ namespace IngameScript
 
         public Program()
         {
-            Runtime.UpdateFrequency = UpdateFrequency.Update10;
+            Runtime.UpdateFrequency = UpdateFrequency.Update1;
             node.Start(new GameContext(this, x => Storage = x), Pckg);
         }
 
